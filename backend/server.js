@@ -45,7 +45,13 @@ app.use(limiter);
 
 // CORS configuration
 app.use(
-  cors()
+  cors({
+    origin: [
+      appConfig.WEBSITE_URL || "http://localhost:5173",
+      "http://localhost:5174" || "https://apni-estate-frontend.onrender.com/*",
+    ],
+    credentials: true,
+  })
 );
 
 // Body parsing middleware
