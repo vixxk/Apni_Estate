@@ -1,0 +1,80 @@
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import { HelmetProvider } from 'react-helmet-async';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import Properties from './pages/Properties';
+import PropertyDetails from './components/properties/propertydetail';
+import Aboutus from './pages/About';
+import Contact from './pages/Contact';
+import Login from './components/login';
+import Signup from './components/signup';
+import ForgotPassword from './components/forgetpassword';
+import ResetPassword from './components/resetpassword';
+import Footer from './components/footer';
+import NotFoundPage from './components/Notfound';
+import { AuthProvider } from './context/AuthContext';
+import AIPropertyHub from './pages/Aiagent';
+import StructuredData from './components/SEO/StructuredData';
+import Profile from './pages/Profile';
+import 'react-toastify/dist/ReactToastify.css';
+import SavedProperties from "./pages/SavedProperties.jsx";
+import VendorAddService from "./pages/VendorAddProperty.jsx";
+import VendorProfile from './pages/VendorProfile';
+import VendorRegister from './pages/VendorRegister';
+import MobileBottomNav from './components/MobileBottomNav';
+
+export const Backendurl = import.meta.env.VITE_API_BASE_URL;
+
+const App = () => {
+  return (
+    <HelmetProvider>
+      <AuthProvider>
+        <Router>
+          {/* Base website structured data */}
+          <StructuredData type="website" />
+          <StructuredData type="organization" />
+
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            
+            {/* Main content with padding for mobile bottom nav */}
+            <main className="flex-grow pb-20 md:pb-0">
+              <Routes>
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<VendorRegister />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset/:token" element={<ResetPassword />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/properties" element={<Properties />} />
+                <Route path="/properties/single/:id" element={<PropertyDetails />} />
+                <Route path="/about" element={<Aboutus />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/ai-property-hub" element={<AIPropertyHub />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/vendor/add-service" element={<VendorAddService />} />
+                <Route path="/vendor/:vendorId" element={<VendorProfile />} /> 
+                <Route path="/saved" element={<SavedProperties />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </main>
+
+            {/* Footer - hidden on mobile, visible on desktop */}
+            <div className="hidden md:block">
+              <Footer />
+            </div>
+
+            {/* Mobile Bottom Navigation */}
+            <MobileBottomNav />
+
+            <ToastContainer />
+          </div>
+        </Router>
+      </AuthProvider>
+    </HelmetProvider>
+  );
+};
+
+export default App;
