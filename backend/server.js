@@ -45,13 +45,7 @@ app.use(limiter);
 
 // CORS configuration
 app.use(
-  cors({
-    origin: [
-      appConfig.WEBSITE_URL || "http://localhost:5173",
-      "http://localhost:5174",
-    ],
-    credentials: true,
-  })
+  cors()
 );
 
 // Body parsing middleware
