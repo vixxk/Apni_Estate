@@ -3,6 +3,7 @@ import { Star, ArrowLeft, ArrowRight, Quote, Heart, Sparkles, TrendingUp, Users,
 import { motion, AnimatePresence } from 'framer-motion';
 import { testimonials } from '../assets/testimonialdata';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 // Enhanced Animation Variants
 const containerVariants = {
@@ -76,6 +77,7 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
+
     <motion.div
       key={testimonial.id}
       initial={{ opacity: 0, x: direction === 'right' ? 50 : -50 }}
@@ -231,6 +233,7 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
 };
 
 const Testimonials = () => {
+  const navigate = useNavigate();   
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState('right');
   const [autoplay, setAutoplay] = useState(true);
@@ -278,6 +281,7 @@ const Testimonials = () => {
   };
 
   return (
+    
     <section className="relative py-32 bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-50 overflow-hidden">
       {/* Enhanced Background Elements */}
       <div className="absolute inset-0">

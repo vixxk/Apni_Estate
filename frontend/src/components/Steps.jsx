@@ -3,6 +3,8 @@ import { steps } from "../assets/stepsdata";
 import { ArrowRight, Sparkles, Star, CheckCircle2, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
+
 
 // Enhanced Animation variants
 const containerVariants = {
@@ -199,6 +201,7 @@ Step.propTypes = {
 };
 
 export default function HowItWorks() {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(null);
 
   return (

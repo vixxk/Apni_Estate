@@ -2,6 +2,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Sparkles, TrendingUp, Award } from "lucide-react";
 import { features } from "../assets/featuredata";
+import { useNavigate } from "react-router-dom";
+
 
 // Enhanced animation variants
 const containerVariants = {
@@ -61,6 +63,7 @@ const floatingAnimation = {
 };
 
 const Features = () => {
+  const navigate = useNavigate();
   const [hoveredCard, setHoveredCard] = useState(null);
 
   return (
