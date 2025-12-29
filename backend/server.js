@@ -14,89 +14,73 @@ import appointmentRoutes from "./routes/appointmentRoute.js";
 import formRoutes from "./routes/formRoute.js";
 import newsRoutes from "./routes/newsRoute.js";
 import adminRoutes from "./routes/adminRoute.js";
-import uploadRoutes from "./routes/uploadRoute.js"; // ✅ new
-import { appConfig } from "./config/config.js";
+import uploadRoutes from "./routes/uploadRoute.js";
 import vendorServiceRoutes from "./routes/vendorServiceRoute.js";
 import serviceUploadRoutes from "./routes/serviceUploadRoute.js";
-
 
 console.log("RAW env JWTSECRET:", process.env.JWTSECRET);
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// for __dirname with ES modules
+// __dirname support (ESM)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Connect to MongoDB
+// Connect DB
 connectDB();
 
-// Security middleware
+// Basic security (optional, safe)
 app.use(helmet());
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500,
-  message: "Too many requests from this IP, please try again later.",
-});
-app.use(limiter);
-
-// CORS configuration
+// Rate limiting (optional)
 app.use(
-  cors({
-    origin: [
-      appConfig.WEBSITE_URL || "http://localhost:5173",
-      "http://localhost:5174" || "https://apni-estate-frontend.onrender.com/*",
-    ],
-    credentials: true,
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 500,
   })
 );
 
-// Body parsing middleware
+// ✅ SIMPLE UNIVERSAL CORS (ALLOW EVERYTHING)
+app.use(cors());
+
+// Body parsers
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-// ✅ serve uploaded images statically
+// Serve uploads
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Health check endpoint
+// Health check
 app.get("/", (req, res) => {
   res.json({
     message: "ApniEstate Backend API is running!",
-    version: "1.0.0",
     status: "healthy",
   });
 });
 
-// API routes
+// Routes
 app.use("/api/users", userRoutes);
-
-// Properties
 app.use("/api/properties", propertyRoutes);
-
-// ✅ new upload route for property images
-app.use("/api/upload", uploadRoutes);
-
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/forms", formRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/vendor/services", vendorServiceRoutes);
-app.use("/api/upload", serviceUploadRoutes);
 
+// Upload routes (separated to avoid conflicts)
+app.use("/api/upload/property", uploadRoutes);
+app.use("/api/upload/service", serviceUploadRoutes);
 
 // Status endpoint
 app.get("/status", (req, res) => {
   res.json({
     status: "OK",
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || "development",
+    time: new Date().toISOString(),
   });
 });
 
-// 404 handler
+// 404
 app.use("*", (req, res) => {
   res.status(404).json({
     success: false,
@@ -106,8 +90,8 @@ app.use("*", (req, res) => {
 
 // Global error handler
 app.use((err, req, res, next) => {
-  console.error("Error:", err);
-  res.status(err.status || 500).json({
+  console.error(err);
+  res.status(500).json({
     success: false,
     message: err.message || "Internal server error",
   });
@@ -115,9 +99,5 @@ app.use((err, req, res, next) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 ApniEstate Backend Server running on port ${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || "development"}`);
-  console.log(
-    `🌐 Frontend URL: ${process.env.WEBSITE_URL || "http://localhost:5173"}`
-  );
+  console.log(`🚀 Server running on port ${PORT}`);
 });
