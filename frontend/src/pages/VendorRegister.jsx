@@ -22,6 +22,7 @@ import {
 import { Backendurl } from '../App';
 import { toast } from 'react-toastify';
 
+
 // Animation Variants
 const containerVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -38,6 +39,7 @@ const containerVariants = {
   exit: { opacity: 0, y: -20 }
 };
 
+
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
   visible: { 
@@ -53,6 +55,7 @@ const cardVariants = {
   }
 };
 
+
 const inputVariants = {
   hidden: { opacity: 0, x: -20 },
   visible: { 
@@ -65,6 +68,7 @@ const inputVariants = {
   }
 };
 
+
 const floatingAnimation = {
   y: [-3, 3, -3],
   transition: {
@@ -74,6 +78,7 @@ const floatingAnimation = {
   }
 };
 
+
 const pulseAnimation = {
   scale: [1, 1.05, 1],
   transition: { 
@@ -82,6 +87,7 @@ const pulseAnimation = {
     ease: "easeInOut"
   }
 };
+
 
 const VendorRegister = () => {
   const [formData, setFormData] = useState({
@@ -93,6 +99,7 @@ const VendorRegister = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [countdown, setCountdown] = useState(null);
   const [fieldFocus, setFieldFocus] = useState({
     name: false,
     email: false,
@@ -103,6 +110,7 @@ const VendorRegister = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const navigate = useNavigate();
 
+
   // Password strength calculation
   const calculatePasswordStrength = (password) => {
     let strength = 0;
@@ -112,6 +120,7 @@ const VendorRegister = () => {
     if (/[0-9]/.test(password)) strength += 25;
     return strength;
   };
+
 
   // Real-time validation
   const validateField = (name, value) => {
@@ -144,6 +153,7 @@ const VendorRegister = () => {
     return Object.keys(errors).length === 0;
   };
 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -151,76 +161,61 @@ const VendorRegister = () => {
       [name]: value
     }));
 
+
     if (validationErrors[name]) {
       setValidationErrors(prev => ({ ...prev, [name]: '' }));
     }
+
 
     if (name === 'password') {
       setPasswordStrength(calculatePasswordStrength(value));
     }
 
+
     validateField(name, value);
   };
+
 
   const handleFocus = (fieldName) => {
     setFieldFocus(prev => ({ ...prev, [fieldName]: true }));
   };
+
 
   const handleBlur = (fieldName) => {
     setFieldFocus(prev => ({ ...prev, [fieldName]: false }));
     validateField(fieldName, formData[fieldName]);
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Create a timeout promise that rejects after 5 seconds
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => {
-        reject(new Error('Request timeout - redirecting to login'));
-      }, 5000);
-    });
-
-    // Create the actual API request promise
-    const requestPromise = axios.post(`${Backendurl}/api/users/register`, {
-      ...formData,
-      role: 'vendor',
-    });
-
-    try {
-      // Race between the API request and the timeout
-      const response = await Promise.race([requestPromise, timeoutPromise]);
-
-      if (response.data.success) {
-        // ✅ DO NOT SAVE ANYTHING TO LOCALSTORAGE
-        toast.success(
-          'Vendor account created successfully! Please sign in to continue.'
-        );
-
-        // ✅ STRICTLY REDIRECT TO LOGIN PAGE
-        navigate('/login', { replace: true });
-      } else {
-        toast.error(response.data.message);
+    // Start countdown and redirect after 5 seconds regardless of response
+    let seconds = 5;
+    setCountdown(seconds);
+    
+    const countdownInterval = setInterval(() => {
+      seconds--;
+      setCountdown(seconds);
+      
+      if (seconds === 0) {
+        clearInterval(countdownInterval);
+        navigate('/login');
       }
-    } catch (error) {
-      // Check if it's a timeout error
-      if (error.message === 'Request timeout - redirecting to login') {
-        toast.warning(
-          'Request is taking too long. Redirecting to login page...'
-        );
-        // Redirect to login after timeout
-        navigate('/login', { replace: true });
-      } else {
-        console.error('Error creating vendor account:', error);
-        toast.error(
-          error.response?.data?.message || 'An error occurred. Please try again.'
-        );
-      }
-    } finally {
-      setLoading(false);
-    }
+    }, 1000);
+
+    // Make the API call but don't wait for it or handle its response
+    // This fires and forgets - no data is saved locally
+    axios.post(
+      `${Backendurl}/api/users/register`, 
+      { ...formData, role: 'vendor' }
+    ).catch((error) => {
+      // Silent error handling - don't show error to user
+      console.error('Registration request failed:', error);
+    });
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 relative overflow-hidden">
@@ -245,6 +240,7 @@ const VendorRegister = () => {
           className="absolute bottom-20 left-1/3 w-64 h-64 bg-pink-400/10 rounded-full blur-3xl"
         />
       </div>
+
 
       {/* Floating Sparkles */}
       <div className="absolute inset-0 pointer-events-none">
@@ -271,6 +267,7 @@ const VendorRegister = () => {
           />
         ))}
       </div>
+
 
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20">
         <motion.div
@@ -314,18 +311,6 @@ const VendorRegister = () => {
                 </div>
                 <p className="text-gray-600">Join our network of trusted property vendors</p>
                 
-                <motion.div
-                  initial={{ opacity: 0, y: -5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-4 flex items-center gap-2 bg-indigo-50 border border-indigo-200 
-                    text-indigo-700 px-4 py-3 rounded-xl text-sm"
-                >
-                  <AlertCircle className="w-4 h-4 text-indigo-600" />
-                  <span>
-                    You'll need to <strong>sign in after registration</strong> to access vendor dashboard
-                  </span>
-                </motion.div>
-                
                 {/* Vendor Benefits */}
                 <div className="flex items-center justify-center space-x-6 mt-4 text-sm text-gray-500">
                   <div className="flex items-center space-x-1">
@@ -343,6 +328,43 @@ const VendorRegister = () => {
                 </div>
               </div>
             </motion.div>
+
+            {/* Countdown Overlay */}
+            <AnimatePresence>
+              {countdown !== null && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center"
+                >
+                  <motion.div
+                    initial={{ scale: 0.8, y: 20 }}
+                    animate={{ scale: 1, y: 0 }}
+                    className="bg-white rounded-2xl p-8 shadow-2xl max-w-sm mx-4 text-center"
+                  >
+                    <motion.div
+                      animate={{
+                        scale: [1, 1.1, 1],
+                        rotate: [0, 5, -5, 0]
+                      }}
+                      transition={{
+                        duration: 0.5,
+                        repeat: Infinity
+                      }}
+                      className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center"
+                    >
+                      <Loader className="w-10 h-10 text-white animate-spin" />
+                    </motion.div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">Registration Submitted</h3>
+                    <p className="text-gray-600 mb-4">Redirecting to login page...</p>
+                    <div className="text-5xl font-bold text-indigo-600 mb-2">{countdown}</div>
+                    <p className="text-sm text-gray-500">seconds remaining</p>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Name Field */}
@@ -365,7 +387,8 @@ const VendorRegister = () => {
                     onChange={handleChange}
                     onFocus={() => handleFocus('name')}
                     onBlur={() => handleBlur('name')}
-                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${
+                    disabled={loading}
+                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${
                       validationErrors.name
                         ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                         : fieldFocus.name
@@ -407,6 +430,7 @@ const VendorRegister = () => {
                 </AnimatePresence>
               </motion.div>
 
+
               {/* Email Field */}
               <motion.div variants={inputVariants}>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -427,7 +451,8 @@ const VendorRegister = () => {
                     onChange={handleChange}
                     onFocus={() => handleFocus('email')}
                     onBlur={() => handleBlur('email')}
-                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${
+                    disabled={loading}
+                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${
                       validationErrors.email
                         ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                         : fieldFocus.email
@@ -469,6 +494,7 @@ const VendorRegister = () => {
                 </AnimatePresence>
               </motion.div>
 
+
               {/* Phone Field */}
               <motion.div variants={inputVariants}>
                 <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
@@ -489,7 +515,8 @@ const VendorRegister = () => {
                     onChange={handleChange}
                     onFocus={() => handleFocus('phone')}
                     onBlur={() => handleBlur('phone')}
-                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${
+                    disabled={loading}
+                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${
                       validationErrors.phone
                         ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                         : fieldFocus.phone
@@ -531,6 +558,7 @@ const VendorRegister = () => {
                 </AnimatePresence>
               </motion.div>
 
+
               {/* Password Field */}
               <motion.div variants={inputVariants}>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
@@ -551,7 +579,8 @@ const VendorRegister = () => {
                     onChange={handleChange}
                     onFocus={() => handleFocus('password')}
                     onBlur={() => handleBlur('password')}
-                    className={`w-full pl-10 pr-12 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${
+                    disabled={loading}
+                    className={`w-full pl-10 pr-12 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${
                       validationErrors.password
                         ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                         : fieldFocus.password
@@ -565,7 +594,8 @@ const VendorRegister = () => {
                     whileTap={{ scale: 0.9 }}
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
+                    disabled={loading}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100 disabled:opacity-50"
                   >
                     {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
                   </motion.button>
@@ -605,6 +635,7 @@ const VendorRegister = () => {
                   )}
                 </AnimatePresence>
 
+
                 <AnimatePresence>
                   {validationErrors.password && (
                     <motion.p
@@ -619,11 +650,12 @@ const VendorRegister = () => {
                 </AnimatePresence>
               </motion.div>
 
+
               {/* Submit Button */}
               <motion.div variants={inputVariants}>
                 <motion.button
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ scale: loading ? 1 : 1.02, y: loading ? 0 : -2 }}
+                  whileTap={{ scale: loading ? 1 : 0.98 }}
                   type="submit"
                   disabled={loading || Object.keys(validationErrors).some(key => validationErrors[key])}
                   className={`w-full py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg ${
@@ -635,7 +667,7 @@ const VendorRegister = () => {
                   {loading ? (
                     <>
                       <Loader className="w-5 h-5 animate-spin" />
-                      <span>Creating Vendor Account...</span>
+                      <span>Submitting...</span>
                     </>
                   ) : (
                     <>
@@ -646,6 +678,7 @@ const VendorRegister = () => {
                   )}
                 </motion.button>
               </motion.div>
+
 
               {/* Vendor Benefits */}
               <motion.div variants={inputVariants} className="bg-indigo-50/50 rounded-xl p-4 space-y-2">
@@ -661,6 +694,7 @@ const VendorRegister = () => {
                 </ul>
               </motion.div>
 
+
               {/* Divider */}
               <motion.div variants={inputVariants} className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
@@ -670,6 +704,7 @@ const VendorRegister = () => {
                   <span className="px-4 bg-white text-gray-500">Already have an account?</span>
                 </div>
               </motion.div>
+
 
               {/* Sign In Link */}
               <motion.div variants={inputVariants}>
@@ -682,6 +717,7 @@ const VendorRegister = () => {
                   <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-200 ml-1" />
                 </Link>
               </motion.div>
+
 
               {/* User Registration Link */}
               <motion.div variants={inputVariants} className="text-center pt-4 border-t border-gray-100">
@@ -701,5 +737,6 @@ const VendorRegister = () => {
     </div>
   );
 };
+
 
 export default VendorRegister;
