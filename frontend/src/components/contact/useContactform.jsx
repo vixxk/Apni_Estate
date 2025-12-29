@@ -47,7 +47,7 @@ export default function useContactForm() {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const response = await axios.post(`${Backendurl}/api/forms/submit`, formData);
+        const response = await axios.post(`${Backendurl}/api/forms`, formData);
         toast.success('Form submitted successfully!');
         // Reset form
         setFormData({ name: '', email: '', phone: '', message: '' });

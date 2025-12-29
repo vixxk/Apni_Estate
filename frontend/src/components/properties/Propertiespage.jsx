@@ -73,7 +73,7 @@ const PropertiesPage = () => {
               p.location.address,
               p.location.city,
               p.location.state,
-              p.location.pincode
+              p.location.pincode,
             ].filter(Boolean);
             locationString = parts.join(", ");
           }
@@ -158,7 +158,7 @@ const PropertiesPage = () => {
     fetchFavourites();
   }, [token]);
 
-  // Filter and sort properties
+  // In the filteredProperties useMemo, update the sort section:
   const filteredProperties = useMemo(() => {
     return propertyState.properties
       .filter((property) => {
@@ -171,8 +171,7 @@ const PropertiesPage = () => {
 
         const typeMatch =
           !filters.propertyType ||
-          property.type?.toLowerCase() ===
-            filters.propertyType.toLowerCase();
+          property.type?.toLowerCase() === filters.propertyType.toLowerCase();
 
         const priceMatch =
           property.price >= filters.priceRange[0] &&
@@ -210,6 +209,16 @@ const PropertiesPage = () => {
             return b.price - a.price;
           case "newest":
             return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+          case "location-asc":
+            // Sort alphabetically A-Z (case-insensitive)
+            return (a.location || "")
+              .toLowerCase()
+              .localeCompare((b.location || "").toLowerCase());
+          case "location-desc":
+            // Sort alphabetically Z-A (case-insensitive)
+            return (b.location || "")
+              .toLowerCase()
+              .localeCompare((a.location || "").toLowerCase());
           default:
             return 0;
         }
@@ -421,6 +430,8 @@ const PropertiesPage = () => {
                     <option value="price-asc">Price: Low to High</option>
                     <option value="price-desc">Price: High to Low</option>
                     <option value="newest">Newest First</option>
+                    <option value="location-asc">Location: A to Z</option>
+                    <option value="location-desc">Location: Z to A</option>
                   </select>
 
                   {/* View Controls */}
