@@ -333,7 +333,7 @@ const Navbar = () => {
                               <span>Saved Properties</span>
                             </motion.button>
 
-                            <motion.button
+                            {/* <motion.button
                               onClick={() => {
                                 setIsDropdownOpen(false);
                                 navigate("/profile");
@@ -346,7 +346,7 @@ const Navbar = () => {
                             >
                               <Settings className="w-4 h-4" />
                               <span>Edit Profile</span>
-                            </motion.button>
+                            </motion.button> */}
                             <div className="border-t border-gray-100 my-2" />
                             <motion.button
                               whileHover={{

@@ -178,30 +178,49 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
+    // Create a timeout promise that rejects after 5 seconds
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error("Request timeout - redirecting to login"));
+      }, 5000);
+    });
+
+    // Create the actual API request promise
+    const requestPromise = axios.post(`${Backendurl}/api/users/register`, {
+      ...formData,
+      role: "user",
+    });
+
     try {
-      const response = await axios.post(
-        `${Backendurl}/api/users/register`,
-        { ...formData, role: "user" }
-      );
-      
+      // Race between the API request and the timeout
+      const response = await Promise.race([requestPromise, timeoutPromise]);
+
       if (response.data.success) {
         // ✅ DO NOT SAVE ANYTHING TO LOCALSTORAGE
-        // localStorage.removeItem("token"); // Remove if exists
-        // localStorage.removeItem("user");  // Remove if exists
-        
-        toast.success("Account created successfully! Please sign in to continue.");
-        
+        toast.success(
+          "Account created successfully! Please sign in to continue."
+        );
+
         // ✅ STRICTLY REDIRECT TO LOGIN PAGE
         navigate("/login", { replace: true });
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.error("Error signing up:", error);
-      toast.error(
-        error.response?.data?.message || "An error occurred. Please try again."
-      );
+      // Check if it's a timeout error
+      if (error.message === "Request timeout - redirecting to login") {
+        toast.warning(
+          "Request is taking too long. Redirecting to login page..."
+        );
+        // Redirect to login after timeout
+        navigate("/login", { replace: true });
+      } else {
+        console.error("Error signing up:", error);
+        toast.error(
+          error.response?.data?.message || "An error occurred. Please try again."
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -301,7 +320,8 @@ const Signup = () => {
                 >
                   <AlertCircle className="w-4 h-4 text-blue-600" />
                   <span>
-                    You'll need to <strong>sign in after signing up</strong> to continue
+                    You'll need to <strong>sign in after signing up</strong> to
+                    continue
                   </span>
                 </motion.div>
 
