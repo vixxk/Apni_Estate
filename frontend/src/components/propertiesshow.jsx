@@ -194,6 +194,7 @@ const PropertiesShow = () => {
 
   const viewAllProperties = () => {
     navigate('/properties');
+    window.scrollTo(0, 0);
   };
 
   if (loading) {

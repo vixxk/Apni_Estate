@@ -415,7 +415,7 @@ const Footer = () => {
               </span>
             </motion.p>
 
-            <motion.a
+            {/* <motion.a
               href="/properties"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -427,7 +427,7 @@ const Footer = () => {
               <Sparkles className="w-4 h-4" />
               Explore Properties
               <ArrowRight className="w-4 h-4" />
-            </motion.a>
+            </motion.a> */}
           </div>
         </div>
       </div>

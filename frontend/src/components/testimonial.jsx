@@ -559,7 +559,10 @@ const Testimonials = () => {
             whileTap={{ scale: 0.95 }}
           >
             <a 
-              href="/contact" 
+              onClick={() => {
+              navigate("/contact");
+              window.scrollTo(0, 0);
+            }}
               className="group inline-flex items-center bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 text-white py-4 px-8 rounded-2xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
               style={{ boxShadow: "0 10px 30px rgba(59, 130, 246, 0.3)" }}
             >
