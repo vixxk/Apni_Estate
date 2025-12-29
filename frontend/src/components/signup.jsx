@@ -97,7 +97,7 @@ const Signup = () => {
     name: "",
     email: "",
     password: "",
-    role: "user", // FIXED: Always set to 'user' for this form
+    role: "user",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -178,16 +178,22 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
     try {
       const response = await axios.post(
         `${Backendurl}/api/users/register`,
-        { ...formData, role: "user" } // Ensure role is 'user'
+        { ...formData, role: "user" }
       );
+      
       if (response.data.success) {
-        localStorage.setItem("token", response.data.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.data.user));
-        toast.success("Account created successfully!");
-        navigate("/login");
+        // ✅ DO NOT SAVE ANYTHING TO LOCALSTORAGE
+        // localStorage.removeItem("token"); // Remove if exists
+        // localStorage.removeItem("user");  // Remove if exists
+        
+        toast.success("Account created successfully! Please sign in to continue.");
+        
+        // ✅ STRICTLY REDIRECT TO LOGIN PAGE
+        navigate("/login", { replace: true });
       } else {
         toast.error(response.data.message);
       }
@@ -291,11 +297,12 @@ const Signup = () => {
                   initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-4 flex items-center gap-2 bg-blue-50 border border-blue-200 
-             text-blue-700 px-4 py-3 rounded-xl text-sm"
+                    text-blue-700 px-4 py-3 rounded-xl text-sm"
                 >
                   <AlertCircle className="w-4 h-4 text-blue-600" />
                   <span>
-                    You’ll need to <strong>sign in after signing up</strong> to continue</span>
+                    You'll need to <strong>sign in after signing up</strong> to continue
+                  </span>
                 </motion.div>
 
                 {/* Stats */}
