@@ -89,7 +89,7 @@ const VendorRegister = () => {
     email: '',
     password: '',
     phone: '',
-    role: 'vendor' // Fixed: Always 'vendor' for this form
+    role: 'vendor'
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -174,22 +174,49 @@ const VendorRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    // Create a timeout promise that rejects after 5 seconds
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error('Request timeout - redirecting to login'));
+      }, 5000);
+    });
+
+    // Create the actual API request promise
+    const requestPromise = axios.post(`${Backendurl}/api/users/register`, {
+      ...formData,
+      role: 'vendor',
+    });
+
     try {
-      const response = await axios.post(
-        `${Backendurl}/api/users/register`, 
-        { ...formData, role: 'vendor' } // Ensure role is 'vendor'
-      );
+      // Race between the API request and the timeout
+      const response = await Promise.race([requestPromise, timeoutPromise]);
+
       if (response.data.success) {
-        localStorage.setItem('token', response.data.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.data.user));
-        toast.success('Vendor account created successfully!');
-        navigate('/vendor/add-service');
+        // ✅ DO NOT SAVE ANYTHING TO LOCALSTORAGE
+        toast.success(
+          'Vendor account created successfully! Please sign in to continue.'
+        );
+
+        // ✅ STRICTLY REDIRECT TO LOGIN PAGE
+        navigate('/login', { replace: true });
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.error('Error creating vendor account:', error);
-      toast.error(error.response?.data?.message || 'An error occurred. Please try again.');
+      // Check if it's a timeout error
+      if (error.message === 'Request timeout - redirecting to login') {
+        toast.warning(
+          'Request is taking too long. Redirecting to login page...'
+        );
+        // Redirect to login after timeout
+        navigate('/login', { replace: true });
+      } else {
+        console.error('Error creating vendor account:', error);
+        toast.error(
+          error.response?.data?.message || 'An error occurred. Please try again.'
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -286,6 +313,18 @@ const VendorRegister = () => {
                   <h2 className="text-2xl font-bold text-gray-800">Vendor Registration</h2>
                 </div>
                 <p className="text-gray-600">Join our network of trusted property vendors</p>
+                
+                <motion.div
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 flex items-center gap-2 bg-indigo-50 border border-indigo-200 
+                    text-indigo-700 px-4 py-3 rounded-xl text-sm"
+                >
+                  <AlertCircle className="w-4 h-4 text-indigo-600" />
+                  <span>
+                    You'll need to <strong>sign in after registration</strong> to access vendor dashboard
+                  </span>
+                </motion.div>
                 
                 {/* Vendor Benefits */}
                 <div className="flex items-center justify-center space-x-6 mt-4 text-sm text-gray-500">
