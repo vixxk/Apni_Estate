@@ -265,10 +265,10 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
                 <span className="font-medium">{vendorName}</span>
               </div>
             </div>
-            <div className="flex items-center gap-1 text-gray-500 text-sm">
+            {/* <div className="flex items-center gap-1 text-gray-500 text-sm">
               <Eye className="w-4 h-4" />
               <span>{property.views || Math.floor(Math.random() * 100) + 20}</span>
-            </div>
+            </div> */}
           </div>
 
           {/* Location */}
