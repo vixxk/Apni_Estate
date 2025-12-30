@@ -162,6 +162,7 @@ const Navbar = () => {
     logout();
     setIsDropdownOpen(false);
     setIsMobileMenuOpen(false);
+    navigate("/");
   };
 
   const handleGoToProfile = () => {
