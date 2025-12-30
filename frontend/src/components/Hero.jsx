@@ -5,6 +5,7 @@ import { RadialGradient } from "react-text-gradients";
 import { useNavigate } from "react-router-dom";
 
 
+
 /* ================= IMAGE IMPORTS ================= */
 import constructionServices from "../assets/construction.png";
 import interior from "../assets/interior.png";
@@ -18,6 +19,7 @@ import apartments from "../assets/apartments.png";
 import shops from "../assets/shops.png";
 import commercialPlots from "../assets/commercial-plots.png";
 // import farmHouse from "../assets/farm-house.png";
+
 
 
 /* ================= DATA ================= */
@@ -35,6 +37,7 @@ const services = [
   { title: "Plots", img: commercialPlots },
   // { title: "Farm House", img: farmHouse },
 ];
+
 
 
 const stats = [
@@ -65,6 +68,7 @@ const stats = [
 ];
 
 
+
 /* ================= ANIMATIONS ================= */
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -73,6 +77,7 @@ const containerVariants = {
     transition: { staggerChildren: 0.12 },
   },
 };
+
 
 
 const itemVariants = {
@@ -86,10 +91,12 @@ const itemVariants = {
 };
 
 
+
 const floatingAnimation = {
   y: [-10, 10, -10],
   transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
 };
+
 
 
 const sparkleAnimation = {
@@ -99,9 +106,11 @@ const sparkleAnimation = {
 };
 
 
+
 /* ================= COMPONENT ================= */
 const Hero = () => {
   const navigate = useNavigate();
+
 
 
   return (
@@ -109,6 +118,7 @@ const Hero = () => {
       {/* ================= BACKGROUND ================= */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50" />
+
 
 
         <motion.div
@@ -124,6 +134,7 @@ const Hero = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/10" />
         </motion.div>
+
 
 
         {/* Floating blobs */}
@@ -142,6 +153,7 @@ const Hero = () => {
         </div>
 
 
+
         {/* Sparkles */}
         <div className="absolute inset-0 pointer-events-none">
           {[...Array(6)].map((_, i) => (
@@ -158,6 +170,7 @@ const Hero = () => {
       </div>
 
 
+
       {/* ================= CONTENT ================= */}
       <div className="relative z-10 min-h-screen flex items-center px-4 py-8">
         <div className="max-w-7xl mx-auto w-full">
@@ -167,18 +180,6 @@ const Hero = () => {
             animate="visible"
             className="text-center"
           >
-            {/* Trust Badge */}
-            <motion.div
-              variants={itemVariants}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 rounded-full shadow mb-8"
-            >
-              {/* <Shield className="w-4 h-4 text-blue-600" />
-              <span className="font-semibold text-blue-700">
-                Trusted by 50,000+ families
-              </span> */}
-            </motion.div>
-
-
             {/* Heading */}
             <motion.div variants={itemVariants} className="mb-12">
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-6">
@@ -190,11 +191,13 @@ const Hero = () => {
               </h1>
 
 
+
               <p className="hidden sm:block text-xl sm:text-2xl text-gray-700 max-w-3xl mx-auto">
                 All property services you need — buying, selling, construction &
                 more
               </p>
             </motion.div>
+
 
 
             {/* ================= SERVICES GRID ================= */}
@@ -207,6 +210,7 @@ const Hero = () => {
                   ALL YOUR <span className="text-purple-600">REAL ESTATE</span>{" "}
                   NEEDS IN ONE PLACE
                 </h2>
+
 
 
                 {/* Mobile: 4 columns, Tablet+: Original layout */}
@@ -231,6 +235,7 @@ const Hero = () => {
                       </div>
 
 
+
                       <p className="font-semibold text-gray-800 text-center text-[10px] sm:text-base leading-tight">
                         {service.title}
                       </p>
@@ -239,6 +244,7 @@ const Hero = () => {
                 </div>
               </div>
             </motion.div>
+
 
 
             {/* ================= STATS ================= */}
@@ -273,6 +279,7 @@ const Hero = () => {
     </div>
   );
 };
+
 
 
 export default Hero;
