@@ -1,5 +1,12 @@
 import { motion } from "framer-motion";
-import { Shield, Sparkles, Users, Home, Star, MessageCircle } from "lucide-react";
+import {
+  Shield,
+  Sparkles,
+  Users,
+  Home,
+  Star,
+  MessageCircle,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import heroimage from "../assets/images/heroimage.png";
 import { RadialGradient } from "react-text-gradients";
@@ -39,10 +46,30 @@ const services = [
 ];
 
 const stats = [
-  { icon: Users, value: "50K+", label: "Happy Customers", color: "from-blue-500 to-cyan-500" },
-  { icon: Home, value: "10K+", label: "Properties Listed", color: "from-green-500 to-emerald-500" },
-  { icon: Star, value: "4.9", label: "Average Rating", color: "from-yellow-500 to-orange-500" },
-  { icon: Shield, value: "100%", label: "Verified Properties", color: "from-purple-500 to-pink-500" },
+  {
+    icon: Users,
+    value: "50K+",
+    label: "Happy Customers",
+    color: "from-blue-500 to-cyan-500",
+  },
+  {
+    icon: Home,
+    value: "10K+",
+    label: "Properties Listed",
+    color: "from-green-500 to-emerald-500",
+  },
+  {
+    icon: Star,
+    value: "4.9",
+    label: "Average Rating",
+    color: "from-yellow-500 to-orange-500",
+  },
+  {
+    icon: Shield,
+    value: "100%",
+    label: "Verified Properties",
+    color: "from-purple-500 to-pink-500",
+  },
 ];
 
 /* ================= ANIMATIONS ================= */
@@ -130,7 +157,10 @@ const Hero = () => {
             className="absolute top-20 left-10 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl"
           />
           <motion.div
-            animate={{ y: [10, -10, 10], transition: { duration: 8, repeat: Infinity } }}
+            animate={{
+              y: [10, -10, 10],
+              transition: { duration: 8, repeat: Infinity },
+            }}
             className="absolute top-40 right-20 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"
           />
         </div>
@@ -153,7 +183,12 @@ const Hero = () => {
       {/* ================= CONTENT ================= */}
       <div className="relative z-10 min-h-screen flex items-center px-4 py-8 md:pt-24 lg:pt-28">
         <div className="max-w-7xl mx-auto w-full">
-          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="text-center">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="text-center"
+          >
             {/* Heading */}
             <motion.div variants={itemVariants} className="mb-12">
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-6">
@@ -170,10 +205,14 @@ const Hero = () => {
             </motion.div>
 
             {/* ================= SERVICES GRID ================= */}
-            <motion.div variants={itemVariants} className="max-w-6xl mx-auto mb-12">
+            <motion.div
+              variants={itemVariants}
+              className="max-w-6xl mx-auto mb-12"
+            >
               <div className="bg-white/95 rounded-3xl p-4 sm:p-8 shadow-2xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-10">
-                  All Your <span className="text-purple-600">Real Estate</span> Needs In One Place
+                  All Your <span className="text-purple-600">Real Estate</span>{" "}
+                  Needs In One Place
                 </h2>
 
                 <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6">
@@ -185,7 +224,11 @@ const Hero = () => {
                       className="bg-white rounded-xl sm:rounded-2xl p-2 sm:p-5 shadow-md hover:shadow-xl cursor-pointer group"
                     >
                       <div className="w-12 h-12 sm:w-24 sm:h-24 mx-auto mb-2 sm:mb-4 rounded-lg sm:rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
-                        <img src={service.img} alt={service.title} className="w-8 h-8 sm:w-16 sm:h-16 object-contain" />
+                        <img
+                          src={service.img}
+                          alt={service.title}
+                          className="w-8 h-8 sm:w-16 sm:h-16 object-contain"
+                        />
                       </div>
 
                       <p className="font-semibold text-gray-800 text-center text-[10px] sm:text-base leading-tight">
@@ -198,18 +241,27 @@ const Hero = () => {
             </motion.div>
 
             {/* ================= STATS ================= */}
-            <motion.div variants={containerVariants} className="grid grid-cols-4 gap-3 sm:gap-6 lg:gap-10 max-w-3xl mx-auto">
+            <motion.div
+              variants={containerVariants}
+              className="grid grid-cols-4 gap-3 sm:gap-6 lg:gap-10 max-w-3xl mx-auto"
+            >
               {stats.map((stat, i) => (
                 <motion.div
                   key={i}
                   variants={itemVariants}
                   className="bg-white/90 rounded-lg sm:rounded-xl p-2 sm:p-4 shadow text-center hover:shadow-xl transition-all"
                 >
-                  <div className={`w-8 h-8 sm:w-12 sm:h-11 mx-auto mb-1 sm:mb-3 bg-gradient-to-br ${stat.color} rounded-lg sm:rounded-xl flex items-center justify-center`}>
+                  <div
+                    className={`w-8 h-8 sm:w-12 sm:h-11 mx-auto mb-1 sm:mb-3 bg-gradient-to-br ${stat.color} rounded-lg sm:rounded-xl flex items-center justify-center`}
+                  >
                     <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
-                  <div className="text-base sm:text-2xl font-bold text-gray-900">{stat.value}</div>
-                  <div className="text-[9px] sm:text-xs text-gray-600 leading-tight">{stat.label}</div>
+                  <div className="text-base sm:text-2xl font-bold text-gray-900">
+                    {stat.value}
+                  </div>
+                  <div className="text-[9px] sm:text-xs text-gray-600 leading-tight">
+                    {stat.label}
+                  </div>
                 </motion.div>
               ))}
             </motion.div>
@@ -223,13 +275,35 @@ const Hero = () => {
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0, opacity: 0 }}
-          whileHover={{ scale: 1.1 }}
+          whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => navigate("/chat")}
-          className="fixed bottom-6 right-6 bg-yellow-400 p-4 rounded-full shadow-2xl z-[9999]"
+          className="
+      fixed
+      bottom-4 right-4
+      md:bottom-6 md:right-6
+      bg-yellow-400
+      p-3 md:p-4
+      rounded-full
+      shadow-xl
+      z-[9999]
+    "
         >
-          <MessageCircle className="w-6 h-6 text-white" />
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+          <MessageCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
+
+          <span
+            className="
+        absolute
+        -top-1 -right-1
+        bg-red-500
+        text-white
+        text-[10px] md:text-xs
+        font-bold
+        rounded-full
+        w-5 h-5 md:w-6 md:h-6
+        flex items-center justify-center
+      "
+          >
             3
           </span>
         </motion.button>
