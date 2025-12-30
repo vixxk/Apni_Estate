@@ -112,7 +112,7 @@ const VendorProfile = () => {
       const savedProps = data?.data?.properties || [];
       setFavourites(savedProps.map((p) => p._id));
     } catch (err) {
-      console.error("Error fetching favourites:", err);
+      console.error("Error fetching favorites:", err);
     }
   };
 

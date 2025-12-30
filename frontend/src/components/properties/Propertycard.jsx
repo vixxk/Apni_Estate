@@ -206,13 +206,13 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
           </motion.button>
         </div>
 
-        {/* Property tags - FIXED: Reduced padding */}
-        <div className="absolute top-2 sm:top-3 md:top-4 left-2 sm:left-3 md:left-4 flex flex-col gap-1 sm:gap-1.5 md:gap-2">
+        {/* Property tags - FIXED: Reduced padding, max-width to prevent overlap */}
+        <div className="absolute top-2 sm:top-3 md:top-4 left-2 sm:left-3 md:left-4 flex flex-col gap-1 sm:gap-1.5 md:gap-2 max-w-[calc(100%-80px)] sm:max-w-[calc(100%-100px)]">
           <motion.span
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="bg-gradient-to-r from-blue-600 to-blue-500 text-white 
-              px-1.5 py-0.5 sm:px-2 sm:py-0.5 md:px-2.5 md:py-1 rounded-full text-[9px] sm:text-[10px] md:text-xs font-semibold shadow-lg inline-block w-fit"
+              px-1.5 py-0.5 sm:px-2 sm:py-0.5 md:px-2.5 md:py-1 rounded-full text-[9px] sm:text-[10px] md:text-xs font-semibold shadow-lg inline-block w-fit max-w-full truncate"
           >
             {property.type}
           </motion.span>
@@ -220,7 +220,7 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="bg-gradient-to-r from-green-600 to-green-500 text-white 
-              px-1.5 py-0.5 sm:px-2 sm:py-0.5 md:px-2.5 md:py-1 rounded-full text-[9px] sm:text-[10px] md:text-xs font-semibold shadow-lg inline-block w-fit"
+              px-1.5 py-0.5 sm:px-2 sm:py-0.5 md:px-2.5 md:py-1 rounded-full text-[9px] sm:text-[10px] md:text-xs font-semibold shadow-lg inline-block w-fit max-w-full truncate"
           >
             {property.availability}
           </motion.span>
@@ -269,10 +269,10 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
             <span className="truncate">{property.location}</span>
           </div>
 
-          {/* Title - Smaller on mobile */}
+          {/* Title - FIXED: Allows 2 lines, proper spacing */}
           <h3
             className="text-sm sm:text-base md:text-xl font-semibold text-gray-900 line-clamp-2
-            group-hover:text-blue-600 transition-colors leading-tight"
+            group-hover:text-blue-600 transition-colors leading-tight pr-2"
           >
             {property.title}
           </h3>

@@ -224,7 +224,7 @@ const SavedProperties = () => {
             transition={{ delay: 0.3 }}
             className="text-2xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 sm:mb-4"
           >
-            No Favourite Properties Yet
+            No Favorite Properties Yet
           </motion.h1>
 
           <motion.p
@@ -321,7 +321,7 @@ const SavedProperties = () => {
               </motion.div>
               <div className="min-w-0 flex-1">
                 <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent truncate">
-                  Favourite Properties
+                  Favorite Properties
                 </h1>
                 <p className="text-gray-600 mt-0.5 sm:mt-1 text-xs sm:text-sm">
                   {properties.length} {properties.length === 1 ? "property" : "properties"} saved
