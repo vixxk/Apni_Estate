@@ -58,10 +58,7 @@ const PropertyDetails = () => {
     }
 
     for (let i = 0; i < 4; i++) {
-      s = s
-        .replace(/\\\\/g, "\\")
-        .replace(/\\"/g, '"')
-        .replace(/\\'/g, "'");
+      s = s.replace(/\\\\/g, "\\").replace(/\\"/g, '"').replace(/\\'/g, "'");
     }
 
     const trimmed = s.trim();
@@ -182,9 +179,7 @@ const PropertyDetails = () => {
           setProperty(mapped);
           setError(null);
         } else {
-          setError(
-            response.data.message || "Failed to load property details."
-          );
+          setError(response.data.message || "Failed to load property details.");
           setProperty(null);
         }
       } catch (err) {
@@ -317,7 +312,9 @@ const PropertyDetails = () => {
           <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
             <X className="w-10 h-10 text-white" />
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">Property Not Found</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            Property Not Found
+          </h3>
           <p className="text-red-600 font-medium mb-6">
             {error || "The property you're looking for doesn't exist."}
           </p>
@@ -342,9 +339,24 @@ const PropertyDetails = () => {
   const hasImages = Array.isArray(images) && images.length > 0;
 
   const propertyFeatures = [
-    { value: property.beds, label: "Bedrooms", icon: BedDouble, color: "from-blue-500 to-cyan-500" },
-    { value: property.baths, label: "Bathrooms", icon: Bath, color: "from-emerald-500 to-teal-500" },
-    { value: property.sqft, label: "sq ft", icon: Maximize, color: "from-purple-500 to-pink-500" },
+    {
+      value: property.beds,
+      label: "Bedrooms",
+      icon: BedDouble,
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      value: property.baths,
+      label: "Bathrooms",
+      icon: Bath,
+      color: "from-emerald-500 to-teal-500",
+    },
+    {
+      value: property.sqft,
+      label: "sq ft",
+      icon: Maximize,
+      color: "from-purple-500 to-pink-500",
+    },
   ].filter((feature) => feature.value > 0);
 
   const hasContactInfo =
@@ -420,16 +432,23 @@ const PropertyDetails = () => {
           <div className="relative h-[320px] sm:h-[450px] lg:h-[550px] bg-gray-900 rounded-t-3xl overflow-hidden">
             <AnimatePresence mode="wait">
               {hasImages ? (
-                <motion.img
+                <motion.a
                   key={activeImage}
-                  src={images[activeImage]}
-                  alt={`${property.title} - View ${activeImage + 1}`}
+                  href={images[activeImage]}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   initial={{ opacity: 0, scale: 1.1 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.4 }}
-                  className="w-full h-full object-cover"
-                />
+                  className="block w-full h-full cursor-zoom-in"
+                >
+                  <img
+                    src={images[activeImage]}
+                    alt={`${property.title} - View ${activeImage + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </motion.a>
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-gradient-to-br from-gray-800 to-gray-900">
                   <HomeIcon className="w-20 h-20 mb-4 opacity-30" />
@@ -481,9 +500,10 @@ const PropertyDetails = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 
-                  bg-black/70 backdrop-blur-md text-white px-5 py-2.5 md:px-6 md:py-3 
-                  rounded-full text-sm md:text-base font-semibold shadow-lg z-10 border border-white/20"
+                className="absolute bottom-2 md:bottom-4 left-[45%] -translate-x-1/2
+  bg-black/75 backdrop-blur-md text-white px-4 py-2 md:px-5 md:py-2.5
+  rounded-full text-sm md:text-base font-semibold shadow-lg z-10 border border-white/20
+  lg:hidden"
               >
                 {activeImage + 1} / {images.length}
               </motion.div>
@@ -542,7 +562,9 @@ const PropertyDetails = () => {
                       className="flex items-start gap-2 text-gray-600"
                     >
                       <MapPin className="w-5 h-5 md:w-6 md:h-6 mt-0.5 flex-shrink-0 text-blue-600" />
-                      <span className="text-base md:text-lg">{property.location}</span>
+                      <span className="text-base md:text-lg">
+                        {property.location}
+                      </span>
                     </motion.div>
                   )}
                 </div>
@@ -555,7 +577,9 @@ const PropertyDetails = () => {
                   className="lg:min-w-[280px]"
                 >
                   <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 shadow-xl">
-                    <p className="text-white/80 text-sm font-medium mb-1">Price</p>
+                    <p className="text-white/80 text-sm font-medium mb-1">
+                      Price
+                    </p>
                     <p className="text-3xl md:text-4xl font-bold text-white mb-2">
                       ₹{Number(property.price).toLocaleString("en-IN")}
                     </p>
@@ -578,7 +602,9 @@ const PropertyDetails = () => {
                   className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl border border-purple-200"
                 >
                   <Building className="w-4 h-4 text-purple-600" />
-                  <span className="text-purple-900 font-semibold text-sm">{property.type}</span>
+                  <span className="text-purple-900 font-semibold text-sm">
+                    {property.type}
+                  </span>
                 </motion.div>
               )}
             </div>
@@ -599,7 +625,9 @@ const PropertyDetails = () => {
                       whileHover={{ y: -5, scale: 1.02 }}
                       className="bg-gradient-to-br from-gray-50 to-blue-50 p-5 md:p-6 rounded-2xl text-center border-2 border-white shadow-md hover:shadow-xl transition-all duration-300"
                     >
-                      <div className={`w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg`}>
+                      <div
+                        className={`w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg`}
+                      >
                         <Icon className="w-6 h-6 md:w-7 md:h-7 text-white" />
                       </div>
                       <p className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">
@@ -659,8 +687,12 @@ const PropertyDetails = () => {
                             <Phone className="w-5 h-5 text-blue-600" />
                           </div>
                           <div className="flex-1">
-                            <p className="text-xs text-gray-500 font-medium">Primary</p>
-                            <p className="text-gray-900 font-semibold">{property.phone}</p>
+                            <p className="text-xs text-gray-500 font-medium">
+                              Primary
+                            </p>
+                            <p className="text-gray-900 font-semibold">
+                              {property.phone}
+                            </p>
                           </div>
                         </a>
                       )}
@@ -673,8 +705,12 @@ const PropertyDetails = () => {
                             <Phone className="w-5 h-5 text-emerald-600" />
                           </div>
                           <div className="flex-1">
-                            <p className="text-xs text-gray-500 font-medium">Alternate</p>
-                            <p className="text-gray-900 font-semibold">{property.alternatePhone}</p>
+                            <p className="text-xs text-gray-500 font-medium">
+                              Alternate
+                            </p>
+                            <p className="text-gray-900 font-semibold">
+                              {property.alternatePhone}
+                            </p>
                           </div>
                         </a>
                       )}
@@ -687,8 +723,12 @@ const PropertyDetails = () => {
                             <Mail className="w-5 h-5 text-purple-600" />
                           </div>
                           <div className="flex-1">
-                            <p className="text-xs text-gray-500 font-medium">Email</p>
-                            <p className="text-gray-900 font-semibold truncate">{property.email}</p>
+                            <p className="text-xs text-gray-500 font-medium">
+                              Email
+                            </p>
+                            <p className="text-gray-900 font-semibold truncate">
+                              {property.email}
+                            </p>
                           </div>
                         </a>
                       )}
@@ -770,7 +810,9 @@ const PropertyDetails = () => {
                   ) : (
                     <div className="text-center py-8 text-gray-400">
                       <Building className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                      <p className="text-sm md:text-base">No amenities information available</p>
+                      <p className="text-sm md:text-base">
+                        No amenities information available
+                      </p>
                     </div>
                   )}
                 </motion.div>
@@ -796,16 +838,20 @@ const PropertyDetails = () => {
                 <p className="text-gray-600">Find this property on the map</p>
               </div>
             </div>
-            
+
             <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 mb-6 border border-gray-200">
               <div className="flex items-start gap-3">
                 <MapPin className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
-                <p className="text-gray-800 font-medium text-lg">{property.location}</p>
+                <p className="text-gray-800 font-medium text-lg">
+                  {property.location}
+                </p>
               </div>
             </div>
 
             <motion.a
-              href={`https://maps.google.com/?q=${encodeURIComponent(property.location)}`}
+              href={`https://maps.google.com/?q=${encodeURIComponent(
+                property.location
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.02 }}

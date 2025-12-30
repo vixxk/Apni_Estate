@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -17,16 +17,38 @@ const MobileBottomNav = () => {
   const { isAuthenticated } = useAuth();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const inactivityTimerRef = useRef(null);
 
-  // Hide nav on scroll down, show on scroll up
+  // Reset inactivity timer - shows nav and starts countdown
+  const resetInactivityTimer = () => {
+    setIsVisible(true);
+    
+    // Clear existing timer
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+    
+    // Set new timer to hide after 3 seconds of inactivity
+    inactivityTimerRef.current = setTimeout(() => {
+      setIsVisible(false);
+    }, 2500);
+  };
+
+  // Handle scroll with inactivity timer
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
+      // Show nav on scroll up, hide on scroll down (when scrolled past 100px)
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         setIsVisible(false);
+        // Clear timer when manually hiding
+        if (inactivityTimerRef.current) {
+          clearTimeout(inactivityTimerRef.current);
+        }
       } else {
-        setIsVisible(true);
+        // Show nav and reset inactivity timer
+        resetInactivityTimer();
       }
       
       setLastScrollY(currentScrollY);
@@ -35,6 +57,33 @@ const MobileBottomNav = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
+
+  // Detect user activity (touch, mouse movement, clicks)
+  useEffect(() => {
+    const handleUserActivity = () => {
+      resetInactivityTimer();
+    };
+
+    // Listen for various user interactions
+    const events = ['touchstart', 'touchmove', 'mousemove', 'click', 'keydown'];
+    
+    events.forEach(event => {
+      window.addEventListener(event, handleUserActivity, { passive: true });
+    });
+
+    // Initial timer on mount
+    resetInactivityTimer();
+
+    // Cleanup
+    return () => {
+      events.forEach(event => {
+        window.removeEventListener(event, handleUserActivity);
+      });
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current);
+      }
+    };
+  }, []);
 
   const navItems = isAuthenticated
     ? [
@@ -56,16 +105,6 @@ const MobileBottomNav = () => {
           activeColor: "text-emerald-600",
           shadowColor: "shadow-emerald-400/30",
         },
-        // {
-        //   name: "AI Assistant",
-        //   path: "/ai-property-hub",
-        //   icon: MessageCircle,
-        //   color: "from-purple-500 to-pink-500",
-        //   bgColor: "bg-gradient-to-br from-purple-100/80 to-pink-100/80",
-        //   activeColor: "text-purple-600",
-        //   shadowColor: "shadow-purple-400/30",
-        //   badge: true,
-        // },
         {
           name: "Favorites",
           path: "/saved",
@@ -140,6 +179,8 @@ const MobileBottomNav = () => {
           }}
           className="md:hidden fixed bottom-0 left-0 right-0 z-50 pointer-events-none"
           style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+          onMouseEnter={resetInactivityTimer}
+          onTouchStart={resetInactivityTimer}
         >
           {/* Floating container */}
           <div className="px-5 pb-5 pointer-events-none">
@@ -187,6 +228,7 @@ const MobileBottomNav = () => {
                         key={item.name}
                         to={item.path}
                         className="relative flex flex-col items-center justify-center flex-1 py-1.5 px-1 group"
+                        onClick={resetInactivityTimer}
                       >
                         {/* Active indicator background - soft gradient pill */}
                         <AnimatePresence>
