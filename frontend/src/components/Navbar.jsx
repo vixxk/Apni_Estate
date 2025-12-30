@@ -23,7 +23,7 @@ import logo from "../assets/images/apniestate-logo.png";
 import { useAuth } from "../context/AuthContext";
 import PropTypes from "prop-types";
 import { useMobileMenu } from "../context/MobileMenuContext";
-
+import { Bell } from "lucide-react";
 
 // Enhanced Animation Variants
 const navVariants = {
@@ -39,7 +39,6 @@ const navVariants = {
   },
 };
 
-
 const logoVariants = {
   hidden: { opacity: 0, scale: 0.8 },
   visible: {
@@ -53,7 +52,6 @@ const logoVariants = {
   },
 };
 
-
 const floatingAnimation = {
   y: [-2, 2, -2],
   transition: {
@@ -62,7 +60,6 @@ const floatingAnimation = {
     ease: "easeInOut",
   },
 };
-
 
 const glowAnimation = {
   boxShadow: [
@@ -77,7 +74,6 @@ const glowAnimation = {
   },
 };
 
-
 const sparkleVariants = {
   animate: {
     scale: [1, 1.3, 1],
@@ -90,7 +86,6 @@ const sparkleVariants = {
     },
   },
 };
-
 
 // Mobile Drawer Animation Variants (from right)
 const drawerVariants = {
@@ -115,28 +110,23 @@ const drawerVariants = {
   },
 };
 
-
 const overlayVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
   exit: { opacity: 0 },
 };
 
-
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { isMobileMenuOpen, setIsMobileMenuOpen } = useMobileMenu(); 
+  const { isMobileMenuOpen, setIsMobileMenuOpen } = useMobileMenu();
   const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef(null);
-
 
   const { user, logout, isAuthenticated } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
-
   const isVendor = user?.role === "vendor";
-
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -145,37 +135,30 @@ const Navbar = () => {
       }
     };
 
-
     if (isDropdownOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownOpen]);
 
-
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
 
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
-
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
-
 
   const handleLogout = () => {
     logout();
@@ -184,12 +167,10 @@ const Navbar = () => {
     navigate("/");
   };
 
-
   const handleGoToProfile = () => {
     setIsDropdownOpen(false);
     navigate("/profile");
   };
-
 
   const getInitials = (name) => {
     if (!name) return "U";
@@ -199,7 +180,6 @@ const Navbar = () => {
       .join("")
       .toUpperCase();
   };
-
 
   return (
     <>
@@ -214,7 +194,6 @@ const Navbar = () => {
         }`}
       >
         <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
-
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -234,7 +213,6 @@ const Navbar = () => {
                   className="w-full h-full object-cover rounded-xl shadow-lg"
                 />
 
-
                 <motion.div
                   animate={floatingAnimation}
                   className="absolute -top-1 -right-1"
@@ -242,7 +220,6 @@ const Navbar = () => {
                   <Sparkles className="w-3 h-3 text-yellow-300" />
                 </motion.div>
               </motion.div>
-
 
               <div className="flex flex-col">
                 <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent group-hover:from-indigo-600 group-hover:via-blue-600 group-hover:to-purple-600 transition-all duration-500">
@@ -254,12 +231,30 @@ const Navbar = () => {
               </div>
             </Link>
 
-
             <div className="hidden md:flex items-center space-x-8">
               <NavLinks currentPath={location.pathname} isVendor={isVendor} />
 
-
               <div className="flex items-center space-x-4">
+                {isVendor && (
+                  <motion.button
+                    onClick={() => navigate("/chat")}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="relative p-2 rounded-xl hover:bg-blue-50 transition-colors"
+                    aria-label="Notifications"
+                  >
+                    <Bell className="w-5 h-5 text-gray-700" />
+
+                    {/* Notification badge */}
+                    <span
+                      className="absolute -top-1 -right-1 w-5 h-5 rounded-full 
+      bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow"
+                    >
+                      3
+                    </span>
+                  </motion.button>
+                )}
+
                 {isAuthenticated ? (
                   <div className="flex items-center space-x-3">
                     <div className="relative" ref={dropdownRef}>
@@ -296,7 +291,6 @@ const Navbar = () => {
                           <ChevronDown className="w-4 h-4 text-gray-400" />
                         </motion.div>
                       </motion.button>
-
 
                       <AnimatePresence>
                         {isDropdownOpen && (
@@ -340,7 +334,6 @@ const Navbar = () => {
                               </div>
                             </div>
 
-
                             <div className="py-2">
                               <motion.button
                                 whileHover={{
@@ -353,7 +346,6 @@ const Navbar = () => {
                                 <UserCircle className="w-4 h-4" />
                                 <span>My Profile</span>
                               </motion.button>
-
 
                               {isVendor && (
                                 <motion.button
@@ -372,7 +364,6 @@ const Navbar = () => {
                                 </motion.button>
                               )}
 
-
                               <motion.button
                                 whileHover={{
                                   x: 4,
@@ -387,7 +378,6 @@ const Navbar = () => {
                                 <Heart className="w-4 h-4" />
                                 <span>Favourite Properties</span>
                               </motion.button>
-
 
                               <div className="border-t border-gray-100 my-2" />
                               <motion.button
@@ -442,29 +432,47 @@ const Navbar = () => {
               </div>
             </div>
 
+            {/* MOBILE ICONS (Bell + Hamburger) */}
+            <div className="md:hidden flex items-center gap-2">
+              {/* 🔔 Bell icon – Vendor only */}
+              {isVendor && (
+                <motion.button
+                  onClick={() => navigate("/chat")}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="relative p-2.5 rounded-xl hover:bg-gray-100 transition-colors"
+                  aria-label="Notifications"
+                >
+                  <Bell className="w-5 h-5 text-gray-700" />
+                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow">
+                    3
+                  </span>
+                </motion.button>
+              )}
 
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              onClick={toggleMobileMenu}
-              className="md:hidden relative p-2.5 rounded-xl hover:bg-gray-100 transition-colors focus:outline-none"
-              aria-label="Toggle menu"
-              aria-expanded={isMobileMenuOpen}
-            >
-              <motion.div
-                animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
-                transition={{ duration: 0.3 }}
+              {/* ☰ Hamburger menu */}
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={toggleMobileMenu}
+                className="relative p-2.5 rounded-xl hover:bg-gray-100 transition-colors focus:outline-none"
+                aria-label="Toggle menu"
+                aria-expanded={isMobileMenuOpen}
               >
-                {isMobileMenuOpen ? (
-                  <X className="w-6 h-6 text-gray-700" />
-                ) : (
-                  <Menu className="w-6 h-6 text-gray-700" />
-                )}
-              </motion.div>
-            </motion.button>
+                <motion.div
+                  animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {isMobileMenuOpen ? (
+                    <X className="w-6 h-6 text-gray-700" />
+                  ) : (
+                    <Menu className="w-6 h-6 text-gray-700" />
+                  )}
+                </motion.div>
+              </motion.button>
+            </div>
           </div>
         </div>
       </motion.nav>
-
 
       {/* Mobile Overlay */}
       <AnimatePresence>
@@ -479,7 +487,6 @@ const Navbar = () => {
           />
         )}
       </AnimatePresence>
-
 
       {/* Mobile Drawer Menu */}
       <AnimatePresence>
@@ -505,7 +512,6 @@ const Navbar = () => {
                 <X className="w-5 h-5 text-white" />
               </button>
 
-
               {/* Logo & Brand */}
               <div
                 className={`flex items-center space-x-3 ${
@@ -528,7 +534,6 @@ const Navbar = () => {
                   </span>
                 </div>
               </div>
-
 
               {/* User Info */}
               {isAuthenticated ? (
@@ -567,7 +572,6 @@ const Navbar = () => {
               ) : null}
             </div>
 
-
             {/* Navigation Links */}
             <div className="px-4 py-6">
               {/* Special Feature */}
@@ -589,7 +593,6 @@ const Navbar = () => {
                     <BotMessageSquare className="w-8 h-8 text-indigo-600" />
                   </div>
 
-
                   {/* Text */}
                   <div className="flex flex-col">
                     <span className="text-base font-bold">AI Property Hub</span>
@@ -598,14 +601,12 @@ const Navbar = () => {
                     </span>
                   </div>
 
-
                   {/* NEW badge */}
                   <span className="ml-auto h-fit text-xs bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full font-bold shadow">
                     NEW
                   </span>
                 </Link>
               </div>
-
 
               {/* Navigation Section */}
               <div className="mb-4">
@@ -646,8 +647,8 @@ const Navbar = () => {
                 />
               </div>
 
-                            {/* Original Register Button - Kept for unauthenticated users */}
-                            {!isAuthenticated && (
+              {/* Original Register Button - Kept for unauthenticated users */}
+              {!isAuthenticated && (
                 <div className="mb-6 space-y-3 mt-4">
                   <Link
                     to="/register"
@@ -659,7 +660,6 @@ const Navbar = () => {
                   </Link>
                 </div>
               )}
-
 
               {/* Account Section - When Authenticated */}
               {isAuthenticated && (
@@ -699,7 +699,6 @@ const Navbar = () => {
                   </button>
                 </div>
               )}
-
 
               {/* Account Section - When Not Authenticated */}
               {!isAuthenticated && (
@@ -741,9 +740,6 @@ const Navbar = () => {
                   </Link>
                 </div>
               )}
-
-
-
             </div>
           </motion.div>
         )}
@@ -751,7 +747,6 @@ const Navbar = () => {
     </>
   );
 };
-
 
 const NavLinks = ({ currentPath, isVendor }) => {
   const navLinks = [
@@ -785,29 +780,23 @@ const NavLinks = ({ currentPath, isVendor }) => {
     },
   ];
 
-
   const [sparkleKey, setSparkleKey] = useState(0);
-
 
   useEffect(() => {
     const interval = setInterval(() => {
       setSparkleKey((prev) => prev + 1);
     }, 3000);
 
-
     return () => clearInterval(interval);
   }, []);
 
-
   const isAIHubActive = currentPath.startsWith("/ai-property-hub");
-
 
   return (
     <div className="flex space-x-2 items-center">
       {navLinks.map(({ name, path, icon: Icon, color, description }) => {
         const isActive =
           path === "/" ? currentPath === path : currentPath.startsWith(path);
-
 
         return (
           <motion.div
@@ -834,14 +823,12 @@ const NavLinks = ({ currentPath, isVendor }) => {
               />
               <span className="font-semibold">{name}</span>
 
-
               <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                 <div className="bg-gray-900 text-white text-xs px-2 py-1 rounded-lg whitespace-nowrap">
                   {description}
                   <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
                 </div>
               </div>
-
 
               {isActive && (
                 <motion.div
@@ -854,7 +841,6 @@ const NavLinks = ({ currentPath, isVendor }) => {
           </motion.div>
         );
       })}
-
 
       <motion.div
         whileHover={{ y: -2, scale: 1.02 }}
@@ -892,13 +878,11 @@ const NavLinks = ({ currentPath, isVendor }) => {
           </div>
           <span>AI Property Hub</span>
 
-
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             animate={isAIHubActive ? { x: [-100, 100] } : {}}
             transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
           />
-
 
           {isAIHubActive && (
             <motion.div
@@ -907,7 +891,6 @@ const NavLinks = ({ currentPath, isVendor }) => {
               initial={false}
             />
           )}
-
 
           <div className="absolute -bottom-14 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
             <div className="bg-gray-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap">
@@ -921,7 +904,6 @@ const NavLinks = ({ currentPath, isVendor }) => {
   );
 };
 
-
 // Mobile NavItem Component
 const MobileNavItem = ({
   icon: Icon,
@@ -933,7 +915,6 @@ const MobileNavItem = ({
 }) => {
   const isActive =
     path === "/" ? currentPath === path : currentPath.startsWith(path);
-
 
   return (
     <Link
@@ -957,12 +938,10 @@ const MobileNavItem = ({
   );
 };
 
-
 NavLinks.propTypes = {
   currentPath: PropTypes.string.isRequired,
   isVendor: PropTypes.bool,
 };
-
 
 MobileNavItem.propTypes = {
   icon: PropTypes.elementType.isRequired,
