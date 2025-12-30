@@ -40,7 +40,7 @@ const App = () => {
             <Navbar />
             
             {/* Main content with padding for mobile bottom nav */}
-            <main className="flex-grow pb-20 md:pb-0">
+            <main className="flex-grow min-h-[calc(100vh-theme(spacing.20))] md:min-h-0">
               <Routes>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
