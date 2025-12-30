@@ -181,7 +181,7 @@ const Hero = () => {
 
             {/* Heading */}
             <motion.div variants={itemVariants} className="mb-12">
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6">
+              <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-6">
                 <RadialGradient gradient={["circle, #3f5efb 0%, #fc466b 100%"]}>
                   Find Your Perfect
                 </RadialGradient>
