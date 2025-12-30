@@ -55,7 +55,6 @@ const VendorAddProperty = () => {
   const [loading, setLoading] = useState(false);
 
   const serviceTypes = [
-    "Buy",
     "Rent",
     "Sell",
     "Construction Services",
@@ -67,7 +66,7 @@ const VendorAddProperty = () => {
     "Construction Materials",
   ];
 
-  const categories = ["rent", "sell", "buy","N/A-"];
+  const categories = ["rent", "sale","N/A-"];
 
   // Determine what fields to show based on service type
   const isPropertyType = ["Houses", "Apartments", "Shops", "Commercial Plots", "Farm House"].includes(form.type);
