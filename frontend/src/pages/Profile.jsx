@@ -215,21 +215,69 @@ function Profile() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 mt-16">
-        <div className="text-center bg-white p-8 rounded-2xl shadow-lg max-w-md">
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <User className="w-8 h-8 text-blue-600" />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center px-4 pt-20">
+        <div className="max-w-lg w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 p-8 sm:p-10 text-center">
+          
+          {/* Icon */}
+          <div className="mx-auto mb-6 w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+            <User className="w-10 h-10 text-white" />
           </div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            Not Logged In
-          </h2>
-          <p className="text-gray-600">
-            Please sign in to view your profile.
+  
+          {/* Heading */}
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+            Your Profile Awaits
+          </h1>
+  
+          {/* Description */}
+          <p className="text-gray-600 text-sm sm:text-base mb-6">
+            Sign in to manage your profile, upload a photo, update your details,
+            and get a personalized experience.
+          </p>
+  
+          {/* Benefits */}
+          <div className="bg-blue-50 rounded-2xl p-4 mb-6 text-left">
+            <ul className="space-y-2 text-sm text-blue-900">
+              <li className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-blue-600" />
+                Edit personal details anytime
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-blue-600" />
+                Upload and manage your profile photo
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-blue-600" />
+                Secure and verified account
+              </li>
+            </ul>
+          </div>
+  
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              onClick={() => (window.location.href = "/login")}
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
+            >
+              Sign In
+            </button>
+  
+            <button
+              onClick={() => (window.location.href = "/signup")}
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white border-2 border-gray-200 text-gray-700 font-semibold hover:border-blue-400 hover:text-blue-600 transition-all"
+            >
+              Create Account
+            </button>
+          </div>
+  
+          {/* Footer note */}
+          <p className="mt-6 text-xs text-gray-500">
+            It takes less than a minute to get started.
           </p>
         </div>
       </div>
     );
   }
+  
 
   return (
     <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
