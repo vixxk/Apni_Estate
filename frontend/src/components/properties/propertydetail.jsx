@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -17,12 +17,19 @@ import {
   Copy,
   Compass,
   Mail,
+  Check,
+  X,
+  User,
+  Loader2,
+  ExternalLink,
+  Home as HomeIcon,
 } from "lucide-react";
 import { Backendurl } from "../../App.jsx";
 import ScheduleViewing from "./ScheduleViewing";
 
 const PropertyDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -169,6 +176,7 @@ const PropertyDetails = () => {
             amenities: normalizeAmenities(amenitiesSource),
             image: firstImage,
             images: imagesArray,
+            owner: p.owner,
           };
 
           setProperty(mapped);
@@ -240,32 +248,87 @@ const PropertyDetails = () => {
     }
   };
 
+  // FIXED: Properly centered loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="animate-pulse">
-            <div className="h-96 bg-gray-200 rounded-xl mb-8"></div>
-            <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="text-center"
+        >
+          {/* Animated loader */}
+          <div className="relative mb-6 mx-auto w-32 h-32 flex items-center justify-center">
+            {/* Outer rotating ring */}
+            <motion.div
+              className="absolute inset-0 rounded-full border-4 border-blue-200"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            >
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full shadow-lg"></div>
+            </motion.div>
+
+            {/* Middle rotating ring */}
+            <motion.div
+              className="absolute inset-3 rounded-full border-4 border-indigo-200"
+              animate={{ rotate: -360 }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            >
+              <div className="absolute top-0 right-0 w-3 h-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full"></div>
+            </motion.div>
+
+            {/* Center icon */}
+            <motion.div
+              className="relative z-10 w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl"
+              animate={{
+                scale: [1, 1.1, 1],
+              }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <HomeIcon className="w-8 h-8 text-white" />
+            </motion.div>
           </div>
-        </div>
+
+          {/* Loading text */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 mb-2">
+              Loading Property
+            </h3>
+            <p className="text-gray-600 font-medium">Please wait a moment...</p>
+          </motion.div>
+        </motion.div>
       </div>
     );
   }
 
   if (error || !property) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <p className="text-red-500 mb-4">{error || "Property not found."}</p>
-          <Link
-            to="/properties"
-            className="text-blue-600 hover:underline flex items-center justify-center"
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50 px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center p-8 bg-white rounded-2xl shadow-xl max-w-md w-full border border-red-100"
+        >
+          <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <X className="w-10 h-10 text-white" />
+          </div>
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">Property Not Found</h3>
+          <p className="text-red-600 font-medium mb-6">
+            {error || "The property you're looking for doesn't exist."}
+          </p>
+          <button
+            onClick={() => navigate("/properties")}
+            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105 active:scale-95 flex items-center gap-2 mx-auto"
           >
-            <ArrowLeft className="w-4 h-4 mr-1" /> Back to Properties
-          </Link>
-        </div>
+            <ArrowLeft className="w-5 h-5" />
+            Back to Properties
+          </button>
+        </motion.div>
       </div>
     );
   }
@@ -279,9 +342,9 @@ const PropertyDetails = () => {
   const hasImages = Array.isArray(images) && images.length > 0;
 
   const propertyFeatures = [
-    { value: property.beds, label: "Beds", icon: BedDouble },
-    { value: property.baths, label: "Baths", icon: Bath },
-    { value: property.sqft, label: "sqft", icon: Maximize },
+    { value: property.beds, label: "Bedrooms", icon: BedDouble, color: "from-blue-500 to-cyan-500" },
+    { value: property.baths, label: "Bathrooms", icon: Bath, color: "from-emerald-500 to-teal-500" },
+    { value: property.sqft, label: "sq ft", icon: Maximize, color: "from-purple-500 to-pink-500" },
   ].filter((feature) => feature.value > 0);
 
   const hasContactInfo =
@@ -291,252 +354,472 @@ const PropertyDetails = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gray-50 pt-16"
+      className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30 pt-20 pb-20 md:pb-12"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
-        <nav className="flex items-center justify-between mb-3 md:mb-8">
-          <Link
-            to="/properties"
-            className="inline-flex items-center text-blue-600 hover:text-blue-700"
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Enhanced Navigation Bar */}
+        <motion.nav
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-between mb-6 md:mb-8"
+        >
+          <motion.button
+            onClick={() => navigate("/properties")}
+            whileHover={{ x: -3 }}
+            whileTap={{ scale: 0.95 }}
+            className="group flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-all duration-300 font-medium"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Properties
-          </Link>
-          <button
-            onClick={handleShare}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg
-              hover:bg-gray-100 transition-colors relative"
-          >
-            {copySuccess ? (
-              <span className="text-green-600 flex items-center gap-1">
-                <Copy className="w-5 h-5" />
-                <span className="hidden sm:inline">Copied!</span>
-              </span>
-            ) : (
-              <>
-                <Share2 className="w-5 h-5" />
-                <span className="hidden sm:inline">Share</span>
-              </>
-            )}
-          </button>
-        </nav>
+            <div className="p-2 rounded-xl bg-white shadow-md group-hover:shadow-lg group-hover:bg-blue-50 transition-all duration-300">
+              <ArrowLeft className="w-5 h-5" />
+            </div>
+            <span className="hidden sm:inline">Back to Properties</span>
+          </motion.button>
 
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="relative h-[280px] sm:h-[400px] md:h-[500px] bg-gray-100 rounded-t-xl overflow-hidden mb-0">
+          <motion.button
+            onClick={handleShare}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white shadow-md hover:shadow-lg transition-all duration-300 font-medium"
+          >
+            <AnimatePresence mode="wait">
+              {copySuccess ? (
+                <motion.span
+                  key="copied"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="text-green-600 flex items-center gap-2"
+                >
+                  <Check className="w-5 h-5" />
+                  <span className="hidden sm:inline">Copied!</span>
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="share"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="flex items-center gap-2 text-gray-700"
+                >
+                  <Share2 className="w-5 h-5" />
+                  <span className="hidden sm:inline">Share</span>
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        </motion.nav>
+
+        {/* Main Content Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white rounded-3xl shadow-xl overflow-hidden"
+        >
+          {/* Enhanced Image Gallery with gradient overlay for better text contrast */}
+          <div className="relative h-[320px] sm:h-[450px] lg:h-[550px] bg-gray-900 rounded-t-3xl overflow-hidden">
             <AnimatePresence mode="wait">
               {hasImages ? (
                 <motion.img
                   key={activeImage}
                   src={images[activeImage]}
                   alt={`${property.title} - View ${activeImage + 1}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+                  initial={{ opacity: 0, scale: 1.1 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4 }}
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                  No images available
+                <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-gradient-to-br from-gray-800 to-gray-900">
+                  <HomeIcon className="w-20 h-20 mb-4 opacity-30" />
+                  <p className="text-lg font-medium">No images available</p>
                 </div>
               )}
             </AnimatePresence>
 
+            {/* Gradient overlay for better contrast */}
+            {hasImages && (
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none"></div>
+            )}
+
+            {/* Navigation Controls - Enhanced */}
             {hasImages && images.length > 1 && (
               <>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1, x: -2 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() =>
                     setActiveImage((prev) =>
                       prev === 0 ? images.length - 1 : prev - 1
                     )
                   }
-                  className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 p-1.5 md:p-2 rounded-full
-                    bg-white/80 backdrop-blur-sm hover:bg-white transition-colors"
+                  className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 p-3 md:p-4 rounded-full
+                    bg-white/90 backdrop-blur-md hover:bg-white shadow-xl transition-all duration-300 z-10"
                 >
-                  <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
-                </button>
-                <button
+                  <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-800" />
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.1, x: 2 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() =>
                     setActiveImage((prev) =>
                       prev === images.length - 1 ? 0 : prev + 1
                     )
                   }
-                  className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-1.5 md:p-2 rounded-full
-                    bg-white/80 backdrop-blur-sm hover:bg-white transition-colors"
+                  className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 p-3 md:p-4 rounded-full
+                    bg-white/90 backdrop-blur-md hover:bg-white shadow-xl transition-all duration-300 z-10"
                 >
-                  <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
-                </button>
+                  <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-800" />
+                </motion.button>
               </>
             )}
 
+            {/* Image Counter - Enhanced */}
             {hasImages && (
-              <div
-                className="absolute bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 
-              bg-black/50 backdrop-blur-sm text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm"
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 
+                  bg-black/70 backdrop-blur-md text-white px-5 py-2.5 md:px-6 md:py-3 
+                  rounded-full text-sm md:text-base font-semibold shadow-lg z-10 border border-white/20"
               >
                 {activeImage + 1} / {images.length}
+              </motion.div>
+            )}
+
+            {/* Thumbnail Strip - Desktop Only */}
+            {hasImages && images.length > 1 && (
+              <div className="hidden lg:flex absolute bottom-4 left-1/2 -translate-x-1/2 gap-2 z-10">
+                {images.slice(0, 5).map((img, idx) => (
+                  <motion.button
+                    key={idx}
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setActiveImage(idx)}
+                    className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+                      activeImage === idx
+                        ? "border-white shadow-xl scale-105"
+                        : "border-white/50 opacity-70 hover:opacity-100"
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt={`Thumbnail ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.button>
+                ))}
+                {images.length > 5 && (
+                  <div className="w-16 h-16 rounded-lg bg-black/70 backdrop-blur-md flex items-center justify-center text-white text-sm font-semibold border-2 border-white/50">
+                    +{images.length - 5}
+                  </div>
+                )}
               </div>
             )}
           </div>
 
-          <div className="p-4 md:p-8">
-            <div className="flex justify-between items-start mb-4 md:mb-6">
-              <div className="flex-1 pr-2">
-                <h1 className="text-xl md:text-3xl font-bold text-gray-900 mb-1 md:mb-2">
-                  {property.title}
-                </h1>
-                {property.location && (
-                  <div className="flex items-center text-gray-600 text-sm md:text-base">
-                    <MapPin className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2 flex-shrink-0" />
-                    <span className="line-clamp-2">{property.location}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-              <div>
-                <div className="bg-blue-50 rounded-lg p-4 md:p-6 mb-4 md:mb-6">
-                  <p className="text-2xl md:text-3xl font-bold text-blue-600 mb-1 md:mb-2">
-                    ₹{Number(property.price).toLocaleString("en-IN")}
-                  </p>
-                  <p className="text-gray-600 text-sm md:text-base">
-                    Available for {property.availability}
-                  </p>
+          {/* Property Content */}
+          <div className="p-6 md:p-10 lg:p-12">
+            {/* Header Section */}
+            <div className="mb-8">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-6">
+                <div className="flex-1">
+                  <motion.h1
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-3"
+                  >
+                    {property.title}
+                  </motion.h1>
+                  {property.location && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="flex items-start gap-2 text-gray-600"
+                    >
+                      <MapPin className="w-5 h-5 md:w-6 md:h-6 mt-0.5 flex-shrink-0 text-blue-600" />
+                      <span className="text-base md:text-lg">{property.location}</span>
+                    </motion.div>
+                  )}
                 </div>
 
-                {propertyFeatures.length > 0 && (
-                  <div className="grid grid-cols-3 gap-2 md:gap-4 mb-4 md:mb-6">
-                    {propertyFeatures.map((feature, index) => {
-                      const Icon = feature.icon;
-                      return (
-                        <div
-                          key={index}
-                          className="bg-gray-50 p-3 md:p-4 rounded-lg text-center"
-                        >
-                          <Icon className="w-5 h-5 md:w-6 md:h-6 text-blue-600 mx-auto mb-1 md:mb-2" />
-                          <p className="text-xs md:text-sm text-gray-600">
-                            {feature.value}{" "}
-                            {feature.label === "sqft"
-                              ? feature.label
-                              : feature.value > 1
-                              ? feature.label
-                              : feature.label.slice(0, -1)}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                <button
-                  onClick={() => setShowSchedule(true)}
-                  className="w-full bg-blue-600 text-white py-2.5 md:py-3 rounded-lg 
-                    hover:bg-blue-700 transition-colors flex items-center 
-                    justify-center gap-2 text-sm md:text-base mb-4 md:mb-6"
+                {/* Price Card - Enhanced */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="lg:min-w-[280px]"
                 >
-                  <Calendar className="w-4 h-4 md:w-5 md:h-5" />
-                  Schedule Viewing
-                </button>
-
-                {hasContactInfo && (
-                  <div className="mb-4 md:mb-6">
-                    <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">
-                      Contact Details
-                    </h2>
-                    <div className="space-y-2 md:space-y-3">
-                      {property.phone && (
-                        <div className="flex items-center text-gray-600 text-sm md:text-base">
-                          <Phone className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-blue-600 flex-shrink-0" />
-                          <a
-                            href={`tel:${property.phone}`}
-                            className="hover:text-blue-600 transition-colors truncate"
-                          >
-                            {property.phone}
-                          </a>
-                        </div>
-                      )}
-                      {property.alternatePhone && (
-                        <div className="flex items-center text-gray-600 text-sm md:text-base">
-                          <Phone className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-blue-600 flex-shrink-0" />
-                          <a
-                            href={`tel:${property.alternatePhone}`}
-                            className="hover:text-blue-600 transition-colors truncate"
-                          >
-                            {property.alternatePhone}
-                          </a>
-                        </div>
-                      )}
-                      {property.email && (
-                        <div className="flex items-center text-gray-600 text-sm md:text-base">
-                          <Mail className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-blue-600 flex-shrink-0" />
-                          <a
-                            href={`mailto:${property.email}`}
-                            className="hover:text-blue-600 transition-colors truncate"
-                          >
-                            {property.email}
-                          </a>
-                        </div>
-                      )}
+                  <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 shadow-xl">
+                    <p className="text-white/80 text-sm font-medium mb-1">Price</p>
+                    <p className="text-3xl md:text-4xl font-bold text-white mb-2">
+                      ₹{Number(property.price).toLocaleString("en-IN")}
+                    </p>
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-lg">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <p className="text-white text-sm font-semibold">
+                        For {property.availability}
+                      </p>
                     </div>
                   </div>
-                )}
+                </motion.div>
               </div>
 
-              <div>
-                <div className="mb-4 md:mb-6">
-                  <h2 className="text-lg md:text-xl font-semibold mb-2 md:mb-4">Description</h2>
-                  <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+              {/* Property Type Badge */}
+              {property.type && (
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl border border-purple-200"
+                >
+                  <Building className="w-4 h-4 text-purple-600" />
+                  <span className="text-purple-900 font-semibold text-sm">{property.type}</span>
+                </motion.div>
+              )}
+            </div>
+
+            {/* Features Grid - Enhanced */}
+            {propertyFeatures.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="grid grid-cols-3 gap-4 md:gap-6 mb-8"
+              >
+                {propertyFeatures.map((feature, index) => {
+                  const Icon = feature.icon;
+                  return (
+                    <motion.div
+                      key={index}
+                      whileHover={{ y: -5, scale: 1.02 }}
+                      className="bg-gradient-to-br from-gray-50 to-blue-50 p-5 md:p-6 rounded-2xl text-center border-2 border-white shadow-md hover:shadow-xl transition-all duration-300"
+                    >
+                      <div className={`w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg`}>
+                        <Icon className="w-6 h-6 md:w-7 md:h-7 text-white" />
+                      </div>
+                      <p className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">
+                        {feature.value}
+                      </p>
+                      <p className="text-sm md:text-base text-gray-600 font-medium">
+                        {feature.label}
+                      </p>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            )}
+
+            {/* Two Column Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
+              {/* Left Column - CTA & Contact */}
+              <div className="lg:col-span-1 space-y-6">
+                {/* Schedule Viewing Button - Enhanced */}
+                <motion.button
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setShowSchedule(true)}
+                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl 
+                    hover:shadow-2xl transition-all duration-300 flex items-center 
+                    justify-center gap-3 text-base md:text-lg font-semibold relative overflow-hidden group"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-indigo-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <Calendar className="w-5 h-5 md:w-6 md:h-6 relative z-10" />
+                  <span className="relative z-10">Schedule Viewing</span>
+                </motion.button>
+
+                {/* Contact Card - Enhanced */}
+                {hasContactInfo && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8 }}
+                    className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 border-2 border-white shadow-lg"
+                  >
+                    <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                      <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg">
+                        <Phone className="w-5 h-5 text-white" />
+                      </div>
+                      Contact Details
+                    </h2>
+                    <div className="space-y-3">
+                      {property.phone && (
+                        <a
+                          href={`tel:${property.phone}`}
+                          className="flex items-center gap-3 p-3 bg-white rounded-xl hover:shadow-md transition-all duration-300 group"
+                        >
+                          <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
+                            <Phone className="w-5 h-5 text-blue-600" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-xs text-gray-500 font-medium">Primary</p>
+                            <p className="text-gray-900 font-semibold">{property.phone}</p>
+                          </div>
+                        </a>
+                      )}
+                      {property.alternatePhone && (
+                        <a
+                          href={`tel:${property.alternatePhone}`}
+                          className="flex items-center gap-3 p-3 bg-white rounded-xl hover:shadow-md transition-all duration-300 group"
+                        >
+                          <div className="p-2 bg-emerald-100 rounded-lg group-hover:bg-emerald-200 transition-colors">
+                            <Phone className="w-5 h-5 text-emerald-600" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-xs text-gray-500 font-medium">Alternate</p>
+                            <p className="text-gray-900 font-semibold">{property.alternatePhone}</p>
+                          </div>
+                        </a>
+                      )}
+                      {property.email && (
+                        <a
+                          href={`mailto:${property.email}`}
+                          className="flex items-center gap-3 p-3 bg-white rounded-xl hover:shadow-md transition-all duration-300 group"
+                        >
+                          <div className="p-2 bg-purple-100 rounded-lg group-hover:bg-purple-200 transition-colors">
+                            <Mail className="w-5 h-5 text-purple-600" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-xs text-gray-500 font-medium">Email</p>
+                            <p className="text-gray-900 font-semibold truncate">{property.email}</p>
+                          </div>
+                        </a>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Owner Link - New Feature */}
+                {/* {property.owner && (
+                  <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.9 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => navigate(`/vendor/${property.owner}`)}
+                    className="w-full flex items-center justify-center gap-3 p-4 bg-white rounded-xl border-2 border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 group"
+                  >
+                    <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg">
+                      <User className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      View Owner Profile
+                    </span>
+                    <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                  </motion.button>
+                )} */}
+              </div>
+
+              {/* Right Column - Details */}
+              <div className="lg:col-span-2 space-y-8">
+                {/* Description */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.0 }}
+                  className="bg-white rounded-2xl p-6 md:p-8 border-2 border-gray-100 shadow-sm"
+                >
+                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                    <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full"></div>
+                    Description
+                  </h2>
+                  <p className="text-gray-700 leading-relaxed text-base md:text-lg">
                     {property.description}
                   </p>
-                </div>
+                </motion.div>
 
-                <div className="mb-0 md:mb-6">
-                  <h2 className="text-lg md:text-xl font-semibold mb-2 md:mb-4">Amenities</h2>
+                {/* Amenities */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.1 }}
+                  className="bg-white rounded-2xl p-6 md:p-8 border-2 border-gray-100 shadow-sm"
+                >
+                  <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <div className="w-1 h-8 bg-gradient-to-b from-emerald-500 to-teal-600 rounded-full"></div>
+                    Amenities & Features
+                  </h2>
                   {property.amenities && property.amenities.length > 0 ? (
-                    <div className="flex flex-wrap gap-1.5 md:gap-2">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                       {property.amenities.map((amenity, index) => (
-                        <span
+                        <motion.div
                           key={index}
-                          className="inline-flex items-center px-2.5 py-1 md:px-3 md:py-1 rounded-full
-                            bg-blue-50 text-blue-700 text-xs md:text-sm border border-blue-100"
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 1.2 + index * 0.05 }}
+                          whileHover={{ scale: 1.05, y: -2 }}
+                          className="flex items-center gap-3 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100 hover:shadow-md transition-all duration-300"
                         >
-                          <Building className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2 text-blue-500" />
-                          {amenity}
-                        </span>
+                          <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg">
+                            <Check className="w-4 h-4 text-white" />
+                          </div>
+                          <span className="text-sm md:text-base font-semibold text-gray-800">
+                            {amenity}
+                          </span>
+                        </motion.div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-500 text-xs md:text-sm">
-                      No amenities information available.
-                    </p>
+                    <div className="text-center py-8 text-gray-400">
+                      <Building className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                      <p className="text-sm md:text-base">No amenities information available</p>
+                    </div>
                   )}
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
+        {/* Location Card - Enhanced */}
         {property.location && (
-          <div className="mt-4 md:mt-8 p-4 md:p-6 bg-blue-50 rounded-xl">
-            <div className="flex items-center gap-2 text-blue-600 mb-2 md:mb-4">
-              <Compass className="w-4 h-4 md:w-5 md:h-5" />
-              <h3 className="text-base md:text-lg font-semibold">Location</h3>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.3 }}
+            className="mt-8 bg-white rounded-3xl p-6 md:p-8 shadow-xl border-2 border-gray-100"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 bg-gradient-to-br from-red-500 to-orange-500 rounded-xl shadow-lg">
+                <Compass className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900">Location</h3>
+                <p className="text-gray-600">Find this property on the map</p>
+              </div>
             </div>
-            <p className="text-gray-600 mb-3 md:mb-4 text-sm md:text-base">{property.location}</p>
-            <a
-              href={`https://maps.google.com/?q=${encodeURIComponent(
-                property.location
-              )}`}
+            
+            <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 mb-6 border border-gray-200">
+              <div className="flex items-start gap-3">
+                <MapPin className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
+                <p className="text-gray-800 font-medium text-lg">{property.location}</p>
+              </div>
+            </div>
+
+            <motion.a
+              href={`https://maps.google.com/?q=${encodeURIComponent(property.location)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors text-sm md:text-base"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:shadow-xl transition-all duration-300 font-semibold text-base md:text-lg group"
             >
-              <MapPin className="w-4 h-4" />
+              <MapPin className="w-5 h-5 group-hover:animate-bounce" />
               View on Google Maps
-            </a>
-          </div>
+              <ExternalLink className="w-5 h-5" />
+            </motion.a>
+          </motion.div>
         )}
 
+        {/* Schedule Viewing Modal */}
         <AnimatePresence>
           {showSchedule && (
             <ScheduleViewing

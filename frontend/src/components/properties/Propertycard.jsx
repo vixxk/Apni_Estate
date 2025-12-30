@@ -206,13 +206,13 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
           </motion.button>
         </div>
 
-        {/* Property tags - Smaller on mobile */}
+        {/* Property tags - FIXED: Reduced padding */}
         <div className="absolute top-2 sm:top-3 md:top-4 left-2 sm:left-3 md:left-4 flex flex-col gap-1 sm:gap-1.5 md:gap-2">
           <motion.span
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="bg-gradient-to-r from-blue-600 to-blue-500 text-white 
-              px-2 py-0.5 sm:px-2.5 sm:py-0.5 md:px-3 md:py-1 rounded-full text-[9px] sm:text-xs md:text-sm font-medium shadow-lg"
+              px-1.5 py-0.5 sm:px-2 sm:py-0.5 md:px-2.5 md:py-1 rounded-full text-[9px] sm:text-[10px] md:text-xs font-semibold shadow-lg inline-block w-fit"
           >
             {property.type}
           </motion.span>
@@ -220,7 +220,7 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="bg-gradient-to-r from-green-600 to-green-500 text-white 
-              px-2 py-0.5 sm:px-2.5 sm:py-0.5 md:px-3 md:py-1 rounded-full text-[9px] sm:text-xs md:text-sm font-medium shadow-lg"
+              px-1.5 py-0.5 sm:px-2 sm:py-0.5 md:px-2.5 md:py-1 rounded-full text-[9px] sm:text-[10px] md:text-xs font-semibold shadow-lg inline-block w-fit"
           >
             {property.availability}
           </motion.span>
