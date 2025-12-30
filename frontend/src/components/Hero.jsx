@@ -12,6 +12,8 @@ import heroimage from "../assets/images/heroimage.png";
 import { RadialGradient } from "react-text-gradients";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useMobileMenu } from "../context/MobileMenuContext";
+
 
 /* ================= IMAGE IMPORTS ================= */
 import constructionServices from "../assets/construction.png";
@@ -104,6 +106,7 @@ const Hero = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   const [showButton, setShowButton] = useState(true);
+  const { isMobileMenuOpen } = useMobileMenu();
 
   // ROLE-BASED VISIBILITY
   const visibleServices = services.filter((service) => {
@@ -270,7 +273,7 @@ const Hero = () => {
       </div>
 
       {/* ================= MESSAGE BUTTON ================= */}
-      {isAuthenticated && user?.role === "vendor" && showButton && (
+      {isAuthenticated && user?.role === "vendor" && showButton && !isMobileMenuOpen && (
         <motion.button
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
