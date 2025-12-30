@@ -8,30 +8,35 @@ import {
   User,
   LogIn,
   MessageCircle,
+  Plus, // Add this import
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useMobileMenu } from "../context/MobileMenuContext";
 
 const MobileBottomNav = () => {
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
-  const { isMobileMenuOpen } = useMobileMenu(); 
+  const { isAuthenticated, user } = useAuth(); // Add user to get role
+  const { isMobileMenuOpen } = useMobileMenu();
 
-  const navItems = isAuthenticated
-    ? [
-        { path: "/", icon: Home },
-        { path: "/properties", icon: Search },
-        { path: "/saved", icon: Heart },
-        { path: "/profile", icon: User },
-      ]
-    : [
-        { path: "/", icon: Home },
-        { path: "/properties", icon: Search },
-        { path: "/saved", icon: Heart },
-        { path: "/profile", icon: User },
-      ];
+  // Base navigation items
+  const baseNavItems = [
+    { path: "/", icon: Home },
+    { path: "/properties", icon: Search },
+    { path: "/saved", icon: Heart },
+    { path: "/profile", icon: User },
+  ];
 
-      if (isMobileMenuOpen) return null;
+  // Add vendor-specific item if user role is vendor
+  const navItems = 
+    isAuthenticated && user?.role === "vendor"
+      ? [
+          ...baseNavItems.slice(0, 2), // Home and Search
+          { path: "/vendor/add-service", icon: Plus, isVendorAction: true }, // Vendor add button
+          ...baseNavItems.slice(2), // Saved and Profile
+        ]
+      : baseNavItems;
+
+  if (isMobileMenuOpen) return null;
 
   return (
     <motion.nav
@@ -56,7 +61,9 @@ const MobileBottomNav = () => {
               <motion.div
                 whileTap={{ scale: 0.85 }}
                 className={`p-2.5 rounded-full transition ${
-                  isActive
+                  item.isVendorAction
+                    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md"
+                    : isActive
                     ? "bg-violet-100 text-violet-600"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
@@ -64,8 +71,8 @@ const MobileBottomNav = () => {
                 <Icon className="w-5 h-5" strokeWidth={2.2} />
               </motion.div>
 
-              {/* Active dot */}
-              {isActive && (
+              {/* Active dot - not shown for vendor action button */}
+              {isActive && !item.isVendorAction && (
                 <motion.span
                   layoutId="activeDot"
                   className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-violet-500"

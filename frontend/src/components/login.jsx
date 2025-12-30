@@ -98,7 +98,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
-  const [passwordFocused, setPasswordFocused] = useState(false);
+  const [passwordFocused, setPassworhandledFocused] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
