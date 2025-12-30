@@ -10,7 +10,80 @@ import {
   Save,
   Camera,
   CheckCircle,
+  Sparkles
 } from "lucide-react";
+import { motion } from "framer-motion";
+
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
+
+const iconVariants = {
+  hidden: { scale: 0, rotate: -180 },
+  visible: {
+    scale: 1,
+    rotate: 0,
+    transition: {
+      type: "spring",
+      stiffness: 200,
+      damping: 15,
+    },
+  },
+};
+
+const floatingAnimation = {
+  y: [0, -10, 0],
+  transition: {
+    duration: 3,
+    repeat: Infinity,
+    ease: "easeInOut",
+  },
+};
+
+const pulseAnimation = {
+  scale: [1, 1.05, 1],
+  transition: {
+    duration: 2,
+    repeat: Infinity,
+    ease: "easeInOut",
+  },
+};
+
+const sparkleVariants = {
+  initial: { scale: 0, rotate: 0, opacity: 0 },
+  animate: {
+    scale: [0, 1, 0],
+    rotate: [0, 180, 360],
+    opacity: [0, 1, 0],
+    transition: {
+      duration: 2,
+      repeat: Infinity,
+      repeatDelay: 1,
+    },
+  },
+};
+
+
 
 // Skeleton Loading Component
 const SkeletonLoader = () => (
@@ -216,68 +289,179 @@ function Profile() {
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center px-4 pt-20">
-        <div className="max-w-lg w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 p-8 sm:p-10 text-center">
-          
-          {/* Icon */}
-          <div className="mx-auto mb-6 w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="max-w-lg w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 p-8 sm:p-10 text-center relative overflow-hidden"
+        >
+          {/* Background Gradient Orbs */}
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{ duration: 4, repeat: Infinity }}
+            className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{
+              scale: [1.2, 1, 1.2],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{ duration: 4, repeat: Infinity, delay: 2 }}
+            className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-pink-400 to-indigo-400 rounded-full blur-3xl"
+          />
+  
+          {/* Icon with Animation */}
+          <motion.div
+            variants={iconVariants}
+            animate={floatingAnimation}
+            className="relative mx-auto mb-6 w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg"
+          >
             <User className="w-10 h-10 text-white" />
-          </div>
+            
+            {/* Sparkle Effects */}
+            <motion.div
+              variants={sparkleVariants}
+              initial="initial"
+              animate="animate"
+              className="absolute -top-2 -right-2"
+            >
+              <Sparkles className="w-5 h-5 text-yellow-400" />
+            </motion.div>
+            
+            <motion.div
+              variants={sparkleVariants}
+              initial="initial"
+              animate="animate"
+              style={{ transitionDelay: "1s" }}
+              className="absolute -bottom-1 -left-1"
+            >
+              <Sparkles className="w-4 h-4 text-pink-400" />
+            </motion.div>
+  
+            {/* Pulse Ring */}
+            <motion.div
+              animate={pulseAnimation}
+              className="absolute inset-0 rounded-full border-4 border-blue-400/30"
+            />
+          </motion.div>
   
           {/* Heading */}
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+          <motion.h1
+            variants={itemVariants}
+            className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3"
+          >
             Your Profile Awaits
-          </h1>
+          </motion.h1>
   
           {/* Description */}
-          <p className="text-gray-600 text-sm sm:text-base mb-6">
+          <motion.p
+            variants={itemVariants}
+            className="text-gray-600 text-sm sm:text-base mb-6"
+          >
             Sign in to manage your profile, upload a photo, update your details,
             and get a personalized experience.
-          </p>
+          </motion.p>
   
           {/* Benefits */}
-          <div className="bg-blue-50 rounded-2xl p-4 mb-6 text-left">
+          <motion.div
+            variants={itemVariants}
+            className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-4 mb-6 text-left border border-blue-100"
+          >
             <ul className="space-y-2 text-sm text-blue-900">
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-blue-600" />
+              <motion.li
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 }}
+                className="flex items-center gap-2"
+              >
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, delay: 0.7 }}
+                >
+                  <CheckCircle className="w-4 h-4 text-blue-600" />
+                </motion.div>
                 Edit personal details anytime
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-blue-600" />
+              </motion.li>
+              <motion.li
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.8 }}
+                className="flex items-center gap-2"
+              >
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, delay: 0.9 }}
+                >
+                  <CheckCircle className="w-4 h-4 text-blue-600" />
+                </motion.div>
                 Upload and manage your profile photo
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-blue-600" />
+              </motion.li>
+              <motion.li
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 1.0 }}
+                className="flex items-center gap-2"
+              >
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, delay: 1.1 }}
+                >
+                  <CheckCircle className="w-4 h-4 text-blue-600" />
+                </motion.div>
                 Secure and verified account
-              </li>
+              </motion.li>
             </ul>
-          </div>
+          </motion.div>
   
           {/* Actions */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-col sm:flex-row gap-3 justify-center"
+          >
+            <motion.button
+              whileHover={{ scale: 1.05, boxShadow: "0 10px 40px rgba(59, 130, 246, 0.3)" }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => (window.location.href = "/login")}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all relative overflow-hidden group"
             >
-              Sign In
-            </button>
+              <span className="relative z-10">Sign In</span>
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-blue-700 to-indigo-700 opacity-0 group-hover:opacity-100 transition-opacity"
+              />
+            </motion.button>
   
-            <button
+            <motion.button
+              whileHover={{ 
+                scale: 1.05, 
+                borderColor: "rgb(96, 165, 250)",
+                backgroundColor: "rgb(239, 246, 255)"
+              }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => (window.location.href = "/signup")}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white border-2 border-gray-200 text-gray-700 font-semibold hover:border-blue-400 hover:text-blue-600 transition-all"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white border-2 border-gray-200 text-gray-700 font-semibold transition-all relative overflow-hidden group"
             >
-              Create Account
-            </button>
-          </div>
+              <span className="relative z-10 group-hover:text-blue-600 transition-colors">
+                Create Account
+              </span>
+            </motion.button>
+          </motion.div>
   
           {/* Footer note */}
-          <p className="mt-6 text-xs text-gray-500">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="mt-6 text-xs text-gray-500"
+          >
             It takes less than a minute to get started.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
       </div>
     );
   }
-  
 
   return (
     <div className="min-h-screen bg-gray-50 py-4 sm:py-8">

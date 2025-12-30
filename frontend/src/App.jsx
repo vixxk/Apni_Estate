@@ -24,12 +24,14 @@ import VendorAddService from "./pages/VendorAddProperty.jsx";
 import VendorProfile from './pages/VendorProfile';
 import VendorRegister from './pages/VendorRegister';
 import MobileBottomNav from './components/MobileBottomNav';
+import { MobileMenuProvider } from "./context/MobileMenuContext";
 
 export const Backendurl = import.meta.env.VITE_API_BASE_URL;
 
 const App = () => {
   return (
     <HelmetProvider>
+        <MobileMenuProvider>
       <AuthProvider>
         <Router>
           {/* Base website structured data */}
@@ -73,6 +75,7 @@ const App = () => {
           </div>
         </Router>
       </AuthProvider>
+      </MobileMenuProvider>
     </HelmetProvider>
   );
 };

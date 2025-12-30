@@ -22,6 +22,7 @@ import {
 import logo from "../assets/images/apniestate-logo.png";
 import { useAuth } from "../context/AuthContext";
 import PropTypes from "prop-types";
+import { useMobileMenu } from "../context/MobileMenuContext";
 
 
 // Enhanced Animation Variants
@@ -124,7 +125,7 @@ const overlayVariants = {
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isMobileMenuOpen, setIsMobileMenuOpen } = useMobileMenu(); 
   const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -972,5 +973,9 @@ MobileNavItem.propTypes = {
   description: PropTypes.string,
 };
 
+export const useMobileMenuState = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  return { isMobileMenuOpen, setIsMobileMenuOpen };
+};
 
 export default Navbar;

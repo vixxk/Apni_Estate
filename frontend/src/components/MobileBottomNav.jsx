@@ -10,10 +10,12 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useMobileMenu } from "../context/MobileMenuContext";
 
 const MobileBottomNav = () => {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
+  const { isMobileMenuOpen } = useMobileMenu(); 
 
   const navItems = isAuthenticated
     ? [
@@ -28,6 +30,8 @@ const MobileBottomNav = () => {
         { path: "/saved", icon: Heart },
         { path: "/profile", icon: User },
       ];
+
+      if (isMobileMenuOpen) return null;
 
   return (
     <motion.nav
