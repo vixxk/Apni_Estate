@@ -66,7 +66,7 @@ const VendorAddProperty = () => {
     "Construction Materials",
   ];
 
-  const categories = ["rent", "sale","N/A-"];
+  const categories = ["rent", "sell","N/A-"];
 
   // Determine what fields to show based on service type
   const isPropertyType = ["Houses", "Apartments", "Shops", "Commercial Plots", "Farm House"].includes(form.type);
@@ -222,6 +222,7 @@ const VendorAddProperty = () => {
       // Prepare property data
       const propertyData = {
         ...form,
+        category: "rent",
         price: Number(form.price),
         features: {
           ...form.features,
@@ -374,7 +375,7 @@ const VendorAddProperty = () => {
                 ))}
               </select>
 
-              <select
+              {/* <select
                 name="category"
                 value={form.category}
                 onChange={handleInputChange}
@@ -385,7 +386,7 @@ const VendorAddProperty = () => {
                     {cat.charAt(0).toUpperCase() + cat.slice(1)}
                   </option>
                 ))}
-              </select>
+              </select> */}
 
               <input
                 type="number"

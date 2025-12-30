@@ -222,7 +222,7 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
         </div>
 
         {/* Property tags - FIXED: Reduced padding, max-width to prevent overlap */}
-        <div className="absolute top-2 sm:top-3 md:top-4 left-2 sm:left-3 md:left-4 flex flex-col gap-1 sm:gap-1.5 md:gap-2 max-w-[calc(100%-80px)] sm:max-w-[calc(100%-100px)]">
+        {/* <div className="absolute top-2 sm:top-3 md:top-4 left-2 sm:left-3 md:left-4 flex flex-col gap-1 sm:gap-1.5 md:gap-2 max-w-[calc(100%-80px)] sm:max-w-[calc(100%-100px)]">
           <motion.span
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -239,7 +239,7 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
           >
             {property.availability}
           </motion.span>
-        </div>
+        </div> */}
 
         {/* Vendor Avatar - Smaller on mobile */}
         <motion.div
