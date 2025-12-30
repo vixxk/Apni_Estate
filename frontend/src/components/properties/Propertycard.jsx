@@ -87,14 +87,19 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
       setCurrentImageIndex((prev) => (prev - 1 + imagesCount) % imagesCount);
     }
   };
-
   const handleToggleFavourite = async (e) => {
     e.stopPropagation();
     if (!token) {
       alert("Please sign in to save properties.");
       return;
     }
-
+  
+    // Determine action before API call
+    const action = isFavourite ? "remove" : "add";
+    
+    // Update UI immediately (optimistic update)
+    onFavouritesChange?.(property._id, action);
+  
     try {
       const { data } = await axios.post(
         `${Backendurl}/api/users/saved/toggle`,
@@ -106,15 +111,25 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
           },
         }
       );
-
-      const action = data?.message?.includes("removed") ? "remove" : "add";
-      onFavouritesChange?.(property._id, action);
+  
+      // Verify the action matches server response
+      const serverAction = data?.message?.includes("removed") ? "remove" : "add";
+      
+      // If server response differs from optimistic update, revert
+      if (serverAction !== action) {
+        onFavouritesChange?.(property._id, serverAction);
+      }
     } catch (err) {
       console.error("Toggle favourite error:", err);
+      
+      // Revert optimistic update on error
+      const revertAction = action === "remove" ? "add" : "remove";
+      onFavouritesChange?.(property._id, revertAction);
+      
       alert("Failed to update favourites");
     }
   };
-
+  
   return (
     <motion.div
       layout
