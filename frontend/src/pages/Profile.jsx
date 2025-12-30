@@ -1,6 +1,51 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Backendurl } from "../App";
+import {
+  User,
+  Mail,
+  Phone,
+  Upload,
+  Trash2,
+  Save,
+  Camera,
+  CheckCircle,
+} from "lucide-react";
+
+// Skeleton Loading Component
+const SkeletonLoader = () => (
+  <div className="max-w-4xl mx-auto p-4 sm:p-6 mt-16 sm:mt-20 animate-pulse">
+    <div className="h-8 sm:h-10 bg-gray-200 rounded-lg w-48 mb-6"></div>
+
+    <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
+      {/* Avatar Section Skeleton */}
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 sm:p-8 flex flex-col items-center border-b">
+        <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gray-300"></div>
+        <div className="mt-4 space-y-2 flex flex-col items-center">
+          <div className="h-10 bg-gray-200 rounded-lg w-32"></div>
+          <div className="h-6 bg-gray-200 rounded w-48"></div>
+        </div>
+      </div>
+
+      {/* Form Section Skeleton */}
+      <div className="p-6 sm:p-8 space-y-6">
+        <div className="space-y-2">
+          <div className="h-4 bg-gray-200 rounded w-16"></div>
+          <div className="h-12 bg-gray-200 rounded-lg"></div>
+        </div>
+        <div className="space-y-2">
+          <div className="h-4 bg-gray-200 rounded w-16"></div>
+          <div className="h-12 bg-gray-200 rounded-lg"></div>
+        </div>
+        <div className="space-y-2">
+          <div className="h-4 bg-gray-200 rounded w-16"></div>
+          <div className="h-12 bg-gray-200 rounded-lg"></div>
+        </div>
+        <div className="h-12 bg-gray-200 rounded-lg w-36"></div>
+      </div>
+    </div>
+  </div>
+);
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -11,6 +56,7 @@ function Profile() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -58,7 +104,8 @@ function Profile() {
       setUser(updated);
       localStorage.setItem("user", JSON.stringify(updated));
 
-      alert("Profile updated");
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
     } catch (err) {
       console.error("Failed to update profile", err);
       alert("Failed to update profile");
@@ -71,13 +118,11 @@ function Profile() {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.startsWith("image/")) {
       alert("Please select an image file");
       return;
     }
 
-    // Validate file size (5MB)
     if (file.size > 5 * 1024 * 1024) {
       alert("Image size should be less than 5MB");
       return;
@@ -85,7 +130,6 @@ function Profile() {
 
     setSelectedFile(file);
 
-    // Create preview
     const reader = new FileReader();
     reader.onloadend = () => {
       setAvatarPreview(reader.result);
@@ -117,14 +161,14 @@ function Profile() {
       setAvatarPreview(data.data.avatar);
       setSelectedFile(null);
 
-      // Update localStorage
       const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
       localStorage.setItem(
         "user",
         JSON.stringify({ ...currentUser, avatar: data.data.avatar })
       );
 
-      alert("Avatar updated successfully");
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
     } catch (err) {
       console.error("Failed to upload avatar", err);
       alert(err.response?.data?.message || "Failed to upload avatar");
@@ -149,14 +193,14 @@ function Profile() {
       setAvatarPreview(null);
       setSelectedFile(null);
 
-      // Update localStorage
       const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
       localStorage.setItem(
         "user",
         JSON.stringify({ ...currentUser, avatar: null })
       );
 
-      alert("Avatar removed successfully");
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
     } catch (err) {
       console.error("Failed to remove avatar", err);
       alert("Failed to remove avatar");
@@ -166,121 +210,216 @@ function Profile() {
   };
 
   if (loading) {
-    return <div className="p-8 mt-20">Loading profile...</div>;
+    return <SkeletonLoader />;
   }
 
   if (!user) {
     return (
-      <div className="p-8 mt-20">
-        You are not logged in. Please sign in to view your profile.
+      <div className="min-h-screen flex items-center justify-center px-4 mt-16">
+        <div className="text-center bg-white p-8 rounded-2xl shadow-lg max-w-md">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <User className="w-8 h-8 text-blue-600" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            Not Logged In
+          </h2>
+          <p className="text-gray-600">
+            Please sign in to view your profile.
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6 mt-20">
-      <h1 className="text-2xl font-bold mb-6">My Profile</h1>
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 mt-16 sm:mt-20">
+        {/* Success Toast */}
+        {showSuccess && (
+          <div className="fixed top-20 right-4 sm:right-6 z-50 bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-slide-in">
+            <CheckCircle className="w-5 h-5" />
+            <span className="font-medium">Changes saved successfully!</span>
+          </div>
+        )}
 
-      <div className="bg-white shadow rounded-xl p-6 space-y-6">
-        {/* Avatar Section */}
-        <div className="flex flex-col items-center space-y-4 pb-6 border-b">
-          <div className="relative">
-            <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-              {avatarPreview ? (
-                <img
-                  src={avatarPreview}
-                  alt="Avatar"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <svg
-                  className="w-16 h-16 text-gray-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                    clipRule="evenodd"
+        {/* <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
+          My Profile
+        </h1> */}
+
+        <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
+          {/* Avatar Section */}
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 sm:p-8 border-b">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="relative group">
+                <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-gradient-to-br from-blue-400 to-indigo-500 shadow-xl ring-4 ring-white">
+                  {avatarPreview ? (
+                    <img
+                      src={avatarPreview}
+                      alt="Avatar"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <User className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Camera Icon Overlay */}
+                <label className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 sm:p-2.5 cursor-pointer shadow-lg transition-all hover:scale-110">
+                  <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="hidden"
                   />
-                </svg>
-              )}
+                </label>
+              </div>
+
+              <div className="text-center">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  {name || "User"}
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">{user.email}</p>
+              </div>
+
+              {/* Avatar Actions */}
+              <div className="flex flex-wrap gap-2 justify-center">
+                {selectedFile && (
+                  <button
+                    onClick={handleAvatarUpload}
+                    disabled={uploadingAvatar}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg"
+                  >
+                    <Upload className="w-4 h-4" />
+                    {uploadingAvatar ? "Uploading..." : "Upload"}
+                  </button>
+                )}
+
+                {user.avatar && !selectedFile && (
+                  <button
+                    onClick={handleRemoveAvatar}
+                    disabled={uploadingAvatar}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg text-sm font-medium disabled:opacity-60 transition-all"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Remove
+                  </button>
+                )}
+              </div>
+
+              <p className="text-xs text-gray-500 text-center">
+                Max 5MB • JPG, PNG, GIF
+              </p>
             </div>
           </div>
 
-          <div className="flex flex-col items-center space-y-2">
-            <label className="cursor-pointer px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium transition">
-              Choose Image
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileSelect}
-                className="hidden"
-              />
-            </label>
+          {/* Profile Form */}
+          <form onSubmit={handleSubmit} className="p-6 sm:p-8">
+            <div className="space-y-6">
+              {/* Email (Read-only) */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <Mail className="w-4 h-4 text-gray-500" />
+                  Email
+                </label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    value={user.email}
+                    disabled
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 cursor-not-allowed focus:outline-none"
+                  />
+                </div>
+                <p className="text-xs text-gray-500">
+                  Email cannot be changed
+                </p>
+              </div>
 
-            {selectedFile && (
-              <button
-                onClick={handleAvatarUpload}
-                disabled={uploadingAvatar}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium disabled:opacity-60 transition"
-              >
-                {uploadingAvatar ? "Uploading..." : "Upload Avatar"}
-              </button>
-            )}
+              {/* Name */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="name"
+                  className="flex items-center gap-2 text-sm font-semibold text-gray-700"
+                >
+                  <User className="w-4 h-4 text-gray-500" />
+                  Full Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
 
-            {user.avatar && !selectedFile && (
-              <button
-                onClick={handleRemoveAvatar}
-                disabled={uploadingAvatar}
-                className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg text-sm font-medium disabled:opacity-60 transition"
-              >
-                Remove Avatar
-              </button>
-            )}
-          </div>
+              {/* Phone */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="phone"
+                  className="flex items-center gap-2 text-sm font-semibold text-gray-700"
+                >
+                  <Phone className="w-4 h-4 text-gray-500" />
+                  Phone Number
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  placeholder="Enter your phone number"
+                />
+              </div>
 
-          <p className="text-xs text-gray-500">
-            Max size: 5MB. Supported: JPG, PNG, GIF
-          </p>
+              {/* Submit Button */}
+              <div className="pt-4">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg"
+                >
+                  <Save className="w-5 h-5" />
+                  {saving ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
 
-        {/* Email Display */}
-        <div>
-          <p className="text-sm text-gray-500">Email</p>
-          <p className="font-medium break-all">{user.email}</p>
+        {/* Additional Info Card */}
+        <div className="mt-6 bg-blue-50 border border-blue-100 rounded-xl p-4 sm:p-6">
+          <h3 className="text-sm font-semibold text-blue-900 mb-2">
+            Profile Tips
+          </h3>
+          <ul className="text-sm text-blue-800 space-y-1">
+            <li>• Keep your profile information up to date</li>
+            <li>• Use a clear profile picture for better recognition</li>
+            <li>• Your email is verified and cannot be changed</li>
+          </ul>
         </div>
-
-        {/* Profile Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Name</label>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Phone</label>
-            <input
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={saving}
-            className="px-4 py-2 rounded-lg bg-blue-600 text-white disabled:opacity-60 hover:bg-blue-700 transition"
-          >
-            {saving ? "Saving..." : "Save Changes"}
-          </button>
-        </form>
       </div>
+
+      <style jsx>{`
+        @keyframes slide-in {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+
+        .animate-slide-in {
+          animation: slide-in 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 }

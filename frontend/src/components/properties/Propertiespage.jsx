@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { Grid, List, SlidersHorizontal, MapPin, Home } from "lucide-react";
@@ -33,7 +33,31 @@ const PropertiesPage = () => {
 
   const [favourites, setFavourites] = useState([]);
 
+  // Refs for outside click detection
+  const filterRef = useRef(null);
+  const filterButtonRef = useRef(null);
+
   const token = localStorage.getItem("token");
+
+  // Close filters when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        viewState.showFilters &&
+        filterRef.current &&
+        !filterRef.current.contains(event.target) &&
+        filterButtonRef.current &&
+        !filterButtonRef.current.contains(event.target)
+      ) {
+        setViewState((prev) => ({ ...prev, showFilters: false }));
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [viewState.showFilters]);
 
   // Fetch all properties
   const fetchProperties = async () => {
@@ -45,16 +69,13 @@ const PropertiesPage = () => {
       if (response.data.success) {
         const rawList = response.data.data || [];
 
-        // Helper: always return full URL for images
         const toFullUrl = (val) => {
           if (!val) return null;
           if (/^https?:\/\//i.test(val)) return val;
           return `${Backendurl}${val.startsWith("/") ? val : `/${val}`}`;
         };
 
-        // Map properties from backend schema
         const mapped = rawList.map((p) => {
-          // Handle images from new Property schema
           let firstImage = null;
           if (Array.isArray(p.images) && p.images.length > 0) {
             firstImage = toFullUrl(p.images[0].url || p.images[0]);
@@ -64,7 +85,6 @@ const PropertiesPage = () => {
             firstImage = toFullUrl(p.image[0]);
           }
 
-          // FIX: Handle location object properly - convert to string
           let locationString = "";
           if (typeof p.location === "string") {
             locationString = p.location;
@@ -101,7 +121,7 @@ const PropertiesPage = () => {
               ? [firstImage]
               : [],
             image: firstImage,
-            owner: p.owner, // Already populated with {_id, name, email, phone, avatar}
+            owner: p.owner,
             status: p.status,
             views: p.views || 0,
             createdAt: p.createdAt,
@@ -130,7 +150,6 @@ const PropertiesPage = () => {
     }
   };
 
-  // Fetch user's favourite properties
   const fetchFavourites = async () => {
     if (!token) {
       setFavourites([]);
@@ -148,17 +167,14 @@ const PropertiesPage = () => {
     }
   };
 
-  // Fetch properties on component mount
   useEffect(() => {
     fetchProperties();
   }, []);
 
-  // Fetch favourites when token changes
   useEffect(() => {
     fetchFavourites();
   }, [token]);
 
-  // In the filteredProperties useMemo, update the sort section:
   const filteredProperties = useMemo(() => {
     return propertyState.properties
       .filter((property) => {
@@ -210,12 +226,10 @@ const PropertiesPage = () => {
           case "newest":
             return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
           case "location-asc":
-            // Sort alphabetically A-Z (case-insensitive)
             return (a.location || "")
               .toLowerCase()
               .localeCompare((b.location || "").toLowerCase());
           case "location-desc":
-            // Sort alphabetically Z-A (case-insensitive)
             return (b.location || "")
               .toLowerCase()
               .localeCompare((a.location || "").toLowerCase());
@@ -245,7 +259,6 @@ const PropertiesPage = () => {
     });
   };
 
-  // Loading State
   if (propertyState.loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -327,14 +340,13 @@ const PropertiesPage = () => {
     );
   }
 
-  // Error State
   if (propertyState.error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center text-red-600 p-6 rounded-lg bg-red-50 max-w-md"
+          className="text-center text-red-600 p-6 rounded-lg bg-red-50 max-w-md w-full"
         >
           <p className="font-medium mb-4">{propertyState.error}</p>
           <button
@@ -348,37 +360,36 @@ const PropertiesPage = () => {
     );
   }
 
-  // Main Content
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="min-h-screen bg-gray-50 pt-16"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
         <motion.header
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="text-center mb-12"
+          className="text-center mb-6 sm:mb-12"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
             Find Your Perfect Property
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">
             Discover a curated collection of premium properties in your desired
             location
           </p>
-          <p className="text-sm text-gray-500 mt-2">
+          <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
             {filteredProperties.length} properties found
           </p>
         </motion.header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-8">
           {/* Filters Sidebar */}
           <AnimatePresence mode="wait">
             {viewState.showFilters && (
               <motion.aside
+                ref={filterRef}
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: -20, opacity: 0 }}
@@ -400,22 +411,23 @@ const PropertiesPage = () => {
             }`}
           >
             {/* Search and View Controls */}
-            <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-              <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm mb-4 sm:mb-6">
+              <div className="flex flex-col gap-3">
                 {/* Search Bar */}
-                <SearchBar
-                  onSearch={(query) =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      searchQuery: query,
-                    }))
-                  }
-                  className="flex-1 w-full"
-                />
+                <div className="w-full">
+                  <SearchBar
+                    onSearch={(query) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        searchQuery: query,
+                      }))
+                    }
+                    className="w-full"
+                  />
+                </div>
 
                 {/* Sort and View Controls */}
-                <div className="flex items-center gap-4 w-full sm:w-auto">
-                  {/* Sort Dropdown */}
+                <div className="flex items-center gap-2 w-full">
                   <select
                     value={filters.sortBy}
                     onChange={(e) =>
@@ -424,7 +436,7 @@ const PropertiesPage = () => {
                         sortBy: e.target.value,
                       }))
                     }
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-2 sm:px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Sort By</option>
                     <option value="price-asc">Price: Low to High</option>
@@ -434,20 +446,24 @@ const PropertiesPage = () => {
                     <option value="location-desc">Location: Z to A</option>
                   </select>
 
-                  {/* View Controls */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
                     {/* Toggle Filters Button */}
                     <button
+                      ref={filterButtonRef}
                       onClick={() =>
                         setViewState((prev) => ({
                           ...prev,
                           showFilters: !prev.showFilters,
                         }))
                       }
-                      className="p-2 rounded-lg hover:bg-gray-100 transition"
+                      className={`p-2 rounded-lg transition ${
+                        viewState.showFilters
+                          ? "bg-blue-100 text-blue-600"
+                          : "hover:bg-gray-100 text-gray-600"
+                      }`}
                       title="Toggle Filters"
                     >
-                      <SlidersHorizontal className="w-5 h-5 text-gray-600" />
+                      <SlidersHorizontal className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
 
                     {/* Grid View Button */}
@@ -465,7 +481,7 @@ const PropertiesPage = () => {
                       }`}
                       title="Grid View"
                     >
-                      <Grid className="w-5 h-5" />
+                      <Grid className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
 
                     {/* List View Button */}
@@ -483,7 +499,7 @@ const PropertiesPage = () => {
                       }`}
                       title="List View"
                     >
-                      <List className="w-5 h-5" />
+                      <List className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                   </div>
                 </div>
@@ -493,9 +509,9 @@ const PropertiesPage = () => {
             {/* Properties Display */}
             <motion.div
               layout
-              className={`grid gap-6 ${
+              className={`grid gap-1.5 sm:gap-4 md:gap-6 ${
                 viewState.isGridView
-                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
+                  ? "grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
                   : "grid-cols-1"
               }`}
             >
@@ -515,13 +531,13 @@ const PropertiesPage = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="col-span-full text-center py-16 bg-white rounded-lg shadow-sm"
+                    className="col-span-full text-center py-12 sm:py-16 bg-white rounded-lg shadow-sm"
                   >
-                    <MapPin className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <MapPin className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
                       No properties found
                     </h3>
-                    <p className="text-gray-600 mb-6">
+                    <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
                       Try adjusting your filters or search criteria to find what
                       you're looking for
                     </p>
@@ -537,7 +553,7 @@ const PropertiesPage = () => {
                           sortBy: "",
                         });
                       }}
-                      className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                      className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                     >
                       Clear Filters
                     </button>

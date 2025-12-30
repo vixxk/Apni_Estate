@@ -353,7 +353,7 @@ const Navbar = () => {
                                 className="w-full px-6 py-3 text-left text-sm text-gray-700 hover:text-blue-600 flex items-center space-x-3 transition-colors"
                               >
                                 <Heart className="w-4 h-4" />
-                                <span>Saved Properties</span>
+                                <span>Favourite Properties</span>
                               </motion.button>
 
                               <div className="border-t border-gray-100 my-2" />

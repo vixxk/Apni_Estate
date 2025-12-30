@@ -57,7 +57,7 @@ const SearchBar = ({ onSearch, className }) => {
       <form onSubmit={handleSubmit} className="relative">
         <input
           type="text"
-          placeholder="Search by location, property type..."
+          placeholder="Search here..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => setShowSuggestions(true)}

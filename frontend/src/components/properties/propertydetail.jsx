@@ -293,8 +293,8 @@ const PropertyDetails = () => {
       animate={{ opacity: 1 }}
       className="min-h-screen bg-gray-50 pt-16"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <nav className="flex items-center justify-between mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
+        <nav className="flex items-center justify-between mb-3 md:mb-8">
           <Link
             to="/properties"
             className="inline-flex items-center text-blue-600 hover:text-blue-700"
@@ -309,19 +309,19 @@ const PropertyDetails = () => {
             {copySuccess ? (
               <span className="text-green-600 flex items-center gap-1">
                 <Copy className="w-5 h-5" />
-                Copied!
+                <span className="hidden sm:inline">Copied!</span>
               </span>
             ) : (
               <>
                 <Share2 className="w-5 h-5" />
-                Share
+                <span className="hidden sm:inline">Share</span>
               </>
             )}
           </button>
         </nav>
 
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="relative h-[500px] bg-gray-100 rounded-xl overflow-hidden mb-8">
+          <div className="relative h-[280px] sm:h-[400px] md:h-[500px] bg-gray-100 rounded-t-xl overflow-hidden mb-0">
             <AnimatePresence mode="wait">
               {hasImages ? (
                 <motion.img
@@ -349,10 +349,10 @@ const PropertyDetails = () => {
                       prev === 0 ? images.length - 1 : prev - 1
                     )
                   }
-                  className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full
+                  className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 p-1.5 md:p-2 rounded-full
                     bg-white/80 backdrop-blur-sm hover:bg-white transition-colors"
                 >
-                  <ChevronLeft className="w-6 h-6" />
+                  <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
                 </button>
                 <button
                   onClick={() =>
@@ -360,75 +360,61 @@ const PropertyDetails = () => {
                       prev === images.length - 1 ? 0 : prev + 1
                     )
                   }
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full
+                  className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-1.5 md:p-2 rounded-full
                     bg-white/80 backdrop-blur-sm hover:bg-white transition-colors"
                 >
-                  <ChevronRight className="w-6 h-6" />
+                  <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
                 </button>
               </>
             )}
 
             {hasImages && (
               <div
-                className="absolute bottom-4 left-1/2 -translate-x-1/2 
-              bg-black/50 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm"
+                className="absolute bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 
+              bg-black/50 backdrop-blur-sm text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm"
               >
                 {activeImage + 1} / {images.length}
               </div>
             )}
           </div>
 
-          <div className="p-8">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <div className="p-4 md:p-8">
+            <div className="flex justify-between items-start mb-4 md:mb-6">
+              <div className="flex-1 pr-2">
+                <h1 className="text-xl md:text-3xl font-bold text-gray-900 mb-1 md:mb-2">
                   {property.title}
                 </h1>
                 {property.location && (
-                  <div className="flex items-center text-gray-600">
-                    <MapPin className="w-5 h-5 mr-2" />
-                    {property.location}
+                  <div className="flex items-center text-gray-600 text-sm md:text-base">
+                    <MapPin className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2 flex-shrink-0" />
+                    <span className="line-clamp-2">{property.location}</span>
                   </div>
                 )}
               </div>
-              <button
-                onClick={handleShare}
-                className="p-2 rounded-full hover:bg-gray-100"
-              >
-                <Share2 className="w-5 h-5" />
-              </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
               <div>
-                <div className="bg-blue-50 rounded-lg p-6 mb-6">
-                  <p className="text-3xl font-bold text-blue-600 mb-2">
+                <div className="bg-blue-50 rounded-lg p-4 md:p-6 mb-4 md:mb-6">
+                  <p className="text-2xl md:text-3xl font-bold text-blue-600 mb-1 md:mb-2">
                     ₹{Number(property.price).toLocaleString("en-IN")}
                   </p>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 text-sm md:text-base">
                     Available for {property.availability}
                   </p>
                 </div>
 
                 {propertyFeatures.length > 0 && (
-                  <div
-                    className={`grid gap-4 mb-6`}
-                    style={{
-                      gridTemplateColumns: `repeat(${Math.min(
-                        propertyFeatures.length,
-                        3
-                      )}, minmax(0, 1fr))`,
-                    }}
-                  >
+                  <div className="grid grid-cols-3 gap-2 md:gap-4 mb-4 md:mb-6">
                     {propertyFeatures.map((feature, index) => {
                       const Icon = feature.icon;
                       return (
                         <div
                           key={index}
-                          className="bg-gray-50 p-4 rounded-lg text-center"
+                          className="bg-gray-50 p-3 md:p-4 rounded-lg text-center"
                         >
-                          <Icon className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-                          <p className="text-sm text-gray-600">
+                          <Icon className="w-5 h-5 md:w-6 md:h-6 text-blue-600 mx-auto mb-1 md:mb-2" />
+                          <p className="text-xs md:text-sm text-gray-600">
                             {feature.value}{" "}
                             {feature.label === "sqft"
                               ? feature.label
@@ -442,40 +428,50 @@ const PropertyDetails = () => {
                   </div>
                 )}
 
+                <button
+                  onClick={() => setShowSchedule(true)}
+                  className="w-full bg-blue-600 text-white py-2.5 md:py-3 rounded-lg 
+                    hover:bg-blue-700 transition-colors flex items-center 
+                    justify-center gap-2 text-sm md:text-base mb-4 md:mb-6"
+                >
+                  <Calendar className="w-4 h-4 md:w-5 md:h-5" />
+                  Schedule Viewing
+                </button>
+
                 {hasContactInfo && (
-                  <div className="mb-6">
-                    <h2 className="text-xl font-semibold mb-4">
+                  <div className="mb-4 md:mb-6">
+                    <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">
                       Contact Details
                     </h2>
-                    <div className="space-y-3">
+                    <div className="space-y-2 md:space-y-3">
                       {property.phone && (
-                        <div className="flex items-center text-gray-600">
-                          <Phone className="w-5 h-5 mr-3 text-blue-600" />
+                        <div className="flex items-center text-gray-600 text-sm md:text-base">
+                          <Phone className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-blue-600 flex-shrink-0" />
                           <a
                             href={`tel:${property.phone}`}
-                            className="hover:text-blue-600 transition-colors"
+                            className="hover:text-blue-600 transition-colors truncate"
                           >
                             {property.phone}
                           </a>
                         </div>
                       )}
                       {property.alternatePhone && (
-                        <div className="flex items-center text-gray-600">
-                          <Phone className="w-5 h-5 mr-3 text-blue-600" />
+                        <div className="flex items-center text-gray-600 text-sm md:text-base">
+                          <Phone className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-blue-600 flex-shrink-0" />
                           <a
                             href={`tel:${property.alternatePhone}`}
-                            className="hover:text-blue-600 transition-colors"
+                            className="hover:text-blue-600 transition-colors truncate"
                           >
                             {property.alternatePhone}
                           </a>
                         </div>
                       )}
                       {property.email && (
-                        <div className="flex items-center text-gray-600">
-                          <Mail className="w-5 h-5 mr-3 text-blue-600" />
+                        <div className="flex items-center text-gray-600 text-sm md:text-base">
+                          <Mail className="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 text-blue-600 flex-shrink-0" />
                           <a
                             href={`mailto:${property.email}`}
-                            className="hover:text-blue-600 transition-colors"
+                            className="hover:text-blue-600 transition-colors truncate"
                           >
                             {property.email}
                           </a>
@@ -484,43 +480,33 @@ const PropertyDetails = () => {
                     </div>
                   </div>
                 )}
-
-                <button
-                  onClick={() => setShowSchedule(true)}
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg 
-                    hover:bg-blue-700 transition-colors flex items-center 
-                    justify-center gap-2"
-                >
-                  <Calendar className="w-5 h-5" />
-                  Schedule Viewing
-                </button>
               </div>
 
               <div>
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold mb-4">Description</h2>
-                  <p className="text-gray-600 leading-relaxed">
+                <div className="mb-4 md:mb-6">
+                  <h2 className="text-lg md:text-xl font-semibold mb-2 md:mb-4">Description</h2>
+                  <p className="text-gray-600 leading-relaxed text-sm md:text-base">
                     {property.description}
                   </p>
                 </div>
 
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold mb-4">Amenities</h2>
+                <div className="mb-0 md:mb-6">
+                  <h2 className="text-lg md:text-xl font-semibold mb-2 md:mb-4">Amenities</h2>
                   {property.amenities && property.amenities.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 md:gap-2">
                       {property.amenities.map((amenity, index) => (
                         <span
                           key={index}
-                          className="inline-flex items-center px-3 py-1 rounded-full
-                            bg-blue-50 text-blue-700 text-sm border border-blue-100"
+                          className="inline-flex items-center px-2.5 py-1 md:px-3 md:py-1 rounded-full
+                            bg-blue-50 text-blue-700 text-xs md:text-sm border border-blue-100"
                         >
-                          <Building className="w-4 h-4 mr-2 text-blue-500" />
+                          <Building className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2 text-blue-500" />
                           {amenity}
                         </span>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-gray-500 text-xs md:text-sm">
                       No amenities information available.
                     </p>
                   )}
@@ -531,19 +517,19 @@ const PropertyDetails = () => {
         </div>
 
         {property.location && (
-          <div className="mt-8 p-6 bg-blue-50 rounded-xl">
-            <div className="flex items-center gap-2 text-blue-600 mb-4">
-              <Compass className="w-5 h-5" />
-              <h3 className="text-lg font-semibold">Location</h3>
+          <div className="mt-4 md:mt-8 p-4 md:p-6 bg-blue-50 rounded-xl">
+            <div className="flex items-center gap-2 text-blue-600 mb-2 md:mb-4">
+              <Compass className="w-4 h-4 md:w-5 md:h-5" />
+              <h3 className="text-base md:text-lg font-semibold">Location</h3>
             </div>
-            <p className="text-gray-600 mb-4">{property.location}</p>
+            <p className="text-gray-600 mb-3 md:mb-4 text-sm md:text-base">{property.location}</p>
             <a
               href={`https://maps.google.com/?q=${encodeURIComponent(
                 property.location
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors text-sm md:text-base"
             >
               <MapPin className="w-4 h-4" />
               View on Google Maps
