@@ -1,12 +1,10 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Shield, Sparkles, Users, Home, Star, MessageCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import heroimage from "../assets/images/heroimage.png";
 import { RadialGradient } from "react-text-gradients";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-
-
 
 /* ================= IMAGE IMPORTS ================= */
 import constructionServices from "../assets/construction.png";
@@ -22,8 +20,6 @@ import commercialPlots from "../assets/commercial-plots.png";
 import furniture from "../assets/furniture.png";
 import decoratives from "../assets/decoratives.png";
 import others from "../assets/others.png";
-
-
 
 /* ================= DATA ================= */
 const services = [
@@ -42,8 +38,6 @@ const services = [
   { title: "Others", img: others },
 ];
 
-
-
 const stats = [
   { icon: Users, value: "50K+", label: "Happy Customers", color: "from-blue-500 to-cyan-500" },
   { icon: Home, value: "10K+", label: "Properties Listed", color: "from-green-500 to-emerald-500" },
@@ -51,15 +45,11 @@ const stats = [
   { icon: Shield, value: "100%", label: "Verified Properties", color: "from-purple-500 to-pink-500" },
 ];
 
-
-
 /* ================= ANIMATIONS ================= */
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
 };
-
-
 
 const itemVariants = {
   hidden: { opacity: 0, y: 30, scale: 0.95 },
@@ -71,14 +61,10 @@ const itemVariants = {
   },
 };
 
-
-
 const floatingAnimation = {
   y: [-10, 10, -10],
   transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
 };
-
-
 
 const sparkleAnimation = {
   scale: [1, 1.2, 1],
@@ -86,32 +72,11 @@ const sparkleAnimation = {
   transition: { duration: 3, repeat: Infinity, ease: "easeInOut" },
 };
 
-
-
 /* ================= COMPONENT ================= */
 const Hero = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
-  const [showChatIcon, setShowChatIcon] = useState(true);
-
-
-
-  // SCROLL HANDLER
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 100) {
-        setShowChatIcon(false);
-      } else {
-        setShowChatIcon(true);
-      }
-    };
-
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-
+  const [showButton, setShowButton] = useState(true);
 
   // ROLE-BASED VISIBILITY
   const visibleServices = services.filter((service) => {
@@ -124,21 +89,25 @@ const Hero = () => {
     return true;
   });
 
+  // Hide button on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setShowButton(false);
+      } else {
+        setShowButton(true);
+      }
+    };
 
-  // CHAT NAVIGATION HANDLER
-  const handleChatClick = () => {
-    navigate("/chat");
-  };
-
-
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* ================= BACKGROUND ================= */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50" />
-
-
 
         <motion.div
           initial={{ opacity: 0, scale: 1.1 }}
@@ -154,8 +123,6 @@ const Hero = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/10" />
         </motion.div>
 
-
-
         {/* Floating blobs */}
         <div className="absolute inset-0 pointer-events-none">
           <motion.div
@@ -167,8 +134,6 @@ const Hero = () => {
             className="absolute top-40 right-20 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"
           />
         </div>
-
-
 
         {/* Sparkles */}
         <div className="absolute inset-0 pointer-events-none">
@@ -185,11 +150,9 @@ const Hero = () => {
         </div>
       </div>
 
-
-
       {/* ================= CONTENT ================= */}
-      <div className="relative z-10 min-h-screen flex items-center px-4 pt-24 pb-8">
-      <div className="max-w-7xl mx-auto w-full">
+      <div className="relative z-10 min-h-screen flex items-center px-4 py-8 md:pt-24 lg:pt-28">
+        <div className="max-w-7xl mx-auto w-full">
           <motion.div variants={containerVariants} initial="hidden" animate="visible" className="text-center">
             {/* Heading */}
             <motion.div variants={itemVariants} className="mb-12">
@@ -201,14 +164,10 @@ const Hero = () => {
                 <span className="text-gray-900">Dream Home</span>
               </h1>
 
-
-
               <p className="hidden sm:block text-xl sm:text-2xl text-gray-700 max-w-3xl mx-auto">
                 All property services you need — buying, construction & more
               </p>
             </motion.div>
-
-
 
             {/* ================= SERVICES GRID ================= */}
             <motion.div variants={itemVariants} className="max-w-6xl mx-auto mb-12">
@@ -216,8 +175,6 @@ const Hero = () => {
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-10">
                   All Your <span className="text-purple-600">Real Estate</span> Needs In One Place
                 </h2>
-
-
 
                 <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6">
                   {visibleServices.map((service, index) => (
@@ -231,8 +188,6 @@ const Hero = () => {
                         <img src={service.img} alt={service.title} className="w-8 h-8 sm:w-16 sm:h-16 object-contain" />
                       </div>
 
-
-
                       <p className="font-semibold text-gray-800 text-center text-[10px] sm:text-base leading-tight">
                         {service.title}
                       </p>
@@ -241,8 +196,6 @@ const Hero = () => {
                 </div>
               </div>
             </motion.div>
-
-
 
             {/* ================= STATS ================= */}
             <motion.div variants={containerVariants} className="grid grid-cols-4 gap-3 sm:gap-6 lg:gap-10 max-w-3xl mx-auto">
@@ -264,38 +217,25 @@ const Hero = () => {
         </div>
       </div>
 
-
-
-      {/* ================= FLOATING CHAT BUTTON (VENDOR ONLY) ================= */}
-      {isAuthenticated && user?.role === "vendor" && (
-        <AnimatePresence>
-          {showChatIcon && (
-            <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              className="fixed bottom-6 right-6 z-[9999] pointer-events-auto"
-            >
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleChatClick}
-                className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-yellow-400 to-orange-500 text-white rounded-full shadow-2xl flex items-center justify-center hover:shadow-yellow-500/50 transition-shadow active:scale-95"
-                type="button"
-              >
-                <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7 scale-x-[-1] pointer-events-none" />
-                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow">
-                    3
-                  </span>
-              </motion.button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      {/* ================= MESSAGE BUTTON ================= */}
+      {isAuthenticated && user?.role === "vendor" && showButton && (
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => navigate("/chat")}
+          className="fixed bottom-6 right-6 bg-yellow-400 p-4 rounded-full shadow-2xl z-[9999]"
+        >
+          <MessageCircle className="w-6 h-6 text-white" />
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+            3
+          </span>
+        </motion.button>
       )}
     </div>
   );
 };
-
-
 
 export default Hero;

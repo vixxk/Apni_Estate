@@ -18,12 +18,13 @@ import {
   PlusCircle,
   Store,
   LogIn,
+  Plus,
+  Bell,
 } from "lucide-react";
 import logo from "../assets/images/apniestate-logo.png";
 import { useAuth } from "../context/AuthContext";
 import PropTypes from "prop-types";
 import { useMobileMenu } from "../context/MobileMenuContext";
-import { Bell } from "lucide-react";
 
 // Enhanced Animation Variants
 const navVariants = {
@@ -155,7 +156,7 @@ const Navbar = () => {
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
-  }, [location.pathname]);
+  }, [location.pathname, setIsMobileMenuOpen]);
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -181,6 +182,11 @@ const Navbar = () => {
       .toUpperCase();
   };
 
+  const handleNotificationClick = () => {
+    navigate("/chat");
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <>
       <motion.nav
@@ -197,6 +203,7 @@ const Navbar = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
+            {/* Logo */}
             <Link to="/" className="flex items-center space-x-3 group">
               <motion.div
                 variants={logoVariants}
@@ -231,13 +238,15 @@ const Navbar = () => {
               </div>
             </Link>
 
+            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               <NavLinks currentPath={location.pathname} isVendor={isVendor} />
 
               <div className="flex items-center space-x-4">
-                {isVendor && (
+                {/* Bell icon - only visible if authenticated AND vendor */}
+                {isAuthenticated && isVendor && (
                   <motion.button
-                    onClick={() => navigate("/chat")}
+                    onClick={handleNotificationClick}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     className="relative p-2 rounded-xl hover:bg-blue-50 transition-colors"
@@ -246,10 +255,7 @@ const Navbar = () => {
                     <Bell className="w-5 h-5 text-gray-700" />
 
                     {/* Notification badge */}
-                    <span
-                      className="absolute -top-1 -right-1 w-5 h-5 rounded-full 
-      bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow"
-                    >
+                    <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow">
                       3
                     </span>
                   </motion.button>
@@ -432,29 +438,31 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* MOBILE ICONS (Bell + Hamburger) */}
-            <div className="md:hidden flex items-center gap-2">
-              {/* 🔔 Bell icon – Vendor only */}
-              {isVendor && (
+            {/* Mobile: Bell icon (only for authenticated vendors) + Hamburger */}
+            <div className="md:hidden flex items-center space-x-2">
+              {/* Bell icon - Mobile (only for authenticated vendors) */}
+              {isAuthenticated && isVendor && (
                 <motion.button
-                  onClick={() => navigate("/chat")}
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="relative p-2.5 rounded-xl hover:bg-gray-100 transition-colors"
+                  onClick={handleNotificationClick}
+                  className="relative p-2.5 rounded-xl bg-white/60 backdrop-blur-md border border-gray-200 hover:bg-white/80 transition-all"
                   aria-label="Notifications"
                 >
                   <Bell className="w-5 h-5 text-gray-700" />
-                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow">
+
+                  {/* Notification badge */}
+                  <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow">
                     3
                   </span>
                 </motion.button>
               )}
 
-              {/* ☰ Hamburger menu */}
+              {/* Hamburger Menu Button */}
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={toggleMobileMenu}
-                className="relative p-2.5 rounded-xl hover:bg-gray-100 transition-colors focus:outline-none"
+                className="relative p-2.5 rounded-xl bg-white/60 backdrop-blur-md border border-gray-200 hover:bg-white/80 transition-colors focus:outline-none"
                 aria-label="Toggle menu"
                 aria-expanded={isMobileMenuOpen}
               >
