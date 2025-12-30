@@ -3,77 +3,52 @@ import { Shield, Sparkles, Users, Home, Star } from "lucide-react";
 import heroimage from "../assets/images/heroimage.png";
 import { RadialGradient } from "react-text-gradients";
 import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "../context/AuthContext";
 
 /* ================= IMAGE IMPORTS ================= */
 import constructionServices from "../assets/construction.png";
 import interior from "../assets/interior.png";
 import legal from "../assets/legal.png";
 import vastu from "../assets/vastu.png";
-// import consulting from "../assets/consulting.png";
+import consulting from "../assets/consulting.png";
 import loan from "../assets/loan.png";
 import materials from "../assets/materials.png";
 import houses from "../assets/houses.png";
 import apartments from "../assets/apartments.png";
-import shops from "../assets/shops.png";
 import commercialPlots from "../assets/commercial-plots.png";
-// import farmHouse from "../assets/farm-house.png";
-
+import furniture from "../assets/furniture.png";
+import decoratives from "../assets/decoratives.png";
+import others from "../assets/others.png";
 
 /* ================= DATA ================= */
 const services = [
+  { title: "Buy", img: houses },
+  { title: "Sell", img: apartments },
+  { title: "Rent", img: commercialPlots },
   { title: "Construction Services", img: constructionServices },
   { title: "Interior Designing", img: interior },
   { title: "Legal Service", img: legal },
   { title: "Vastu", img: vastu },
-  // { title: "Construction Consulting", img: consulting },
+  { title: "Construction Consulting", img: consulting },
   { title: "Home Loan", img: loan },
   { title: "Construction Materials", img: materials },
-  { title: "Houses", img: houses },
-  { title: "Apartments", img: apartments },
-  { title: "Shops", img: shops },
-  { title: "Plots", img: commercialPlots },
-  // { title: "Farm House", img: farmHouse },
+  { title: "Furniture", img: furniture },
+  { title: "Decoratives", img: decoratives },
+  { title: "Others", img: others },
 ];
-
 
 const stats = [
-  {
-    icon: Users,
-    value: "50K+",
-    label: "Happy Customers",
-    color: "from-blue-500 to-cyan-500",
-  },
-  {
-    icon: Home,
-    value: "10K+",
-    label: "Properties Listed",
-    color: "from-green-500 to-emerald-500",
-  },
-  {
-    icon: Star,
-    value: "4.9",
-    label: "Average Rating",
-    color: "from-yellow-500 to-orange-500",
-  },
-  {
-    icon: Shield,
-    value: "100%",
-    label: "Verified Properties",
-    color: "from-purple-500 to-pink-500",
-  },
+  { icon: Users, value: "50K+", label: "Happy Customers", color: "from-blue-500 to-cyan-500" },
+  { icon: Home, value: "10K+", label: "Properties Listed", color: "from-green-500 to-emerald-500" },
+  { icon: Star, value: "4.9", label: "Average Rating", color: "from-yellow-500 to-orange-500" },
+  { icon: Shield, value: "100%", label: "Verified Properties", color: "from-purple-500 to-pink-500" },
 ];
-
 
 /* ================= ANIMATIONS ================= */
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.12 },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
 };
-
 
 const itemVariants = {
   hidden: { opacity: 0, y: 30, scale: 0.95 },
@@ -85,12 +60,10 @@ const itemVariants = {
   },
 };
 
-
 const floatingAnimation = {
   y: [-10, 10, -10],
   transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
 };
-
 
 const sparkleAnimation = {
   scale: [1, 1.2, 1],
@@ -98,18 +71,27 @@ const sparkleAnimation = {
   transition: { duration: 3, repeat: Infinity, ease: "easeInOut" },
 };
 
-
 /* ================= COMPONENT ================= */
 const Hero = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
 
+  // ROLE-BASED VISIBILITY
+  const visibleServices = services.filter((service) => {
+    if (service.title === "Sell") {
+      return isAuthenticated && user?.role === "vendor";
+    }
+    if (service.title === "Buy") {
+      return !isAuthenticated || user?.role !== "vendor";
+    }
+    return true;
+  });
 
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* ================= BACKGROUND ================= */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50" />
-
 
         <motion.div
           initial={{ opacity: 0, scale: 1.1 }}
@@ -125,7 +107,6 @@ const Hero = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/10" />
         </motion.div>
 
-
         {/* Floating blobs */}
         <div className="absolute inset-0 pointer-events-none">
           <motion.div
@@ -133,14 +114,10 @@ const Hero = () => {
             className="absolute top-20 left-10 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl"
           />
           <motion.div
-            animate={{
-              y: [10, -10, 10],
-              transition: { duration: 8, repeat: Infinity },
-            }}
+            animate={{ y: [10, -10, 10], transition: { duration: 8, repeat: Infinity } }}
             className="absolute top-40 right-20 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"
           />
         </div>
-
 
         {/* Sparkles */}
         <div className="absolute inset-0 pointer-events-none">
@@ -157,24 +134,10 @@ const Hero = () => {
         </div>
       </div>
 
-
       {/* ================= CONTENT ================= */}
       <div className="relative z-10 min-h-screen flex items-center px-4 py-8">
         <div className="max-w-7xl mx-auto w-full">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="text-center"
-          >
-            <motion.div
-              variants={itemVariants}
-              className="inline-flex items-center gap-2 px-8 py-7 rounded-full "
-            >
-             
-            </motion.div>
-
-
+          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="text-center">
             {/* Heading */}
             <motion.div variants={itemVariants} className="mb-12">
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-6">
@@ -185,47 +148,29 @@ const Hero = () => {
                 <span className="text-gray-900">Dream Home</span>
               </h1>
 
-
               <p className="hidden sm:block text-xl sm:text-2xl text-gray-700 max-w-3xl mx-auto">
-                All property services you need — buying, selling, construction &
-                more
+                All property services you need — buying, construction & more
               </p>
             </motion.div>
 
-
             {/* ================= SERVICES GRID ================= */}
-            <motion.div
-              variants={itemVariants}
-              className="max-w-6xl mx-auto mb-12"
-            >
+            <motion.div variants={itemVariants} className="max-w-6xl mx-auto mb-12">
               <div className="bg-white/95 rounded-3xl p-4 sm:p-8 shadow-2xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-10">
-                  All Your <span className="text-purple-600">Real Estate</span>{" "}
-                  Needs In One Place
+                  All Your <span className="text-purple-600">Real Estate</span> Needs In One Place
                 </h2>
 
-
-                {/* Mobile: 4 columns, Tablet+: Original layout */}
                 <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6">
-                  {services.map((service, index) => (
+                  {visibleServices.map((service, index) => (
                     <motion.div
                       key={index}
                       whileHover={{ y: -6, scale: 1.05 }}
                       onClick={() => navigate("/properties")}
                       className="bg-white rounded-xl sm:rounded-2xl p-2 sm:p-5 shadow-md hover:shadow-xl cursor-pointer group"
                     >
-                      <div
-                        className="w-12 h-12 sm:w-24 sm:h-24 mx-auto mb-2 sm:mb-4 rounded-lg sm:rounded-2xl bg-gradient-to-br 
-                                      from-purple-50 to-blue-50 flex items-center 
-                                      justify-center shadow-inner group-hover:scale-110 transition-transform"
-                      >
-                        <img
-                          src={service.img}
-                          alt={service.title}
-                          className="w-8 h-8 sm:w-16 sm:h-16 object-contain"
-                        />
+                      <div className="w-12 h-12 sm:w-24 sm:h-24 mx-auto mb-2 sm:mb-4 rounded-lg sm:rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+                        <img src={service.img} alt={service.title} className="w-8 h-8 sm:w-16 sm:h-16 object-contain" />
                       </div>
-
 
                       <p className="font-semibold text-gray-800 text-center text-[10px] sm:text-base leading-tight">
                         {service.title}
@@ -236,30 +181,19 @@ const Hero = () => {
               </div>
             </motion.div>
 
-
             {/* ================= STATS ================= */}
-            <motion.div
-              variants={containerVariants}
-              className="grid grid-cols-4 gap-3 sm:gap-6 lg:gap-10 max-w-3xl mx-auto"
-            >
+            <motion.div variants={containerVariants} className="grid grid-cols-4 gap-3 sm:gap-6 lg:gap-10 max-w-3xl mx-auto">
               {stats.map((stat, i) => (
                 <motion.div
                   key={i}
                   variants={itemVariants}
                   className="bg-white/90 rounded-lg sm:rounded-xl p-2 sm:p-4 shadow text-center hover:shadow-xl transition-all"
                 >
-                  <div
-                    className={`w-8 h-8 sm:w-12 sm:h-11 mx-auto mb-1 sm:mb-3 bg-gradient-to-br ${stat.color} 
-                                rounded-lg sm:rounded-xl flex items-center justify-center`}
-                  >
+                  <div className={`w-8 h-8 sm:w-12 sm:h-11 mx-auto mb-1 sm:mb-3 bg-gradient-to-br ${stat.color} rounded-lg sm:rounded-xl flex items-center justify-center`}>
                     <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
-                  <div className="text-base sm:text-2xl font-bold text-gray-900">
-                    {stat.value}
-                  </div>
-                  <div className="text-[9px] sm:text-xs text-gray-600 leading-tight">
-                    {stat.label}
-                  </div>
+                  <div className="text-base sm:text-2xl font-bold text-gray-900">{stat.value}</div>
+                  <div className="text-[9px] sm:text-xs text-gray-600 leading-tight">{stat.label}</div>
                 </motion.div>
               ))}
             </motion.div>
@@ -269,6 +203,5 @@ const Hero = () => {
     </div>
   );
 };
-
 
 export default Hero;

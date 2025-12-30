@@ -417,7 +417,7 @@ const Navbar = () => {
                         to="/login"
                         className="text-gray-700 hover:text-blue-600 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-blue-50"
                       >
-                        Sign in
+                        Log in
                       </Link>
                     </motion.div>
                     <motion.div
@@ -715,7 +715,7 @@ const Navbar = () => {
                     <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
                       <LogIn className="w-5 h-5 text-gray-600" />
                     </div>
-                    <span className="font-semibold">Sign in</span>
+                    <span className="font-semibold">Log In</span>
                   </Link>
                   <Link
                     to="/signup"

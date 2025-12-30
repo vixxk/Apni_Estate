@@ -25,6 +25,7 @@ import VendorProfile from './pages/VendorProfile';
 import VendorRegister from './pages/VendorRegister';
 import MobileBottomNav from './components/MobileBottomNav';
 import { MobileMenuProvider } from "./context/MobileMenuContext";
+import Chat from './components/Chat.jsx';
 
 export const Backendurl = import.meta.env.VITE_API_BASE_URL;
 
@@ -59,6 +60,7 @@ const App = () => {
                 <Route path="/vendor/add-service" element={<VendorAddService />} />
                 <Route path="/vendor/:vendorId" element={<VendorProfile />} /> 
                 <Route path="/saved" element={<SavedProperties />} />
+                <Route path="/chat" element={<Chat />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </main>

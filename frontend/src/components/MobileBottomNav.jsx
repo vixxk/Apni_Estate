@@ -8,7 +8,7 @@ import {
   User,
   LogIn,
   MessageCircle,
-  Plus, // Add this import
+  Plus,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useMobileMenu } from "../context/MobileMenuContext";
@@ -19,22 +19,34 @@ const MobileBottomNav = () => {
   const { isMobileMenuOpen } = useMobileMenu();
 
   // Base navigation items
-  const baseNavItems = [
-    { path: "/", icon: Home },
-    { path: "/properties", icon: Search },
-    { path: "/saved", icon: Heart },
-    { path: "/profile", icon: User },
-  ];
+// Customer navigation (default)
+const customerNavItems = [
+  { path: "/", icon: Home },
+  { path: "/properties", icon: Search },
+  { path: "/chat", icon: MessageCircle },
+  { path: "/saved", icon: Heart },
+  { path: "/profile", icon: User },
+];
 
-  // Add vendor-specific item if user role is vendor
-  const navItems = 
-    isAuthenticated && user?.role === "vendor"
-      ? [
-          ...baseNavItems.slice(0, 2), // Home and Search
-          { path: "/vendor/add-service", icon: Plus, isVendorAction: true }, // Vendor add button
-          ...baseNavItems.slice(2), // Saved and Profile
-        ]
-      : baseNavItems;
+// Vendor navigation (NO chat)
+const vendorNavItems = [
+  { path: "/", icon: Home },
+  { path: "/properties", icon: Search },
+  {
+    path: "/vendor/add-service",
+    icon: Plus,
+    isVendorAction: true,
+  },
+  { path: "/saved", icon: Heart },
+  { path: "/profile", icon: User },
+];
+
+// Final nav selection
+const navItems =
+  isAuthenticated && user?.role === "vendor"
+    ? vendorNavItems
+    : customerNavItems;
+
 
   if (isMobileMenuOpen) return null;
 
