@@ -201,7 +201,7 @@ const Navbar = () => {
       >
         <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3 group">
@@ -212,7 +212,7 @@ const Navbar = () => {
                   scale: 1.1,
                 }}
                 transition={{ duration: 0.5 }}
-                className="relative w-12 h-12 flex items-center justify-center"
+                className="relative w-8 h-8 flex items-center justify-center"
               >
                 <img
                   src={logo}
@@ -229,14 +229,14 @@ const Navbar = () => {
               </motion.div>
 
               {/* Vertical Divider Line */}
-              <div className="h-12 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
+              <div className="h-12 w-px bg-gradient-to-b  from-transparent via-gray-300 to-transparent"></div>
 
               {/* Government Recognition Logo */}
               <motion.div
                 variants={logoVariants}
                 whileHover={{ scale: 1.1 }}
                 transition={{ duration: 0.3 }}
-                className="relative w-12 h-12 flex items-center justify-center"
+                className="relative w-8 h-8 flex items-center justify-center"
               >
                 <img
                   src={govLogo}
@@ -551,7 +551,16 @@ const Navbar = () => {
                   />
                 </div>
 
+                {/* <div className="h-12 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div> */}
 
+                {/* Government Recognition Logo - Mobile */}
+                {/* <div className="w-12 h-12 rounded-full bg-white overflow-hidden shadow-md border-2 border-white/50">
+                  <img
+                    src={govLogo}
+                    alt="Government Recognition"
+                    className="w-full h-full object-contain p-1"
+                  />
+                </div> */}
 
                 <div className="flex flex-col">
                   <span className="text-2xl font-bold text-white">
