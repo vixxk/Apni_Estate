@@ -131,12 +131,10 @@ const Hero = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  // Handle service card click
-  // Handle service card click
+  
   const handleServiceClick = (serviceTitle) => {
     const title = serviceTitle.toLowerCase();
-
+  
     // Properties (Buy, Sell, Rent)
     if (title === "buy" || title === "sell") {
       navigate("/properties", {
@@ -159,9 +157,13 @@ const Hero = () => {
         state: { filterType: title },
       });
     }
-    // Sales Items
+    // Sales Items - NORMALIZE "Interior Designing" to "interior"
+    else if (title === "interior designing") {
+      navigate("/sales-items", {
+        state: { filterType: "interior" }, // Changed from "interior designing"
+      });
+    }
     else if (
-      title === "interior designing" ||
       title === "construction materials" ||
       title === "furniture" ||
       title === "decoratives"
@@ -179,7 +181,7 @@ const Hero = () => {
       navigate("/properties");
     }
   };
-
+  
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* ================= BACKGROUND ================= */}
