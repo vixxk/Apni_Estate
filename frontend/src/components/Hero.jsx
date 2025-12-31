@@ -160,7 +160,7 @@ const Hero = () => {
     // Sales Items - NORMALIZE "Interior Designing" to "interior"
     else if (title === "interior designing") {
       navigate("/sales-items", {
-        state: { filterType: "interior" }, // Changed from "interior designing"
+        state: { filterType: "interior" },
       });
     }
     else if (
@@ -233,7 +233,7 @@ const Hero = () => {
       </div>
 
       {/* ================= CONTENT ================= */}
-      <div className="relative z-10 min-h-screen flex items-center px-4 py-8 md:pt-24 lg:pt-28">
+      <div className="relative z-10 min-h-screen flex items-center px-4 py-4 md:pt-12 lg:pt-14">
         <div className="max-w-7xl mx-auto w-full">
           <motion.div
             variants={containerVariants}
@@ -242,8 +242,8 @@ const Hero = () => {
             className="text-center"
           >
             {/* Heading */}
-            <motion.div variants={itemVariants} className="mb-12">
-              <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-6">
+            <motion.div variants={itemVariants} className="mb-8">
+              <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-4">
                 <RadialGradient gradient={["circle, #3f5efb 0%, #fc466b 100%"]}>
                   Find Your Perfect
                 </RadialGradient>
@@ -259,7 +259,7 @@ const Hero = () => {
             {/* ================= SERVICES GRID ================= */}
             <motion.div
               variants={itemVariants}
-              className="max-w-6xl mx-auto mb-12"
+              className="max-w-6xl mx-auto mb-8"
             >
               <div className="bg-white/95 rounded-3xl p-4 sm:p-8 shadow-2xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-10">
