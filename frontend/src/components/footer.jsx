@@ -169,27 +169,27 @@ const FooterLink = ({ href, children, icon: Icon }) => {
 
 // Social Links Component
 const socialLinks = [
-  {
-    icon: Twitter,
-    href: "#",
-    label: "Twitter",
-    color: "from-[#1DA1F2] to-[#0d8bd9]",
-    hoverColor: "hover:shadow-[#1DA1F2]/25",
-  },
-  {
-    icon: Facebook,
-    href: "#",
-    label: "Facebook",
-    color: "from-[#1877F2] to-[#0d65d9]",
-    hoverColor: "hover:shadow-[#1877F2]/25",
-  },
-  {
-    icon: Instagram,
-    href: "#",
-    label: "Instagram",
-    color: "from-[#fd5949] via-[#d6249f] to-[#285AEB]",
-    hoverColor: "hover:shadow-pink-500/25",
-  },
+  // {
+  //   icon: Twitter,
+  //   href: "#",
+  //   label: "Twitter",
+  //   color: "from-[#1DA1F2] to-[#0d8bd9]",
+  //   hoverColor: "hover:shadow-[#1DA1F2]/25",
+  // },
+  // {
+  //   icon: Facebook,
+  //   href: "#",
+  //   label: "Facebook",
+  //   color: "from-[#1877F2] to-[#0d65d9]",
+  //   hoverColor: "hover:shadow-[#1877F2]/25",
+  // },
+  // {
+  //   icon: Instagram,
+  //   href: "#",
+  //   label: "Instagram",
+  //   color: "from-[#fd5949] via-[#d6249f] to-[#285AEB]",
+  //   hoverColor: "hover:shadow-pink-500/25",
+  // },
   {
     icon: Linkedin,
     href: "https://www.linkedin.com/company/apni-estate/",
@@ -236,18 +236,18 @@ const companyLinks = [
 const contactInfo = [
   {
     icon: MapPin,
-    text: "123 Property Plaza, Silicon Valley, CA 94088",
-    href: "https://maps.google.com/?q=123+Property+Plaza,Silicon+Valley,CA+94088",
+    text: "Tripura,Agartala",
+    href: "https://www.google.com/maps/place/Tripura/@23.6880803,91.200007,9.39z",
   },
   {
     icon: Phone,
-    text: "+1 (234) 567-890",
-    href: "tel:+1234567890",
+    text: "+91 6009396197",
+    href: "tel:+916009396197",
   },
   {
     icon: Mail,
-    text: "support@apniestate.com",
-    href: "mailto:support@apniestate.com",
+    text: "apniestateofficial@gmail.com",
+    href: "mailto:apniestateofficial@gmail.com",
   },
 ];
 

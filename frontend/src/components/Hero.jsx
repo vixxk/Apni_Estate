@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useMobileMenu } from "../context/MobileMenuContext";
 
-
 /* ================= IMAGE IMPORTS ================= */
 import constructionServices from "../assets/construction.png";
 import interior from "../assets/interior.png";
@@ -22,26 +21,26 @@ import legal from "../assets/legal.png";
 import vastu from "../assets/vastu.png";
 import consulting from "../assets/consulting.png";
 import loan from "../assets/loan.png";
-import materials from "../assets/materials.png";
+import constructionMaterials from "../assets/construction materials.jpeg";
 import houses from "../assets/houses.png";
-import apartments from "../assets/apartments.png";
-import commercialPlots from "../assets/commercial-plots.png";
+import sell from "../assets/sell.png";
+import rent from "../assets/rent.png";
 import furniture from "../assets/furniture.png";
 import decoratives from "../assets/decoratives.png";
 import others from "../assets/others.png";
 
 /* ================= DATA ================= */
 const services = [
-  { title: "Buy", img: houses },
-  { title: "Sell", img: apartments },
-  { title: "Rent", img: commercialPlots },
+  { title: "Buy", img: sell },
+  { title: "Sell", img: sell },
+  { title: "Rent", img: rent },
   { title: "Construction Services", img: constructionServices },
   { title: "Interior Designing", img: interior },
   { title: "Legal Service", img: legal },
   { title: "Vastu", img: vastu },
   { title: "Construction Consulting", img: consulting },
   { title: "Home Loan", img: loan },
-  { title: "Construction Materials", img: materials },
+  { title: "Construction Materials", img: constructionMaterials },
   { title: "Furniture", img: furniture },
   { title: "Decoratives", img: decoratives },
   { title: "Others", img: others },
@@ -133,6 +132,54 @@ const Hero = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Handle service card click
+  // Handle service card click
+  const handleServiceClick = (serviceTitle) => {
+    const title = serviceTitle.toLowerCase();
+
+    // Properties (Buy, Sell, Rent)
+    if (title === "buy" || title === "sell") {
+      navigate("/properties", {
+        state: { filterType: "buy-sell" },
+      });
+    } else if (title === "rent") {
+      navigate("/properties", {
+        state: { filterType: "rent" },
+      });
+    }
+    // Services
+    else if (
+      title === "construction services" ||
+      title === "legal service" ||
+      title === "vastu" ||
+      title === "construction consulting" ||
+      title === "home loan"
+    ) {
+      navigate("/services", {
+        state: { filterType: title },
+      });
+    }
+    // Sales Items
+    else if (
+      title === "interior designing" ||
+      title === "construction materials" ||
+      title === "furniture" ||
+      title === "decoratives"
+    ) {
+      navigate("/sales-items", {
+        state: { filterType: title },
+      });
+    }
+    // Others - show everything
+    else if (title === "others") {
+      navigate("/everything");
+    }
+    // Default - properties
+    else {
+      navigate("/properties");
+    }
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* ================= BACKGROUND ================= */}
@@ -223,18 +270,18 @@ const Hero = () => {
                     <motion.div
                       key={index}
                       whileHover={{ y: -6, scale: 1.05 }}
-                      onClick={() => navigate("/properties")}
-                      className="bg-white rounded-xl sm:rounded-2xl p-2 sm:p-5 shadow-md hover:shadow-xl cursor-pointer group"
+                      onClick={() => handleServiceClick(service.title)}
+                      className="bg-white rounded-xl sm:rounded-2xl shadow-md hover:shadow-xl cursor-pointer group overflow-hidden"
                     >
-                      <div className="w-12 h-12 sm:w-24 sm:h-24 mx-auto mb-2 sm:mb-4 rounded-lg sm:rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+                      <div className="w-12 h-12 sm:w-24 sm:h-24 mx-auto rounded-lg sm:rounded-2xl overflow-hidden">
                         <img
                           src={service.img}
                           alt={service.title}
-                          className="w-8 h-8 sm:w-16 sm:h-16 object-contain"
+                          className="w-full h-full object-cover"
                         />
                       </div>
 
-                      <p className="font-semibold text-gray-800 text-center text-[10px] sm:text-base leading-tight">
+                      <p className="font-semibold text-gray-800 text-center text-[10px] sm:text-base leading-tight p-2">
                         {service.title}
                       </p>
                     </motion.div>
@@ -273,44 +320,47 @@ const Hero = () => {
       </div>
 
       {/* ================= MESSAGE BUTTON ================= */}
-      {isAuthenticated && user?.role === "vendor" && showButton && !isMobileMenuOpen && (
-        <motion.button
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0, opacity: 0 }}
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => navigate("/chat")}
-          className="
-      fixed
-      bottom-4 right-4
-      md:bottom-6 md:right-6
-      bg-yellow-400
-      p-3 md:p-4
-      rounded-full
-      shadow-xl
-      z-[9999]
-    "
-        >
-          <MessageCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
-
-          <span
+      {isAuthenticated &&
+        user?.role === "vendor" &&
+        showButton &&
+        !isMobileMenuOpen && (
+          <motion.button
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate("/chat")}
             className="
-        absolute
-        -top-1 -right-1
-        bg-red-500
-        text-white
-        text-[10px] md:text-xs
-        font-bold
-        rounded-full
-        w-5 h-5 md:w-6 md:h-6
-        flex items-center justify-center
-      "
+              fixed
+              bottom-4 right-4
+              md:bottom-6 md:right-6
+              bg-yellow-400
+              p-3 md:p-4
+              rounded-full
+              shadow-xl
+              z-[9999]
+            "
           >
-            3
-          </span>
-        </motion.button>
-      )}
+            <MessageCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
+
+            <span
+              className="
+                absolute
+                -top-1 -right-1
+                bg-red-500
+                text-white
+                text-[10px] md:text-xs
+                font-bold
+                rounded-full
+                w-5 h-5 md:w-6 md:h-6
+                flex items-center justify-center
+              "
+            >
+              3
+            </span>
+          </motion.button>
+        )}
     </div>
   );
 };

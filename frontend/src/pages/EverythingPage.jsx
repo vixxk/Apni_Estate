@@ -1,28 +1,43 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { Grid, List, SlidersHorizontal, MapPin, Home } from "lucide-react";
+import { Grid, List, SlidersHorizontal, MapPin, Layers } from "lucide-react";
 import { useLocation } from "react-router-dom";
-import SearchBar from "../properties/Searchbar.jsx";
-import FilterSection from "../properties/Filtersection.jsx";
-import PropertyCard from "../properties/Propertycard.jsx";
-import { Backendurl } from "../../App.jsx";
+import SearchBar from "../components/properties/Searchbar.jsx";
+import FilterSection from "../components/properties/Filtersection.jsx";
+import PropertyCard from "../components/properties/Propertycard.jsx";
+import { Backendurl } from "../App.jsx";
 
-const PropertiesPage = () => {
+const EverythingPage = () => {
   const location = useLocation();
   const filterType = location.state?.filterType;
+
+  // ALL categories combined
+  const ALL_CATEGORIES = [
+    "buy",
+    "sell",
+    "rent",
+    "construction services",
+    "legal service",
+    "vastu",
+    "construction consulting",
+    "home loan",
+    "interior designing",
+    "construction materials",
+    "furniture",
+    "decoratives",
+    "others"
+  ];
 
   const [viewState, setViewState] = useState({
     isGridView: true,
     showFilters: false,
-    showMap: false,
   });
 
   const [propertyState, setPropertyState] = useState({
     properties: [],
     loading: true,
     error: null,
-    selectedProperty: null,
   });
 
   const [filters, setFilters] = useState({
@@ -37,26 +52,22 @@ const PropertiesPage = () => {
 
   const [favourites, setFavourites] = useState([]);
 
-  // Refs for outside click detection
   const filterRef = useRef(null);
   const filterButtonRef = useRef(null);
 
   const token = localStorage.getItem("token");
 
-  // Update filter when navigating from Hero page
   useEffect(() => {
     if (location.state?.filterType) {
-      setFilters(prev => ({
+      setFilters((prev) => ({
         ...prev,
         propertyType: location.state.filterType,
-        searchQuery: "" // Keep search bar empty
+        searchQuery: "",
       }));
-      // Clear the navigation state to prevent reapplying on refresh
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
-  // Close filters when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -76,7 +87,6 @@ const PropertiesPage = () => {
     };
   }, [viewState.showFilters]);
 
-  // Fetch all properties
   const fetchProperties = async () => {
     try {
       setPropertyState((prev) => ({ ...prev, loading: true }));
@@ -121,6 +131,7 @@ const PropertiesPage = () => {
             description: p.description,
             price: p.price,
             type: p.type || p.propertyType,
+            category: p.category || p.type || p.propertyType,
             location: locationString || "Location not specified",
             beds: p.features?.bedrooms ?? 0,
             baths: p.features?.bathrooms ?? 0,
@@ -160,7 +171,7 @@ const PropertiesPage = () => {
     } catch (err) {
       setPropertyState((prev) => ({
         ...prev,
-        error: "Failed to fetch properties. Please try again later.",
+        error: "Failed to fetch listings. Please try again later.",
         loading: false,
       }));
       console.error("Error fetching properties:", err);
@@ -193,55 +204,53 @@ const PropertiesPage = () => {
   }, [token]);
 
   const filteredProperties = useMemo(() => {
-    // Define allowed property types
-    const allowedTypes = ['buy', 'sell', 'rent'];
-    
     return propertyState.properties
       .filter((property) => {
-        // Only show properties with allowed types (buy, sell, rent)
-        const typeAllowed = allowedTypes.includes(
-          property.type?.toLowerCase()
+        // FILTER ALL CATEGORIES
+        const categoryMatch = ALL_CATEGORIES.some(
+          (cat) =>
+            property.category?.toLowerCase() === cat.toLowerCase() ||
+            property.type?.toLowerCase() === cat.toLowerCase()
         );
-        if (!typeAllowed) return false;
-        
+        if (!categoryMatch) return false;
+
         const searchMatch =
           !filters.searchQuery ||
           [property.title, property.description, property.location].some(
             (field) =>
               field?.toLowerCase().includes(filters.searchQuery.toLowerCase())
           );
-  
-        // Handle buy-sell combined filter
+
         let typeMatch = true;
         if (filters.propertyType) {
           if (filters.propertyType === 'buy-sell') {
-            // Show both buy and sell properties
             typeMatch = ['buy', 'sell'].includes(property.type?.toLowerCase());
           } else {
-            // Show only the specific type
-            typeMatch = property.type?.toLowerCase() === filters.propertyType.toLowerCase();
+            typeMatch =
+              property.type?.toLowerCase() === filters.propertyType.toLowerCase() ||
+              property.category?.toLowerCase() === filters.propertyType.toLowerCase();
           }
         }
-  
+
         const priceMatch =
           property.price >= filters.priceRange[0] &&
           property.price <= filters.priceRange[1];
-  
+
         const bedroomsMatch =
           !filters.bedrooms ||
           filters.bedrooms === "0" ||
           property.beds >= parseInt(filters.bedrooms);
-  
+
         const bathroomsMatch =
           !filters.bathrooms ||
           filters.bathrooms === "0" ||
           property.baths >= parseInt(filters.bathrooms);
-  
+
         const availabilityMatch =
           !filters.availability ||
           property.availability?.toLowerCase() ===
             filters.availability.toLowerCase();
-  
+
         return (
           searchMatch &&
           typeMatch &&
@@ -272,7 +281,6 @@ const PropertiesPage = () => {
         }
       });
   }, [propertyState.properties, filters]);
-  
 
   const handleFilterChange = (newFilters) => {
     setFilters((prev) => ({
@@ -304,7 +312,7 @@ const PropertiesPage = () => {
         >
           <div className="relative mb-6">
             <motion.div
-              className="w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center relative shadow-lg shadow-blue-500/30"
+              className="w-24 h-24 bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl flex items-center justify-center relative shadow-lg shadow-orange-500/30"
               animate={{
                 rotate: [0, 0, 360, 360, 0],
                 scale: [1, 0.9, 0.9, 1, 1],
@@ -312,11 +320,11 @@ const PropertiesPage = () => {
               }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             >
-              <Home className="w-12 h-12 text-white" />
+              <Layers className="w-12 h-12 text-white" />
             </motion.div>
 
             <motion.div
-              className="absolute w-3 h-3 bg-blue-300 rounded-full right-4 bottom-10"
+              className="absolute w-3 h-3 bg-orange-300 rounded-full right-4 bottom-10"
               animate={{
                 x: [0, 30, 0, -30, 0],
                 y: [-30, 0, 30, 0, -30],
@@ -325,7 +333,7 @@ const PropertiesPage = () => {
             />
 
             <motion.div
-              className="absolute w-2 h-2 bg-indigo-400 rounded-full"
+              className="absolute w-2 h-2 bg-red-400 rounded-full"
               animate={{
                 x: [0, -30, 0, 30, 0],
                 y: [30, 0, -30, 0, 30],
@@ -334,22 +342,22 @@ const PropertiesPage = () => {
             />
 
             <div
-              className="absolute inset-0 bg-blue-500/10 rounded-full animate-ping"
+              className="absolute inset-0 bg-orange-500/10 rounded-full animate-ping"
               style={{ animationDuration: "3s" }}
             ></div>
           </div>
 
-          <h3 className="text-2xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            Loading Properties
+          <h3 className="text-2xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+            Loading All Listings
           </h3>
 
           <p className="text-gray-600 mb-5 max-w-xs text-center">
-            We're finding the perfect homes that match your preferences...
+            We're gathering all available properties, services & items...
           </p>
 
           <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
             <motion.div
-              className="h-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600 bg-size-200 absolute top-0 left-0 right-0"
+              className="h-full bg-gradient-to-r from-orange-600 via-red-500 to-orange-600 bg-size-200 absolute top-0 left-0 right-0"
               animate={{
                 backgroundPosition: ["0% center", "100% center", "0% center"],
               }}
@@ -362,13 +370,13 @@ const PropertiesPage = () => {
             />
           </div>
 
-          <div className="flex items-center mt-4 text-xs text-blue-600">
+          <div className="flex items-center mt-4 text-xs text-orange-600">
             <motion.div
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"
+              className="w-1.5 h-1.5 bg-orange-600 rounded-full mr-2"
             />
-            <span>Please wait while we curate properties for you</span>
+            <span>Please wait while we curate everything for you</span>
           </div>
         </motion.div>
       </div>
@@ -386,7 +394,7 @@ const PropertiesPage = () => {
           <p className="font-medium mb-4">{propertyState.error}</p>
           <button
             onClick={fetchProperties}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+            className="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors duration-200"
           >
             Try Again
           </button>
@@ -408,19 +416,17 @@ const PropertiesPage = () => {
           className="text-center mb-6 sm:mb-12"
         >
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
-            Find Your Perfect Property
+            Everything You Need
           </h1>
           <p className="text-sm sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">
-            Discover a curated collection of premium properties in your desired
-            location
+            Explore all properties, services, and items available on our platform
           </p>
           <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
-            {filteredProperties.length} properties found
+            {filteredProperties.length} listings found
           </p>
         </motion.header>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-8">
-          {/* Filters Sidebar */}
           <AnimatePresence mode="wait">
             {viewState.showFilters && (
               <motion.aside
@@ -439,16 +445,13 @@ const PropertiesPage = () => {
             )}
           </AnimatePresence>
 
-          {/* Properties Grid/List */}
           <div
             className={`${
               viewState.showFilters ? "lg:col-span-3" : "lg:col-span-4"
             }`}
           >
-            {/* Search and View Controls */}
             <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm mb-4 sm:mb-6">
               <div className="flex flex-col gap-3">
-                {/* Search Bar */}
                 <div className="w-full">
                   <SearchBar
                     onSearch={(query) =>
@@ -461,7 +464,6 @@ const PropertiesPage = () => {
                   />
                 </div>
 
-                {/* Sort and View Controls */}
                 <div className="flex items-center gap-2 w-full">
                   <select
                     value={filters.sortBy}
@@ -471,7 +473,7 @@ const PropertiesPage = () => {
                         sortBy: e.target.value,
                       }))
                     }
-                    className="flex-1 px-2 sm:px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-2 sm:px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="">Sort By</option>
                     <option value="price-asc">Price: Low to High</option>
@@ -482,7 +484,6 @@ const PropertiesPage = () => {
                   </select>
 
                   <div className="flex items-center gap-1">
-                    {/* Toggle Filters Button */}
                     <button
                       ref={filterButtonRef}
                       onClick={() =>
@@ -493,7 +494,7 @@ const PropertiesPage = () => {
                       }
                       className={`p-2 rounded-lg transition ${
                         viewState.showFilters
-                          ? "bg-blue-100 text-blue-600"
+                          ? "bg-orange-100 text-orange-600"
                           : "hover:bg-gray-100 text-gray-600"
                       }`}
                       title="Toggle Filters"
@@ -501,7 +502,6 @@ const PropertiesPage = () => {
                       <SlidersHorizontal className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
 
-                    {/* Grid View Button */}
                     <button
                       onClick={() =>
                         setViewState((prev) => ({
@@ -511,7 +511,7 @@ const PropertiesPage = () => {
                       }
                       className={`p-2 rounded-lg transition ${
                         viewState.isGridView
-                          ? "bg-blue-100 text-blue-600"
+                          ? "bg-orange-100 text-orange-600"
                           : "hover:bg-gray-100 text-gray-600"
                       }`}
                       title="Grid View"
@@ -519,7 +519,6 @@ const PropertiesPage = () => {
                       <Grid className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
 
-                    {/* List View Button */}
                     <button
                       onClick={() =>
                         setViewState((prev) => ({
@@ -529,7 +528,7 @@ const PropertiesPage = () => {
                       }
                       className={`p-2 rounded-lg transition ${
                         !viewState.isGridView
-                          ? "bg-blue-100 text-blue-600"
+                          ? "bg-orange-100 text-orange-600"
                           : "hover:bg-gray-100 text-gray-600"
                       }`}
                       title="List View"
@@ -541,7 +540,6 @@ const PropertiesPage = () => {
               </div>
             </div>
 
-            {/* Properties Display */}
             <motion.div
               layout
               className={`grid gap-1.5 sm:gap-4 md:gap-6 ${
@@ -568,13 +566,12 @@ const PropertiesPage = () => {
                     exit={{ opacity: 0 }}
                     className="col-span-full text-center py-12 sm:py-16 bg-white rounded-lg shadow-sm"
                   >
-                    <MapPin className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
+                    <Layers className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
                     <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                      No properties found
+                      No listings found
                     </h3>
                     <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
-                      Try adjusting your filters or search criteria to find what
-                      you're looking for
+                      Try adjusting your filters or search criteria
                     </p>
                     <button
                       onClick={() => {
@@ -588,7 +585,7 @@ const PropertiesPage = () => {
                           sortBy: "",
                         });
                       }}
-                      className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                      className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition"
                     >
                       Clear Filters
                     </button>
@@ -603,4 +600,4 @@ const PropertiesPage = () => {
   );
 };
 
-export default PropertiesPage;
+export default EverythingPage;

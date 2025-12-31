@@ -7,19 +7,19 @@ const contactInfo = [
   {
     icon: Phone,
     title: 'Phone',
-    content: '+1 (234) 567-890',
-    link: 'tel:+1234567890',
+    content: '+91 6009396197',
+    link: 'tel:+916009396197',
   },
   {
     icon: Mail,
     title: 'Email',
-    content: 'support@apniestate.com',
-    link: 'mailto:support@apniestate.com',
+    content: 'apniestateofficial@gmail.com',
+    link: 'mailto:apniestateofficial@gmail.com',
   },
   {
     icon: MapPin,
     title: 'Address',
-    content: '123 Main Street, City, Country',
+    content: 'Tripura,Agartala',
     link: '#map',
   },
   {
