@@ -260,10 +260,10 @@ const Testimonials = () => {
 
   // Statistics for enhanced visual appeal
   const stats = [
-    { icon: Users, value: "10K+", label: "Happy Clients", color: "from-blue-500 to-cyan-500" },
-    { icon: Star, value: "4.9", label: "Average Rating", color: "from-yellow-500 to-orange-500" },
-    { icon: Award, value: "50+", label: "Awards Won", color: "from-purple-500 to-pink-500" },
-    { icon: TrendingUp, value: "98%", label: "Success Rate", color: "from-green-500 to-emerald-500" }
+    { icon: Users, value: "200+", label: "Happy Clients", color: "from-blue-500 to-cyan-500" },
+    { icon: Star, value: "4.5", label: "Average Rating", color: "from-yellow-500 to-orange-500" },
+    { icon: Award, value: "5+", label: "Awards Won", color: "from-purple-500 to-pink-500" },
+    { icon: TrendingUp, value: "85%", label: "Success Rate", color: "from-green-500 to-emerald-500" }
   ];
 
 

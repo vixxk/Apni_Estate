@@ -7,13 +7,13 @@ const milestones = [
   {
     icon: Home,
     title: "Properties Explored",
-    value: 5000,
+    value: 200,
     description: "Homes browsed and shortlisted through ApniEstate.",
   },
   {
     icon: Target,
     title: "Happy Users",
-    value: 10000,
+    value: 300,
     description: "People who used ApniEstate to move closer to their ideal home.",
   },
 ];
