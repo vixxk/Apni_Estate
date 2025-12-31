@@ -5,13 +5,11 @@ import Features from '../components/Features'
 import Properties from '../components/propertiesshow'
 import Steps from '../components/Steps'
 import Testimonials from '../components/testimonial'
-import TripuraStartup from '../components/TripuraStartup'
 // import Blog from '../components/Blog'
 
 const Home = () => {
   return (
     <div className="pt-16">
-      <TripuraStartup />
       <Hero />
       <Companies />
       <Features />

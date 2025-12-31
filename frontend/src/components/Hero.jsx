@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import heroimage from "../assets/images/heroimage.png";
+import tsLogo from "../assets/tsLogo.jpg";
 import { RadialGradient } from "react-text-gradients";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -131,10 +132,10 @@ const Hero = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  
+
   const handleServiceClick = (serviceTitle) => {
     const title = serviceTitle.toLowerCase();
-  
+
     // Properties (Buy, Sell, Rent)
     if (title === "buy" || title === "sell") {
       navigate("/properties", {
@@ -162,8 +163,7 @@ const Hero = () => {
       navigate("/sales-items", {
         state: { filterType: "interior" },
       });
-    }
-    else if (
+    } else if (
       title === "construction materials" ||
       title === "furniture" ||
       title === "decoratives"
@@ -181,7 +181,7 @@ const Hero = () => {
       navigate("/properties");
     }
   };
-  
+
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* ================= BACKGROUND ================= */}
@@ -232,8 +232,54 @@ const Hero = () => {
         </div>
       </div>
 
+      {/* ================= TRIPURA STARTUP BADGE ================= */}
+      <div className="absolute top-2 left-0 right-0 z-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex justify-center"
+          >
+            {/* Modern Badge Card */}
+            <div className="relative group">
+              {/* Subtle gradient glow */}
+              <div className="absolute -inset-2 bg-gradient-to-r from-blue-200 via-purple-200 to-indigo-200 rounded-2xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500"></div>
+
+              {/* Main Card */}
+              <div className="relative flex items-center gap-3 md:gap-4 px-3 py-2 md:px-4 md:py-2.5 rounded-xl bg-white/80 backdrop-blur-xl border border-gray-200/60 shadow-sm hover:shadow-md transition-all duration-300">
+                {/* Logo */}
+                <div className="flex-shrink-0">
+                  <img
+                    src={tsLogo}
+                    alt="Tripura Startup"
+                    className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+
+                {/* Divider Line */}
+                <div className="h-10 md:h-12 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
+
+                {/* Text Content */}
+                <div className="pr-1">
+                  <p className="text-[9px] md:text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-0.5">
+                    Registered Startup For
+                  </p>
+                  <h3 className="text-xs md:text-sm lg:text-base font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                    Startup Tripura
+                  </h3>
+                </div>
+
+                {/* Corner Accent */}
+                <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 opacity-60"></div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
       {/* ================= CONTENT ================= */}
-      <div className="relative z-10 min-h-screen flex items-center px-4 py-4 md:pt-12 lg:pt-14">
+      <div className="relative z-10 min-h-screen flex items-center px-4 py-4 pt-20 md:pt-24 lg:pt-28">
         <div className="max-w-7xl mx-auto w-full">
           <motion.div
             variants={containerVariants}
@@ -333,32 +379,11 @@ const Hero = () => {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate("/chat")}
-            className="
-              fixed
-              bottom-4 right-4
-              md:bottom-6 md:right-6
-              bg-yellow-400
-              p-3 md:p-4
-              rounded-full
-              shadow-xl
-              z-[9999]
-            "
+            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-yellow-400 p-3 md:p-4 rounded-full shadow-xl z-[9999]"
           >
             <MessageCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
 
-            <span
-              className="
-                absolute
-                -top-1 -right-1
-                bg-red-500
-                text-white
-                text-[10px] md:text-xs
-                font-bold
-                rounded-full
-                w-5 h-5 md:w-6 md:h-6
-                flex items-center justify-center
-              "
-            >
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] md:text-xs font-bold rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center">
               3
             </span>
           </motion.button>
