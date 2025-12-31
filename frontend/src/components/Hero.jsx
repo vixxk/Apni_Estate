@@ -50,13 +50,13 @@ const services = [
 const stats = [
   {
     icon: Users,
-    value: "50K+",
+    value: "100+",
     label: "Happy Customers",
     color: "from-blue-500 to-cyan-500",
   },
   {
     icon: Home,
-    value: "10K+",
+    value: "5K+",
     label: "Properties Listed",
     color: "from-green-500 to-emerald-500",
   },
@@ -247,15 +247,21 @@ const Hero = () => {
               <div className="absolute -inset-2 bg-gradient-to-r from-blue-200 via-purple-200 to-indigo-200 rounded-2xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500"></div>
 
               {/* Main Card */}
-              <div className="relative flex items-center gap-3 md:gap-4 px-3 py-2 md:px-4 md:py-2.5 rounded-xl bg-white/80 backdrop-blur-xl border border-gray-200/60 shadow-sm hover:shadow-md transition-all duration-300">
+              <div className="relative flex items-center gap-3 md:gap-4 px-3 py-2 md:px-4 md:py-2.5 rounded-xl overflow-visible bg-white/80 backdrop-blur-xl border border-gray-200/60 shadow-sm hover:shadow-md transition-all duration-300">
                 {/* Logo */}
-                <div className="flex-shrink-0">
-                  <img
-                    src={tsLogo}
-                    alt="Tripura Startup"
-                    className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
+                <div className="relative flex-shrink-0 w-10 h-10 md:w-12 md:h-12">
+  <img
+    src={tsLogo}
+    alt="Tripura Startup"
+    className="
+      absolute inset-0
+      w-full h-full object-contain
+      scale-[1.6] md:scale-[1.8]
+      group-hover:scale-[1.9]
+      transition-transform duration-300
+    "
+  />
+</div>
 
                 {/* Divider Line */}
                 <div className="h-10 md:h-12 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>

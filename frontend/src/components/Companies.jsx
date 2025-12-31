@@ -56,9 +56,9 @@ const Companies = () => {
   const navigate = useNavigate();
 
   const stats = [
-    { icon: Users, value: "200+", label: "Trusted Partners" },
+    { icon: Users, value: "20+", label: "Trusted Partners" },
     { icon: Star, value: "4.9", label: "Average Rating" },
-    { icon: Award, value: "50M+", label: "Properties Listed" },
+    { icon: Award, value: "5K+", label: "Properties Listed" },
     { icon: TrendingUp, value: "98%", label: "Success Rate" },
   ];
 

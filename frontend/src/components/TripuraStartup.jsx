@@ -17,21 +17,24 @@ const TripuraStartup = () => {
           <div className="relative group">
             {/* Subtle gradient glow */}
             <div className="absolute -inset-2 bg-gradient-to-r from-blue-200 via-purple-200 to-indigo-200 rounded-2xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500"></div>
-            
+
             {/* Main Card */}
-            <div className="relative flex items-center gap-4 md:gap-5 px-4 py-3 md:px-5 md:py-3.5 rounded-2xl
+            <div
+              className="relative flex items-center gap-4 md:gap-5 px-4 py-3 md:px-5 md:py-3.5 rounded-2xl
               bg-white/80 backdrop-blur-xl 
               border border-gray-200/60 
               shadow-sm hover:shadow-md 
-              transition-all duration-300">
-              
+              transition-all duration-300"
+            >
               {/* Logo - No border/box, just the image */}
               <div className="flex-shrink-0">
                 <img
                   src={tsLogo}
                   alt="Tripura Startup"
                   className="w-12 h-12 md:w-16 md:h-16 object-contain
-                    group-hover:scale-105 transition-transform duration-300"
+    scale-125 md:scale-130
+    group-hover:scale-140
+    transition-transform duration-300"
                 />
               </div>
 
@@ -44,7 +47,7 @@ const TripuraStartup = () => {
                   Registered Startup For
                 </p>
                 <h3 className="text-sm md:text-base lg:text-lg font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                   Startup Tripura
+                  Startup Tripura
                 </h3>
               </div>
 

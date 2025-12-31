@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { testimonials } from '../assets/testimonialdata';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import tsLogo from "../assets/tsLogo.jpg";
 import recognitionLogo from '../assets/gov.png'; 
-
 
 // Enhanced Animation Variants
 const containerVariants = {
@@ -18,7 +18,6 @@ const containerVariants = {
     }
   }
 };
-
 
 const cardVariants = {
   hidden: { opacity: 0, y: 50, scale: 0.9 },
@@ -35,7 +34,6 @@ const cardVariants = {
   }
 };
 
-
 const headerVariants = {
   hidden: { opacity: 0, y: -30 },
   visible: { 
@@ -48,7 +46,6 @@ const headerVariants = {
   }
 };
 
-
 const floatingAnimation = {
   y: [-5, 5, -5],
   transition: {
@@ -57,7 +54,6 @@ const floatingAnimation = {
     ease: "easeInOut"
   }
 };
-
 
 const sparkleAnimation = {
   scale: [1, 1.3, 1],
@@ -70,7 +66,6 @@ const sparkleAnimation = {
   }
 };
 
-
 const pulseAnimation = {
   scale: [1, 1.05, 1],
   transition: { 
@@ -80,14 +75,10 @@ const pulseAnimation = {
   }
 };
 
-
 const TestimonialCard = ({ testimonial, index, direction }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-
   return (
-
-
     <motion.div
       key={testimonial.id}
       initial={{ opacity: 0, x: direction === 'right' ? 50 : -50 }}
@@ -114,12 +105,10 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
         <Sparkles className="w-6 h-6" />
       </motion.div>
 
-
       {/* Quote Icon with Enhanced Design */}
       <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
         <Quote className="w-16 h-16 text-blue-500 transform group-hover:scale-110 transition-transform duration-300" />
       </div>
-
 
       {/* Premium Badge */}
       <motion.div 
@@ -131,7 +120,6 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
         <Star className="w-3 h-3 fill-current" />
         <span>Verified</span>
       </motion.div>
-
 
       {/* Testimonial Content */}
       <div className="relative z-10 mt-12">
@@ -146,7 +134,6 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
           <span className="text-4xl text-blue-400 font-serif absolute -bottom-6 right-0 opacity-50">&rdquo;</span>
         </motion.p>
       </div>
-
 
       {/* Client Information Section */}
       <motion.div 
@@ -181,7 +168,6 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
               <div className="w-2 h-2 bg-white rounded-full" />
             </motion.div>
           </div>
-
 
           {/* Client Details */}
           <div className="flex-1">
@@ -220,7 +206,6 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
         </div>
       </motion.div>
 
-
       {/* Position Indicators for Mobile */}
       <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 md:hidden">
         {testimonials.map((_, i) => (
@@ -238,7 +223,6 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
         ))}
       </div>
 
-
       {/* Hover Effect Overlay */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -249,7 +233,6 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
   );
 };
 
-
 const Testimonials = () => {
   const navigate = useNavigate();   
   const [activeIndex, setActiveIndex] = useState(0);
@@ -257,15 +240,13 @@ const Testimonials = () => {
   const [autoplay, setAutoplay] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
 
-
   // Statistics for enhanced visual appeal
   const stats = [
-    { icon: Users, value: "200+", label: "Happy Clients", color: "from-blue-500 to-cyan-500" },
-    { icon: Star, value: "4.5", label: "Average Rating", color: "from-yellow-500 to-orange-500" },
+    { icon: Users, value: "100+", label: "Happy Clients", color: "from-blue-500 to-cyan-500" },
+    { icon: Star, value: "4.9", label: "Average Rating", color: "from-yellow-500 to-orange-500" },
     { icon: Award, value: "5+", label: "Awards Won", color: "from-purple-500 to-pink-500" },
     { icon: TrendingUp, value: "85%", label: "Success Rate", color: "from-green-500 to-emerald-500" }
   ];
-
 
   // Auto-rotate testimonials
   useEffect(() => {
@@ -279,14 +260,12 @@ const Testimonials = () => {
     return () => clearInterval(interval);
   }, [autoplay, isHovered]);
 
-
   const handlePrev = () => {
     setDirection('left');
     setActiveIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
     setAutoplay(false);
     setTimeout(() => setAutoplay(true), 10000);
   };
-
 
   const handleNext = () => {
     setDirection('right');
@@ -295,7 +274,6 @@ const Testimonials = () => {
     setTimeout(() => setAutoplay(true), 10000);
   };
 
-
   const handleDotClick = (index) => {
     setDirection(index > activeIndex ? 'right' : 'left');
     setActiveIndex(index);
@@ -303,9 +281,7 @@ const Testimonials = () => {
     setTimeout(() => setAutoplay(true), 10000);
   };
 
-
   return (
-    
     <section className="relative py-32 bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-50 overflow-hidden">
       {/* Enhanced Background Elements */}
       <div className="absolute inset-0">
@@ -313,7 +289,6 @@ const Testimonials = () => {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl animate-pulse delay-1000" />
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-blue-100/20 to-purple-100/20 rounded-full blur-3xl" />
       </div>
-
 
       {/* Floating Decorative Elements */}
       <motion.div 
@@ -334,7 +309,6 @@ const Testimonials = () => {
       >
         <Zap className="w-7 h-7" />
       </motion.div>
-
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Enhanced Header Section */}
@@ -357,7 +331,6 @@ const Testimonials = () => {
             <Sparkles className="w-4 h-4" />
           </motion.div>
 
-
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -369,7 +342,6 @@ const Testimonials = () => {
             <span className="block text-blue-600">Are Saying</span>
           </motion.h2>
 
-
           <motion.div 
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
@@ -377,7 +349,6 @@ const Testimonials = () => {
             transition={{ delay: 0.4, duration: 0.8 }}
             className="w-32 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-8 rounded-full"
           />
-
 
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -390,7 +361,6 @@ const Testimonials = () => {
             Our commitment to excellence speaks through their experiences.
           </motion.p>
         </motion.div>
-
 
         {/* Statistics Section */}
         <motion.div 
@@ -425,7 +395,6 @@ const Testimonials = () => {
             </motion.div>
           ))}
         </motion.div>
-
 
         {/* Desktop Testimonials Grid */}
         <div className="hidden lg:block">
@@ -463,12 +432,10 @@ const Testimonials = () => {
                   <span>Verified</span>
                 </motion.div>
 
-
                 {/* Quote decoration */}
                 <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
                   <Quote className="w-16 h-16 text-blue-500 transform group-hover:scale-110 transition-transform duration-300" />
                 </div>
-
 
                 {/* Testimonial content */}
                 <div className="relative z-10 mt-12">
@@ -478,7 +445,6 @@ const Testimonials = () => {
                     <span className="text-4xl text-blue-400 font-serif absolute -bottom-6 right-0 opacity-50">&rdquo;</span>
                   </p>
                 </div>
-
 
                 {/* Client information */}
                 <div className="flex items-center space-x-4">
@@ -493,7 +459,6 @@ const Testimonials = () => {
                       <div className="w-2 h-2 bg-white rounded-full" />
                     </div>
                   </div>
-
 
                   <div className="flex-1">
                     <h3 className="font-bold text-gray-900 text-lg mb-1 group-hover:text-blue-600 transition-colors duration-300">
@@ -526,7 +491,6 @@ const Testimonials = () => {
           </motion.div>
         </div>
 
-
         {/* Mobile/Tablet Testimonial Carousel */}
         <div className="lg:hidden relative">
           <div 
@@ -544,7 +508,6 @@ const Testimonials = () => {
             </AnimatePresence>
           </div>
 
-
           {/* Enhanced Navigation Controls */}
           <div className="flex justify-center items-center mt-12 space-x-6">
             <motion.button
@@ -556,7 +519,6 @@ const Testimonials = () => {
             >
               <ArrowLeft className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform duration-200" />
             </motion.button>
-
 
             {/* Dot Indicators */}
             <div className="flex space-x-2">
@@ -576,7 +538,6 @@ const Testimonials = () => {
               ))}
             </div>
 
-
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -588,7 +549,6 @@ const Testimonials = () => {
             </motion.button>
           </div>
         </div>
-
 
         {/* Enhanced Call to Action */}
         <motion.div 
@@ -604,10 +564,10 @@ const Testimonials = () => {
           >
             <a 
               onClick={() => {
-              navigate("/contact");
-              window.scrollTo(0, 0);
-            }}
-              className="group inline-flex items-center bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 text-white py-4 px-8 rounded-2xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                navigate("/contact");
+                window.scrollTo(0, 0);
+              }}
+              className="group inline-flex items-center bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 text-white py-4 px-8 rounded-2xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 cursor-pointer"
               style={{ boxShadow: "0 10px 30px rgba(59, 130, 246, 0.3)" }}
             >
               <Heart className="mr-3 w-5 h-5 text-pink-300 group-hover:text-pink-200 transition-colors duration-200" />
@@ -627,7 +587,7 @@ const Testimonials = () => {
           </motion.p>
         </motion.div>
 
-        {/* Recognition Section - NEW */}
+        {/* Recognition Section - Enhanced with Two Logos */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -635,79 +595,124 @@ const Testimonials = () => {
           transition={{ delay: 0.4 }}
           className="mt-20 border-t border-gray-200 pt-12"
         >
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 300 }}
-            className="bg-white/60 backdrop-blur-sm border border-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-              {/* Logo Container */}
-              <motion.div
-                initial={{ scale: 0, rotate: -180 }}
-                whileInView={{ scale: 1, rotate: 0 }}
-                viewport={{ once: true }}
-                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-                className="flex-shrink-0"
-              >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-xl opacity-30 animate-pulse" />
-                  <img
-                    src={recognitionLogo}
-                    alt="Recognition Logo"
-                    className="relative w-20 h-20 md:w-24 md:h-24 object-contain rounded-full bg-white p-2 shadow-md"
-                  />
-                </div>
-              </motion.div>
-
-              {/* Text Content */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4 }}
-                className="text-center md:text-left"
-              >
-                <p className="text-gray-600 text-sm md:text-base leading-relaxed">
-                  <span className="font-semibold text-gray-800">Recognised by the </span>
-                  <span className="font-bold text-blue-600">Directorate of Information Technology</span>
-                  <span className="text-gray-600">, Government of Tripura.</span>
-                </p>
-                
-                {/* <motion.div
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
+          <div className="space-y-3">
+            {/* Startup Tripura Recognition */}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="bg-white/60 backdrop-blur-sm border border-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+                {/* Logo Container */}
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  whileInView={{ scale: 1, rotate: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.6, duration: 0.8 }}
-                  className="mt-3 flex items-center justify-center md:justify-start gap-2"
+                  transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                  className="flex-shrink-0"
                 >
-                  <Award className="w-4 h-4 text-yellow-500" />
-                  <p className="text-xs md:text-sm text-gray-500 font-medium uppercase tracking-wide">
-                    Recognised Startup - Government of India & Tripura
-                  </p>
-                </motion.div> */}
-              </motion.div>
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-red-400 rounded-full blur-xl opacity-30 animate-pulse" />
+                    <img
+                      src={tsLogo}
+                      alt="Startup Tripura Logo"
+                      className="relative w-20 h-20 md:w-24 md:h-24 object-contain rounded-full bg-white p-2 shadow-md"
+                    />
+                  </div>
+                </motion.div>
 
-              {/* Badge */}
-              <motion.div
-                initial={{ scale: 0, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-                className="flex-shrink-0"
-              >
-                <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
-                  <Star className="w-4 h-4 fill-current" />
-                  <span className="text-xs font-bold uppercase">Certified</span>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
+                {/* Text Content */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4 }}
+                  className="text-center md:text-left"
+                >
+                  <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+                    <span className="font-semibold text-gray-800">Registered Startup under </span>
+                    <span className="font-bold text-orange-600">Startup Tripura</span>
+                    <span className="text-gray-600">, Government of Tripura.</span>
+                  </p>
+                </motion.div>
+
+                {/* Badge */}
+                <motion.div
+                  initial={{ scale: 0, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+                  className="flex-shrink-0"
+                >
+                  <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    <span className="text-xs font-bold uppercase">Registered</span>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Directorate of Information Technology Recognition */}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="bg-white/60 backdrop-blur-sm border border-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+                {/* Logo Container */}
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  whileInView={{ scale: 1, rotate: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ type: "spring", stiffness: 200, delay: 0.3 }}
+                  className="flex-shrink-0"
+                >
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-xl opacity-30 animate-pulse" />
+                    <img
+                      src={recognitionLogo}
+                      alt="Government Recognition Logo"
+                      className="relative w-20 h-20 md:w-24 md:h-24 object-contain rounded-full bg-white p-2 shadow-md"
+                    />
+                  </div>
+                </motion.div>
+
+                {/* Text Content */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5 }}
+                  className="text-center md:text-left"
+                >
+                  <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+                    <span className="font-semibold text-gray-800">Recognised by the </span>
+                    <span className="font-bold text-blue-600">Directorate of Information Technology</span>
+                    <span className="text-gray-600">, Government of Tripura.</span>
+                  </p>
+                </motion.div>
+
+                {/* Badge */}
+                <motion.div
+                  initial={{ scale: 0, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+                  className="flex-shrink-0"
+                >
+                  <div className="bg-gradient-to-r from-blue-400 to-blue-700 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
+                    <Star className="w-4 h-4 fill-current" />
+                    <span className="text-xs font-bold uppercase">Certified</span>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
         </motion.div>
       </div>
     </section>
   );
 };
-
 
 // PropTypes
 TestimonialCard.propTypes = {
@@ -722,6 +727,5 @@ TestimonialCard.propTypes = {
   index: PropTypes.number.isRequired,
   direction: PropTypes.string.isRequired,
 };
-
 
 export default Testimonials;
