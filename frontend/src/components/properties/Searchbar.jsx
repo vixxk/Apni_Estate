@@ -156,9 +156,9 @@ const SearchBar = ({ onSearch, className }) => {
   };
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      {/* ==================== MAIN SEARCH BAR ==================== */}
-      <div ref={searchContainerRef} className="relative flex-[2]">
+    <div className={`flex items-center gap-3 ${className}`}>
+      {/* ==================== MAIN SEARCH BAR (80%) ==================== */}
+      <div ref={searchContainerRef} className="relative flex-[4]">
         <form onSubmit={handleSearchSubmit} className="relative">
           <input
             type="text"
@@ -167,7 +167,7 @@ const SearchBar = ({ onSearch, className }) => {
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setShowSuggestions(true)}
             onKeyDown={handleSearchKeyDown}
-            className="w-full pl-12 pr-20 py-3 rounded-lg border border-gray-200 
+            className="w-full pl-12 pr-14 py-3 rounded-lg border border-gray-200 
               focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
               transition-all text-gray-800 placeholder-gray-400"
           />
@@ -177,17 +177,17 @@ const SearchBar = ({ onSearch, className }) => {
               text-gray-400 h-5 w-5 pointer-events-none" 
           />
           
-          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+          <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
             <AnimatePresence>
               {searchQuery && (
                 <motion.button
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0, opacity: 0 }}
                   type="button"
                   onClick={clearSearch}
-                  className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 
-                    hover:text-gray-600 transition-colors"
+                  className="p-2 rounded-full hover:bg-gray-100 text-gray-400 
+                    hover:text-gray-600 transition-colors flex items-center justify-center"
                 >
                   <X className="h-4 w-4" />
                 </motion.button>
@@ -197,7 +197,7 @@ const SearchBar = ({ onSearch, className }) => {
             <button 
               type="submit"
               className="bg-blue-600 text-white p-2 rounded-lg 
-                hover:bg-blue-700 transition-colors"
+                hover:bg-blue-700 transition-colors flex items-center justify-center"
               title="Search"
             >
               <Search className="h-4 w-4" />
@@ -226,7 +226,7 @@ const SearchBar = ({ onSearch, className }) => {
                     className="w-full text-left px-3 py-2 hover:bg-gray-50 
                       rounded-md flex items-center gap-2 text-gray-700"
                   >
-                    <Search className="h-4 w-4 text-gray-400" />
+                    <Search className="h-4 w-4 text-gray-400 flex-shrink-0" />
                     <span className="truncate">{query}</span>
                   </button>
                 ))}
@@ -236,8 +236,8 @@ const SearchBar = ({ onSearch, className }) => {
         </AnimatePresence>
       </div>
 
-      {/* ==================== LOCATION SEARCH BAR ==================== */}
-      <div ref={locationContainerRef} className="relative flex-[0.7] min-w-[180px]">
+      {/* ==================== LOCATION SEARCH BAR (20%) ==================== */}
+      <div ref={locationContainerRef} className="relative flex-[1] min-w-[140px]">
         <form onSubmit={handleLocationSubmit} className="relative">
           <input
             type="text"
@@ -246,32 +246,33 @@ const SearchBar = ({ onSearch, className }) => {
             onChange={(e) => setLocationQuery(e.target.value)}
             onFocus={() => setShowLocationSuggestions(true)}
             onKeyDown={handleLocationKeyDown}
-            className="w-full pl-9 pr-9 py-3 rounded-lg border border-gray-200 
+            className="w-full pl-8 pr-8 py-3 rounded-lg border border-gray-200 
               focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
-              transition-all text-gray-800 placeholder-gray-400 text-sm"
+              transition-all text-gray-700 placeholder-gray-400 text-xs"
           />
           
           <MapPin 
-            className="absolute left-2.5 top-1/2 -translate-y-1/2 
-              text-gray-400 h-4 w-4 pointer-events-none" 
+            className="absolute left-2 top-1/2 -translate-y-1/2 
+              text-gray-400 h-3.5 w-3.5 pointer-events-none" 
           />
           
-          <AnimatePresence>
-            {locationQuery && (
-              <motion.button
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                type="button"
-                onClick={clearLocation}
-                className="absolute right-2 top-1/2 -translate-y-1/2
-                  p-1 rounded-full hover:bg-gray-100 text-gray-400 
-                  hover:text-gray-600 transition-colors"
-              >
-                <X className="h-3.5 w-3.5" />
-              </motion.button>
-            )}
-          </AnimatePresence>
+          <div className="absolute right-1 top-1/2 -translate-y-1/2">
+            <AnimatePresence>
+              {locationQuery && (
+                <motion.button
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  type="button"
+                  onClick={clearLocation}
+                  className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 
+                    hover:text-gray-600 transition-colors flex items-center justify-center"
+                >
+                  <X className="h-3 w-3" />
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
         </form>
 
         {/* Location Suggestions Dropdown */}
@@ -282,22 +283,22 @@ const SearchBar = ({ onSearch, className }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg 
-                shadow-lg border border-gray-100 overflow-hidden z-50"
+                shadow-lg border border-gray-100 overflow-hidden z-50 w-48"
             >
               {/* Recent Locations */}
               {recentLocations.length > 0 && (
                 <div className="p-2 border-b border-gray-100">
                   <h3 className="text-xs font-medium text-gray-500 px-3 mb-2">
-                    Recent Locations
+                    Recent
                   </h3>
                   {recentLocations.map((location, index) => (
                     <button
                       key={`recent-loc-${index}`}
                       onClick={() => selectRecentLocation(location)}
-                      className="w-full text-left px-3 py-2 hover:bg-gray-50 
-                        rounded-md flex items-center gap-2 text-gray-700 text-sm"
+                      className="w-full text-left px-3 py-1.5 hover:bg-gray-50 
+                        rounded-md flex items-center gap-2 text-gray-700 text-xs"
                     >
-                      <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                      <MapPin className="h-3 w-3 text-gray-400 flex-shrink-0" />
                       <span className="truncate">{location}</span>
                     </button>
                   ))}
@@ -307,16 +308,16 @@ const SearchBar = ({ onSearch, className }) => {
               {/* Popular Locations */}
               <div className="p-2">
                 <h3 className="text-xs font-medium text-gray-500 px-3 mb-2">
-                  Popular Locations
+                  Popular
                 </h3>
                 {popularLocations.map((location, index) => (
                   <button
                     key={`popular-${index}`}
                     onClick={() => selectPopularLocation(location)}
-                    className="w-full text-left px-3 py-2 hover:bg-gray-50 
-                      rounded-md flex items-center gap-2 text-gray-700 text-sm"
+                    className="w-full text-left px-3 py-1.5 hover:bg-gray-50 
+                      rounded-md flex items-center gap-2 text-gray-700 text-xs"
                   >
-                    <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                    <MapPin className="h-3 w-3 text-gray-400 flex-shrink-0" />
                     <span className="truncate">{location}</span>
                   </button>
                 ))}
