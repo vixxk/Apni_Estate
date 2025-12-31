@@ -18,10 +18,10 @@ import {
   PlusCircle,
   Store,
   LogIn,
-  Plus,
   Bell,
 } from "lucide-react";
 import logo from "../assets/images/apniestate-logo.png";
+import govLogo from "../assets/gov.png"; // Government Recognition Logo
 import { useAuth } from "../context/AuthContext";
 import PropTypes from "prop-types";
 import { useMobileMenu } from "../context/MobileMenuContext";
@@ -226,6 +226,23 @@ const Navbar = () => {
                 >
                   <Sparkles className="w-3 h-3 text-yellow-300" />
                 </motion.div>
+              </motion.div>
+
+              {/* Vertical Divider Line */}
+              <div className="h-12 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
+
+              {/* Government Recognition Logo */}
+              <motion.div
+                variants={logoVariants}
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.3 }}
+                className="relative w-12 h-12 flex items-center justify-center"
+              >
+                <img
+                  src={govLogo}
+                  alt="Government Recognition"
+                  className="w-full h-full object-contain rounded-full shadow-md border-2 border-gray-100"
+                />
               </motion.div>
 
               <div className="flex flex-col">
@@ -533,6 +550,9 @@ const Navbar = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
+
+
+
                 <div className="flex flex-col">
                   <span className="text-2xl font-bold text-white">
                     ApniEstate

@@ -53,7 +53,7 @@ export default function Hero() {
           </div>
 
           {/* Pattern overlay */}
-          <div className="absolute inset-0 opacity-30 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjMiPjxwYXRoIGQ9Ik01IDEwQzMuODk1IDEwIDMgMTAuODk1IDMgMTJ2MzhjMCAxLjEwNS44OTUgMiAyIDJoMzhWMTBINXptMzgtMkg1QzIuODEgOCAxIDkuODEgMSAxMnYzOGMwIDIuMTkgMS43OSA0IDQgNGg0MWMxLjEwNSAwIDItLjg5NSAyLTJWMTBjMC0xLjEwNS0uODk1LTItMi0yaC0zeiIvPjwvZz48L2c+PC9zdmc+')]"></div>
+          <div className="absolute inset-0 opacity-30 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjMiPjxwYXRoIGQ9Ik01IDEwQzMuODk1IDEwIDMgMTAuODk1IDMgMTJ2MzhjMCAxLjEwNS44OTUgMiAyIDJoMzh2LWE0MlMwIDEwIDV6bTM4LTJINUM2IC44MTAgMSA5LjgxIDEgMTJ2MzhjMCAyLjE5IDEuNzkgNCA0IDRoNDFjMS4xMDUgMCAyLS44OTUgMi0yVjEwYzAtMS4xMDUtLjg5NS0yLTItMmgtM3oiLz48L2c+PC9nPjwvc3ZnPg==')]"></div>
         </div>
 
         {/* Content */}
@@ -63,9 +63,32 @@ export default function Hero() {
           transition={{ delay: 0.2, duration: 0.8 }}
           className="relative text-center text-white px-4 max-w-4xl mx-auto z-10"
         >
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-8 leading-tight">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-2 leading-tight">
             About <span className="text-yellow-300">ApniEstate</span>
           </h1>
+
+          {/* Recognised By Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="mb-8"
+          >
+            <p className="text-sm sm:text-base text-gray-200">
+              Recognised by the <span className="font-semibold text-white">Directorate of Information Technology,</span>
+              <br />
+              <span className="font-semibold text-white">Government of Tripura.</span>
+            </p>
+          </motion.div>
+
+          {/* Decorative line */}
+          <motion.div
+            className="w-24 h-1 bg-white mx-auto mb-8"
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: 96, opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+          />
+
           <p className="text-xl md:text-2xl leading-relaxed font-light">
             ApniEstate is your trusted partner for finding verified homes and
             investment properties/services across India, with clear details and a smooth,
