@@ -1,29 +1,36 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Search, X, MapPin } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef } from "react";
+import { Search, X, MapPin } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const SearchBar = ({ onSearch, className }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [locationQuery, setLocationQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [locationQuery, setLocationQuery] = useState("");
   const [recentSearches, setRecentSearches] = useState([]);
   const [recentLocations, setRecentLocations] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
-  
+
   // Refs for click outside detection
   const searchContainerRef = useRef(null);
   const locationContainerRef = useRef(null);
 
   // Popular locations
   const popularLocations = [
-    'Tripura', 'Goa', 'Jaipur', 'Delhi', 'Mumbai', 'Bangalore', 'Pune', 'Hyderabad'
+    "Tripura",
+    "Goa",
+    "Jaipur",
+    "Delhi",
+    "Mumbai",
+    "Bangalore",
+    "Pune",
+    "Hyderabad",
   ];
 
   useEffect(() => {
     // Load recent searches from localStorage
-    const savedSearches = localStorage.getItem('recentSearches');
-    const savedLocations = localStorage.getItem('recentLocations');
-    
+    const savedSearches = localStorage.getItem("recentSearches");
+    const savedLocations = localStorage.getItem("recentLocations");
+
     if (savedSearches) {
       setRecentSearches(JSON.parse(savedSearches));
     }
@@ -44,11 +51,11 @@ const SearchBar = ({ onSearch, className }) => {
     };
 
     if (showSuggestions) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showSuggestions]);
 
@@ -64,11 +71,11 @@ const SearchBar = ({ onSearch, className }) => {
     };
 
     if (showLocationSuggestions) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showLocationSuggestions]);
 
@@ -76,30 +83,30 @@ const SearchBar = ({ onSearch, className }) => {
   const performSearch = (search = searchQuery, location = locationQuery) => {
     const searchText = search.trim();
     const locationText = location.trim();
-    
+
     // Combine both queries
-    const combinedQuery = [searchText, locationText].filter(Boolean).join(' ');
+    const combinedQuery = [searchText, locationText].filter(Boolean).join(" ");
 
     // Save to recent searches if there's a search query
     if (searchText) {
       const updatedSearches = [
         searchText,
-        ...recentSearches.filter(item => item !== searchText)
+        ...recentSearches.filter((item) => item !== searchText),
       ].slice(0, 5);
       setRecentSearches(updatedSearches);
-      localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
+      localStorage.setItem("recentSearches", JSON.stringify(updatedSearches));
     }
 
     // Save to recent locations if there's a location query
     if (locationText) {
       const updatedLocations = [
         locationText,
-        ...recentLocations.filter(item => item !== locationText)
+        ...recentLocations.filter((item) => item !== locationText),
       ].slice(0, 5);
       setRecentLocations(updatedLocations);
-      localStorage.setItem('recentLocations', JSON.stringify(updatedLocations));
+      localStorage.setItem("recentLocations", JSON.stringify(updatedLocations));
     }
-    
+
     // Trigger parent search with combined query
     onSearch(combinedQuery);
     setShowSuggestions(false);
@@ -113,12 +120,12 @@ const SearchBar = ({ onSearch, className }) => {
   };
 
   const clearSearch = () => {
-    setSearchQuery('');
-    performSearch('', locationQuery);
+    setSearchQuery("");
+    performSearch("", locationQuery);
   };
 
   const handleSearchKeyDown = (e) => {
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       setShowSuggestions(false);
     }
   };
@@ -130,12 +137,12 @@ const SearchBar = ({ onSearch, className }) => {
   };
 
   const clearLocation = () => {
-    setLocationQuery('');
-    performSearch(searchQuery, '');
+    setLocationQuery("");
+    performSearch(searchQuery, "");
   };
 
   const handleLocationKeyDown = (e) => {
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       setShowLocationSuggestions(false);
     }
   };
@@ -171,12 +178,12 @@ const SearchBar = ({ onSearch, className }) => {
               focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
               transition-all text-gray-800 placeholder-gray-400"
           />
-          
-          <Search 
+
+          <Search
             className="absolute left-4 top-1/2 -translate-y-1/2 
-              text-gray-400 h-5 w-5 pointer-events-none" 
+              text-gray-400 h-5 w-5 pointer-events-none"
           />
-          
+
           <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
             <AnimatePresence>
               {searchQuery && (
@@ -193,8 +200,8 @@ const SearchBar = ({ onSearch, className }) => {
                 </motion.button>
               )}
             </AnimatePresence>
-            
-            <button 
+
+            <button
               type="submit"
               className="bg-blue-600 text-white p-2 rounded-lg 
                 hover:bg-blue-700 transition-colors flex items-center justify-center"
@@ -237,7 +244,10 @@ const SearchBar = ({ onSearch, className }) => {
       </div>
 
       {/* ==================== LOCATION SEARCH BAR (20%) ==================== */}
-      <div ref={locationContainerRef} className="relative flex-[1] min-w-[140px]">
+      <div
+        ref={locationContainerRef}
+        className="relative flex-[1] min-w-[140px]"
+      >
         <form onSubmit={handleLocationSubmit} className="relative">
           <input
             type="text"
@@ -250,12 +260,12 @@ const SearchBar = ({ onSearch, className }) => {
               focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
               transition-all text-gray-700 placeholder-gray-400 text-xs"
           />
-          
-          <MapPin 
+
+          <MapPin
             className="absolute left-2 top-1/2 -translate-y-1/2 
-              text-gray-400 h-3.5 w-3.5 pointer-events-none" 
+              text-gray-400 h-3.5 w-3.5 pointer-events-none"
           />
-          
+
           <div className="absolute right-1 top-1/2 -translate-y-1/2">
             <AnimatePresence>
               {locationQuery && (
@@ -282,21 +292,21 @@ const SearchBar = ({ onSearch, className }) => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg 
-                shadow-lg border border-gray-100 overflow-hidden z-50 w-48"
+              className="absolute top-full right-0 mt-2 bg-white rounded-lg 
+        shadow-lg border border-gray-100 overflow-hidden z-50 w-40"
             >
               {/* Recent Locations */}
               {recentLocations.length > 0 && (
                 <div className="p-2 border-b border-gray-100">
-                  <h3 className="text-xs font-medium text-gray-500 px-3 mb-2">
+                  <h3 className="text-xs font-medium text-gray-500 px-2 mb-2">
                     Recent
                   </h3>
                   {recentLocations.map((location, index) => (
                     <button
                       key={`recent-loc-${index}`}
                       onClick={() => selectRecentLocation(location)}
-                      className="w-full text-left px-3 py-1.5 hover:bg-gray-50 
-                        rounded-md flex items-center gap-2 text-gray-700 text-xs"
+                      className="w-full text-left px-2 py-1.5 hover:bg-gray-50 
+                rounded-md flex items-center gap-1.5 text-gray-700 text-xs"
                     >
                       <MapPin className="h-3 w-3 text-gray-400 flex-shrink-0" />
                       <span className="truncate">{location}</span>
@@ -307,15 +317,15 @@ const SearchBar = ({ onSearch, className }) => {
 
               {/* Popular Locations */}
               <div className="p-2">
-                <h3 className="text-xs font-medium text-gray-500 px-3 mb-2">
+                <h3 className="text-xs font-medium text-gray-500 px-2 mb-2">
                   Popular
                 </h3>
                 {popularLocations.map((location, index) => (
                   <button
                     key={`popular-${index}`}
                     onClick={() => selectPopularLocation(location)}
-                    className="w-full text-left px-3 py-1.5 hover:bg-gray-50 
-                      rounded-md flex items-center gap-2 text-gray-700 text-xs"
+                    className="w-full text-left px-2 py-1.5 hover:bg-gray-50 
+              rounded-md flex items-center gap-1.5 text-gray-700 text-xs"
                   >
                     <MapPin className="h-3 w-3 text-gray-400 flex-shrink-0" />
                     <span className="truncate">{location}</span>
