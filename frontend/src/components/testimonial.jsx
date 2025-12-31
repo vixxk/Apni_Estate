@@ -673,7 +673,7 @@ const Testimonials = () => {
                   <span className="text-gray-600">, Government of Tripura.</span>
                 </p>
                 
-                <motion.div
+                {/* <motion.div
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
@@ -684,7 +684,7 @@ const Testimonials = () => {
                   <p className="text-xs md:text-sm text-gray-500 font-medium uppercase tracking-wide">
                     Recognised Startup - Government of India & Tripura
                   </p>
-                </motion.div>
+                </motion.div> */}
               </motion.div>
 
               {/* Badge */}
