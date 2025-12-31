@@ -269,7 +269,7 @@ const Hero = () => {
                 {/* Text Content */}
                 <div className="pr-1">
                   <p className="text-[9px] md:text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-0.5">
-                    Registered Startup For
+                    Registered Startup Of
                   </p>
                   <h3 className="text-xs md:text-sm lg:text-base font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
                     Startup Tripura
