@@ -30,10 +30,10 @@ const __dirname = path.dirname(__filename);
 // Connect DB
 connectDB();
 
-// Basic security (optional, safe)
+// Basic security 
 app.use(helmet());
 
-// Rate limiting (optional)
+// Rate limiting 
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -41,7 +41,6 @@ app.use(
   })
 );
 
-// ✅ SIMPLE UNIVERSAL CORS (ALLOW EVERYTHING)
 app.use(cors());
 
 // Body parsers
@@ -68,7 +67,7 @@ app.use("/api/news", newsRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/vendor/services", vendorServiceRoutes);
 
-// Upload routes (separated to avoid conflicts)
+// Upload routes 
 app.use("/api/upload/property", uploadRoutes);
 app.use("/api/upload/service", serviceUploadRoutes);
 

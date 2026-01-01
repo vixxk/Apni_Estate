@@ -211,11 +211,9 @@ const PropertiesPage = () => {
               field?.toLowerCase().includes(filters.searchQuery.toLowerCase())
           );
   
-        // Handle buy-sell combined filter
         let typeMatch = true;
         if (filters.propertyType) {
           if (filters.propertyType === 'buy-sell') {
-            // Show both buy and sell properties
             typeMatch = ['buy', 'sell'].includes(property.type?.toLowerCase());
           } else {
             // Show only the specific type

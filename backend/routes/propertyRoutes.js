@@ -12,11 +12,10 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024, files: 5 }, // 10MB per file, max 5 files
 });
 
-// ============================================
-// IMAGE UPLOAD ENDPOINT
-// ============================================
 
-// POST /api/properties/upload-images
+// @route   POST /api/properties/upload-images
+// @desc    IMAGE UPLOAD ENDPOINT
+// @access  for Vendors
 router.post(
   "/upload-images",
   protect,
@@ -57,12 +56,10 @@ router.post(
   }
 );
 
-// ============================================
-// VENDOR ADD PROPERTY ENDPOINT
-// ============================================
 
-// POST /api/properties/vendor-add
-// POST /api/properties/vendor-add
+// @route   POST /api/properties/vendor-add
+// @desc    VENDOR ADD PROPERTY ENDPOINT
+// @access  for Vendors
 router.post("/vendor-add", protect, authorize("vendor"), async (req, res) => {
   try {
     const {
@@ -79,7 +76,6 @@ router.post("/vendor-add", protect, authorize("vendor"), async (req, res) => {
       tags,
     } = req.body;
 
-    // Basic validation
     if (!title || !description || !price || !type || !category || !images || images.length === 0) {
       return res.status(400).json({
         success: false,
@@ -141,7 +137,6 @@ router.post("/vendor-add", protect, authorize("vendor"), async (req, res) => {
       tags: Array.isArray(tags) ? tags.map((t) => t.toLowerCase()) : [],
     };
 
-    // Create property
     const newProperty = new Property(propertyData);
     const savedProperty = await newProperty.save();
 
@@ -153,7 +148,6 @@ router.post("/vendor-add", protect, authorize("vendor"), async (req, res) => {
   } catch (error) {
     console.error("Property creation error:", error);
     
-    // Handle validation errors
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map(err => err.message);
       return res.status(400).json({
@@ -172,12 +166,9 @@ router.post("/vendor-add", protect, authorize("vendor"), async (req, res) => {
 });
 
 
-// ============================================
-// GET ALL PROPERTIES (with filters)
-// ============================================
-
-// GET /api/properties
-// GET /api/properties
+// @route   GET /api/properties
+// @desc    GET ALL PROPERTIES (with filters)
+// @access  Public
 router.get("/", async (req, res) => {
   try {
     const {
@@ -188,14 +179,13 @@ router.get("/", async (req, res) => {
       category,
       furnished,
       search,
-      owner, // NEW: filter by owner
+      owner, 
       page = 1,
       limit = 12,
     } = req.query;
 
     let filter = { status: "available" };
 
-    // NEW: Filter by owner
     if (owner) {
       filter.owner = owner;
     }
@@ -223,7 +213,7 @@ router.get("/", async (req, res) => {
     const skip = (Number(page) - 1) * Number(limit);
 
     const properties = await Property.find(filter)
-      .populate("owner", "name email phone avatar") // Include avatar
+      .populate("owner", "name email phone avatar") 
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(Number(limit));
@@ -250,11 +240,9 @@ router.get("/", async (req, res) => {
 });
 
 
-// ============================================
-// GET SINGLE PROPERTY
-// ============================================
-
-// GET /api/properties/:id
+// @route   GET /api/properties/:id
+// @desc    GET SINGLE PROPERTY
+// @access  Public
 router.get("/:id", async (req, res) => {
   try {
     const property = await Property.findByIdAndUpdate(
@@ -283,11 +271,9 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// ============================================
-// GET VENDOR'S PROPERTIES
-// ============================================
-
-// GET /api/properties/vendor/my-properties
+// @route   GET /api/properties/:vendor/my-properties
+// @desc    GET VENDOR'S PROPERTIES
+// @access  Vendor
 router.get("/vendor/my-properties", protect, authorize("vendor"), async (req, res) => {
   try {
     const properties = await Property.find({ owner: req.user.id }).sort({
@@ -307,11 +293,10 @@ router.get("/vendor/my-properties", protect, authorize("vendor"), async (req, re
   }
 });
 
-// ============================================
-// UPDATE PROPERTY
-// ============================================
 
-// PUT /api/properties/:id
+// @route   PUT /api/properties/:id
+// @desc    UPDATE PROPERTY
+// @access  Vendor
 router.put(
   "/:id",
   protect,
@@ -366,11 +351,9 @@ router.put(
   }
 );
 
-// ============================================
-// DELETE PROPERTY
-// ============================================
-
-// DELETE /api/properties/:id
+// @route   DELETE /api/properties/:id
+// @desc    DELETE PROPERTY
+// @access  Vendor
 router.delete(
   "/:id",
   protect,
@@ -410,11 +393,9 @@ router.delete(
   }
 );
 
-// ============================================
-// ADD PROPERTY TO FAVORITES
-// ============================================
-
-// POST /api/properties/:id/favorite
+// @route   POST /api/properties/:id/favorite
+// @desc    ADD PROPERTY TO FAVORITES
+// @access  Vendor/Users (Logged In)
 router.post("/:id/favorite", protect, async (req, res) => {
   try {
     const property = await Property.findById(req.params.id);
@@ -453,11 +434,9 @@ router.post("/:id/favorite", protect, async (req, res) => {
   }
 });
 
-// ============================================
-// GET NEARBY PROPERTIES
-// ============================================
-
-// GET /api/properties/nearby
+// @route   POST /api/properties/nearby
+// @desc    GET NEARBY PROPERTIES
+// @access  Public
 router.get("/nearby/:id", async (req, res) => {
   try {
     const property = await Property.findById(req.params.id);

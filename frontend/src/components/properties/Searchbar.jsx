@@ -14,7 +14,6 @@ const SearchBar = ({ onSearch, className }) => {
   const searchContainerRef = useRef(null);
   const locationContainerRef = useRef(null);
 
-  // Popular locations
   const popularLocations = [
     "Tripura",
     "Goa",
@@ -79,7 +78,6 @@ const SearchBar = ({ onSearch, className }) => {
     };
   }, [showLocationSuggestions]);
 
-  // Combined search function
   const performSearch = (search = searchQuery, location = locationQuery) => {
     const searchText = search.trim();
     const locationText = location.trim();
@@ -107,7 +105,6 @@ const SearchBar = ({ onSearch, className }) => {
       localStorage.setItem("recentLocations", JSON.stringify(updatedLocations));
     }
 
-    // Trigger parent search with combined query
     onSearch(combinedQuery);
     setShowSuggestions(false);
     setShowLocationSuggestions(false);

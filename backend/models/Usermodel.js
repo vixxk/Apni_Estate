@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
     default: 'user'
   },
   avatar: {
-    type: String, // URL to avatar image
+    type: String, 
     default: null
   },
   isVerified: {
@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema({
     ref: 'Property'
   }],
   preferences: {
-    propertyType: [String], // ['apartment', 'house', 'villa', etc.]
+    propertyType: [String], 
     priceRange: {
       min: Number,
       max: Number

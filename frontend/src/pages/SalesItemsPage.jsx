@@ -11,7 +11,6 @@ import { Backendurl } from "../App.jsx";
 const SalesItemsPage = () => {
   const location = useLocation();
 
-  // Sales item categories to filter
   const SALES_CATEGORIES = [
     "interior",
     "interior designing",
@@ -214,7 +213,6 @@ const SalesItemsPage = () => {
               field?.toLowerCase().includes(filters.searchQuery.toLowerCase())
           );
 
-        // FIX: Only apply typeMatch if propertyType is actually set (not empty string)
         let typeMatch = true;
         if (filters.propertyType && filters.propertyType.trim() !== "") {
           typeMatch =

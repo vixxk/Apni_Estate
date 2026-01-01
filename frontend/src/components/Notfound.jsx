@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-// Enhanced Animation Variants
+// Animation Variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {

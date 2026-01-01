@@ -12,7 +12,6 @@ const EverythingPage = () => {
   const location = useLocation();
   const filterType = location.state?.filterType;
 
-  // ALL categories combined
   const ALL_CATEGORIES = [
     "buy",
     "sell",

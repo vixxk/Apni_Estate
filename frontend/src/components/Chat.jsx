@@ -1,4 +1,3 @@
-// Chat.jsx
 import { motion } from "framer-motion";
 import { MessageCircle, Mail, Bell, Sparkles, ArrowRight } from "lucide-react";
 

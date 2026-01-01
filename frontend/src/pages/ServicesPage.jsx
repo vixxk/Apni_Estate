@@ -12,7 +12,6 @@ const ServicesPage = () => {
   const location = useLocation();
   const filterType = location.state?.filterType;
 
-  // Service categories to filter
   const SERVICE_CATEGORIES = [
     "construction services",
     "legal service",

@@ -106,8 +106,6 @@ const FilterSection = ({ filters, setFilters, onApplyFilters }) => {
           </div>
         </div>
 
-        {/* Rest of your existing filter groups */}
-        {/* ... */}
 
         <div className="flex space-x-4 mt-8">
           <button

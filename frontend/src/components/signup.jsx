@@ -197,12 +197,11 @@ const Signup = () => {
       const response = await Promise.race([requestPromise, timeoutPromise]);
 
       if (response.data.success) {
-        // ✅ DO NOT SAVE ANYTHING TO LOCALSTORAGE
         toast.success(
           "Account created successfully! Please sign in to continue."
         );
 
-        // ✅ STRICTLY REDIRECT TO LOGIN PAGE
+        //STRICTLY REDIRECT TO LOGIN PAGE
         navigate("/login", { replace: true });
       } else {
         toast.error(response.data.message);

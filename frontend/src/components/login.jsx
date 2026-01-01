@@ -19,7 +19,7 @@ import { Backendurl } from "../App";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 
-// Enhanced Animation Variants
+// Animation Variants
 const containerVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -110,7 +110,7 @@ const Login = () => {
     }));
   };
 
-  // FIXED: save token + user and pass correct shape to context
+  // save token + user and pass correct shape to context
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -121,7 +121,6 @@ const Login = () => {
       );
 
       if (response.data.success) {
-        // backend returns { success, message, data: { user, token } }
         const { user, token } = response.data.data;
 
         // store in localStorage for authenticated requests
@@ -146,7 +145,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Enhanced Background with Multiple Gradients */}
+      {/* Background with Multiple Gradients */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
         <div className="absolute inset-0 bg-gradient-to-tr from-blue-100/30 via-transparent to-purple-100/30"></div>
         <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-indigo-100/20 to-transparent"></div>
@@ -233,7 +232,7 @@ const Login = () => {
                 </motion.div>
               </motion.div>
 
-              {/* Enhanced Form */}
+              {/*  Form */}
               <motion.form
                 onSubmit={handleSubmit}
                 className="space-y-6"
@@ -338,7 +337,7 @@ const Login = () => {
                   </Link>
                 </div>
 
-                {/* Enhanced Submit Button */}
+                {/* Submit Button */}
                 <motion.button
                   type="submit"
                   disabled={loading}
@@ -361,7 +360,7 @@ const Login = () => {
                   )}
                 </motion.button>
 
-                {/* Enhanced Divider */}
+                {/* Divider */}
                 <div className="relative my-8">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
@@ -373,7 +372,7 @@ const Login = () => {
                   </div>
                 </div>
 
-                {/* Enhanced Sign Up Link */}
+                {/* Sign Up Link */}
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}

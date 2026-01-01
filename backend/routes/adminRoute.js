@@ -20,7 +20,7 @@ router.get("/stats", protect, authorize("admin"), async (req, res) => {
       appointmentCount,
     ] = await Promise.all([
       Property.countDocuments({}),                 // all properties
-      Property.countDocuments({ status: "active" }), // or "available" if that's your field
+      Property.countDocuments({ status: "active" }), // or "available" if that's the field
       Appointment.countDocuments({ status: "pending" }),
       User.countDocuments({ role: "user" }),
       Appointment.countDocuments(),
@@ -31,7 +31,7 @@ router.get("/stats", protect, authorize("admin"), async (req, res) => {
       data: {
         totalProperties,
         activeListings,
-        totalViews: 0, // update later when you track views
+        totalViews: 0, // update later when views are tracked
         pendingAppointments,
         stats: {
           users: userCount,

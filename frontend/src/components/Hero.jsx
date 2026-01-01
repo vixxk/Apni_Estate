@@ -136,7 +136,6 @@ const Hero = () => {
   const handleServiceClick = (serviceTitle) => {
     const title = serviceTitle.toLowerCase();
 
-    // Properties (Buy, Sell, Rent)
     if (title === "buy" || title === "sell") {
       navigate("/properties", {
         state: { filterType: "buy-sell" },
@@ -145,9 +144,7 @@ const Hero = () => {
       navigate("/properties", {
         state: { filterType: "rent" },
       });
-    }
-    // Services
-    else if (
+    } else if (
       title === "construction services" ||
       title === "legal service" ||
       title === "vastu" ||
@@ -157,9 +154,7 @@ const Hero = () => {
       navigate("/services", {
         state: { filterType: title },
       });
-    }
-    // Sales Items - NORMALIZE "Interior Designing" to "interior"
-    else if (title === "interior designing") {
+    } else if (title === "interior designing") {
       navigate("/sales-items", {
         state: { filterType: "interior" },
       });
@@ -171,13 +166,9 @@ const Hero = () => {
       navigate("/sales-items", {
         state: { filterType: title },
       });
-    }
-    // Others - show everything
-    else if (title === "others") {
+    } else if (title === "others") {
       navigate("/everything");
-    }
-    // Default - properties
-    else {
+    } else {
       navigate("/properties");
     }
   };
@@ -250,18 +241,18 @@ const Hero = () => {
               <div className="relative flex items-center gap-3 md:gap-4 px-3 py-2 md:px-4 md:py-2.5 rounded-xl overflow-visible bg-white/80 backdrop-blur-xl border border-gray-200/60 shadow-sm hover:shadow-md transition-all duration-300">
                 {/* Logo */}
                 <div className="relative flex-shrink-0 w-10 h-10 md:w-12 md:h-12">
-  <img
-    src={tsLogo}
-    alt="Tripura Startup"
-    className="
+                  <img
+                    src={tsLogo}
+                    alt="Tripura Startup"
+                    className="
       absolute inset-0
       w-full h-full object-contain
       scale-[1.6] md:scale-[1.8]
       group-hover:scale-[1.9]
       transition-transform duration-300
     "
-  />
-</div>
+                  />
+                </div>
 
                 {/* Divider Line */}
                 <div className="h-10 md:h-12 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>

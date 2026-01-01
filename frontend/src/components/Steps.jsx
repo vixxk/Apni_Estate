@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
 
-// Enhanced Animation variants
+// Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -228,7 +228,7 @@ export default function HowItWorks() {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Enhanced Header */}
+        {/* Header */}
         <motion.div
           variants={headerVariants}
           initial="hidden"
@@ -320,7 +320,7 @@ export default function HowItWorks() {
           </motion.div>
         </motion.div>
 
-        {/* Enhanced Steps */}
+        {/* Steps */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -352,7 +352,7 @@ export default function HowItWorks() {
                 />
               </motion.div>
 
-              {/* Enhanced connection arrows - desktop */}
+              {/* connection arrows - desktop */}
               {index < steps.length - 1 && (
                 <div
                   className="hidden lg:block absolute"
@@ -382,7 +382,7 @@ export default function HowItWorks() {
           ))}
         </motion.div>
 
-        {/* Enhanced CTA Section */}
+        {/*  CTA Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -390,7 +390,7 @@ export default function HowItWorks() {
           transition={{ delay: 0.5 }}
           className="flex flex-col items-center mt-20"
         >
-          {/* CTA button with enhanced styling */}
+          {/* CTA button with styling */}
           <motion.a
             onClick={() => {
               navigate("/properties");
@@ -432,7 +432,7 @@ export default function HowItWorks() {
           </motion.p>
         </motion.div>
 
-        {/* Enhanced Testimonial with modern design */}
+        {/* Testimonial with modern design */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}

@@ -23,7 +23,6 @@ export const protect = async (req, res, next) => {
     }
 
     try {
-      // Verify token with the same secret used everywhere else
       const decoded = jwt.verify(token, config.JWT_SECRET);
 
       // Get user from token

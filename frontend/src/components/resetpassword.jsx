@@ -17,7 +17,7 @@ import {
 import { toast } from "react-toastify";
 import { Backendurl } from "../App";
 
-// Enhanced Animation Variants
+// Animation Variants
 const containerVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: { 

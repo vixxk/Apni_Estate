@@ -206,7 +206,6 @@ const VendorRegister = () => {
     }, 1000);
 
     // Make the API call but don't wait for it or handle its response
-    // This fires and forgets - no data is saved locally
     axios.post(
       `${Backendurl}/api/users/register`, 
       { ...formData, role: 'vendor' }

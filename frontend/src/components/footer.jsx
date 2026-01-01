@@ -19,7 +19,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
 
-// Enhanced Animation Variants
+// Animation Variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -167,7 +167,6 @@ const FooterLink = ({ href, children, icon: Icon }) => {
   );
 };
 
-// Social Links Component
 const socialLinks = [
   // {
   //   icon: Twitter,

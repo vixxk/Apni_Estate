@@ -321,22 +321,6 @@ const AIPropertyHub = () => {
                       available in local development environment.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                      {/* <a
-                        href="https://github.com/AAYUSH412/Real-Estate-Website"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
-                      >
-                        <Github className="w-4 h-4" />
-                        <span>View on GitHub</span>
-                      </a> */}
-                      {/* <a
-                        href="https://github.com/AAYUSH412/Real-Estate-Website/archive/refs/heads/main.zip"
-                        className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                      >
-                        <Download className="w-4 h-4" />
-                        <span>Download Repository</span>
-                      </a> */}
                     </div>
                   </div>
                 </div>

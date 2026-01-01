@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import tsLogo from "../assets/tsLogo.jpg";
 import recognitionLogo from '../assets/gov.png'; 
 
-// Enhanced Animation Variants
+// Animation Variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -105,7 +105,7 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
         <Sparkles className="w-6 h-6" />
       </motion.div>
 
-      {/* Quote Icon with Enhanced Design */}
+      {/* Quote Icon with Design */}
       <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
         <Quote className="w-16 h-16 text-blue-500 transform group-hover:scale-110 transition-transform duration-300" />
       </div>
@@ -143,7 +143,7 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
         className="flex items-center justify-between mt-8"
       >
         <div className="flex items-center space-x-4">
-          {/* Enhanced Profile Image */}
+          {/* Profile Image */}
           <div className="relative group/avatar">
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -179,7 +179,7 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
               {testimonial.location}
             </p>
             
-            {/* Enhanced Star Rating */}
+            {/* Star Rating */}
             <div className="flex items-center space-x-1">
               {[...Array(5)].map((_, i) => (
                 <motion.div
@@ -240,7 +240,7 @@ const Testimonials = () => {
   const [autoplay, setAutoplay] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Statistics for enhanced visual appeal
+  // Statistics for visual appeal
   const stats = [
     { icon: Users, value: "100+", label: "Happy Clients", color: "from-blue-500 to-cyan-500" },
     { icon: Star, value: "4.9", label: "Average Rating", color: "from-yellow-500 to-orange-500" },
@@ -311,7 +311,7 @@ const Testimonials = () => {
       </motion.div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Enhanced Header Section */}
+        {/* Header Section */}
         <motion.div 
           variants={headerVariants}
           initial="hidden"
@@ -418,7 +418,7 @@ const Testimonials = () => {
                 }}
                 className="group relative bg-gradient-to-br from-white to-blue-50/50 backdrop-blur-sm border border-white/20 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden"
               >
-                {/* Enhanced background effects */}
+                {/* background effects */}
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 
                 {/* Premium Badge */}
@@ -508,7 +508,7 @@ const Testimonials = () => {
             </AnimatePresence>
           </div>
 
-          {/* Enhanced Navigation Controls */}
+          {/* Navigation Controls */}
           <div className="flex justify-center items-center mt-12 space-x-6">
             <motion.button
               whileHover={{ scale: 1.1 }}
@@ -550,7 +550,7 @@ const Testimonials = () => {
           </div>
         </div>
 
-        {/* Enhanced Call to Action */}
+        {/* Call to Action */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -587,7 +587,7 @@ const Testimonials = () => {
           </motion.p>
         </motion.div>
 
-        {/* Recognition Section - Enhanced with Two Logos */}
+        {/* Recognition Section - Two Logos */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -714,7 +714,6 @@ const Testimonials = () => {
   );
 };
 
-// PropTypes
 TestimonialCard.propTypes = {
   testimonial: PropTypes.shape({
     id: PropTypes.number.isRequired,

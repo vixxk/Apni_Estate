@@ -5,7 +5,7 @@ import { features } from "../assets/featuredata";
 import { useNavigate } from "react-router-dom";
 
 
-// Enhanced animation variants
+// animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -68,7 +68,7 @@ const Features = () => {
 
   return (
     <section className="py-28 relative overflow-hidden">
-      {/* Enhanced Background */}
+      {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60"></div>
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-blue-400/10 to-indigo-400/10 rounded-full blur-3xl animate-pulse"></div>
@@ -77,7 +77,7 @@ const Features = () => {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Enhanced Section Header */}
+        {/* Section Header */}
         <motion.div
           variants={headerVariants}
           initial="hidden"
@@ -135,7 +135,7 @@ const Features = () => {
           </motion.div>
         </motion.div>
 
-        {/* Enhanced Features Grid */}
+        {/* Features Grid */}
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
           variants={containerVariants}
@@ -160,7 +160,7 @@ const Features = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-3xl blur-sm opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
               
               <div className="relative bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-xl hover:shadow-2xl border border-gray-100/50 hover:border-blue-200/50 transition-all duration-500 h-full">
-                {/* Icon with Enhanced Styling */}
+                {/* Icon with Styling */}
                 <motion.div 
                   className="relative w-20 h-20 mb-8"
                   animate={hoveredCard === index ? { rotate: [0, 5, -5, 0] } : {}}
@@ -203,7 +203,7 @@ const Features = () => {
           ))}
         </motion.div>
         
-        {/* Enhanced Call to Action */}
+        {/* Call to Action */}
         <motion.div 
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}

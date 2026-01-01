@@ -1,9 +1,8 @@
-// backend/scripts/migrateOldProperties.js
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import Property from '../models/propertymodel.js'; // note lowercase file name
 
-dotenv.config({ path: '.env.local' }); // loads your Mongo URI
+dotenv.config({ path: '.env.local' }); // loads Mongo URI
 
 const OLD_COLLECTION = 'properties';
 

@@ -77,7 +77,7 @@ const ScheduleViewing = ({ propertyId, propertyTitle, propertyLocation, property
 
       setLoading(true);
       const response = await axios.post(
-        `${Backendurl}/api/appointments`, // FIXED URL
+        `${Backendurl}/api/appointments`, 
         {
           property: propertyId, // match backend field name (property)
           date: formData.date,

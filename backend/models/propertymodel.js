@@ -20,7 +20,6 @@ const propertySchema = new mongoose.Schema({
   type: {
     type: String,
     required: [true, 'Property type is required'],
-    // Updated enum to include all service and property types
     enum: [
       'apartment', 'house', 'villa', 'plot', 'commercial', 'office',
       'construction services', 'interior', 'legal service', 'vastu',
@@ -39,25 +38,25 @@ const propertySchema = new mongoose.Schema({
   location: {
     address: {
       type: String,
-      required: false, // Changed to optional
+      required: false, 
       trim: true,
       default: ''
     },
     city: {
       type: String,
-      required: false, // Changed to optional
+      required: false, 
       trim: true,
       default: ''
     },
     state: {
       type: String,
-      required: false, // Changed to optional
+      required: false, 
       trim: true,
       default: ''
     },
     pincode: {
       type: String,
-      required: false, // Changed to optional
+      required: false, 
       match: [/^\d{6}$/, 'Please enter a valid 6-digit pincode'],
       default: ''
     },
@@ -194,7 +193,7 @@ propertySchema.pre('save', function (next) {
   next();
 });
 
-// *** Force collection name to match existing Atlas collection ***
+// Force collection name to match existing Atlas collection 
 const Property = mongoose.model('Property', propertySchema, 'properties');
 
 export default Property;

@@ -21,12 +21,12 @@ import {
   Bell,
 } from "lucide-react";
 import logo from "../assets/images/apniestate-logo.png";
-import govLogo from "../assets/gov.png"; // Government Recognition Logo
+import govLogo from "../assets/gov.png"; 
 import { useAuth } from "../context/AuthContext";
 import PropTypes from "prop-types";
 import { useMobileMenu } from "../context/MobileMenuContext";
 
-// Enhanced Animation Variants
+// Animation Variants
 const navVariants = {
   hidden: { opacity: 0, y: -20 },
   visible: {

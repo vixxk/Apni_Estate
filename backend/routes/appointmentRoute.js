@@ -1,7 +1,7 @@
 import express from 'express';
 import Appointment from '../models/appointmentModel.js';
 import { protect } from '../middleware/authmiddleware.js';
-// import { isAdmin } from '../middleware/adminMiddleware.js'; // if you add admin auth later
+// import { isAdmin } from '../middleware/adminMiddleware.js'; // add admin auth later
 
 const router = express.Router();
 
@@ -33,7 +33,7 @@ router.get('/', protect, async (req, res) => {
 // @access  Private (ideally admin)
 router.get('/all', protect, async (req, res) => {
   try {
-    // If you later add roles, you can enforce admin here
+    // If needed, enforce admin here
     // if (!req.user.isAdmin) {
     //   return res.status(403).json({
     //     success: false,

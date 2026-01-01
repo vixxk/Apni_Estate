@@ -1,4 +1,3 @@
-// backend/routes/UserRoute.js
 import "../config/env.js";
 
 import express from "express";
@@ -19,7 +18,6 @@ console.log("JWT_SECRET:", config.JWT_SECRET);
 
 const router = express.Router();
 
-// Generate JWT token
 const generateToken = (id) => {
   if (!config.JWT_SECRET) {
     throw new Error("JWT_SECRET is missing in config");
@@ -30,7 +28,6 @@ const generateToken = (id) => {
   });
 };
 
-// ======================= AUTH =======================
 
 // @route   POST /api/users/register
 // @desc    Register a new user (user or vendor)
@@ -39,7 +36,7 @@ router.post("/register", async (req, res) => {
   try {
     const { name, email, password, phone, role } = req.body;
 
-    // ❌ Block admin creation via signup
+    // Block admin creation via signup
     if (role === "admin") {
       return res.status(403).json({
         success: false,
@@ -210,7 +207,6 @@ router.post("/admin", async (req, res) => {
   }
 });
 
-// =================== PROFILE & SAVED ===================
 
 // @route   GET /api/users/me
 // @desc    Get current user (basic)
@@ -252,7 +248,6 @@ const upload = multer({
   }
 });
 
-// Add this route before the export default router line
 // @route   POST /api/users/avatar
 // @desc    Upload profile avatar
 // @access  Private
@@ -480,7 +475,6 @@ router.post("/saved/toggle", protect, async (req, res) => {
   }
 });
 
-// =================== PASSWORD FLOWS ===================
 
 // @route   POST /api/users/forgot
 // @desc    Forgot password

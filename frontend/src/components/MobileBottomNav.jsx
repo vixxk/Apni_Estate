@@ -15,10 +15,9 @@ import { useMobileMenu } from "../context/MobileMenuContext";
 
 const MobileBottomNav = () => {
   const location = useLocation();
-  const { isAuthenticated, user } = useAuth(); // Add user to get role
+  const { isAuthenticated, user } = useAuth(); 
   const { isMobileMenuOpen } = useMobileMenu();
 
-  // Base navigation items
 // Customer navigation (default)
 const customerNavItems = [
   { path: "/", icon: Home },
@@ -28,7 +27,7 @@ const customerNavItems = [
   { path: "/profile", icon: User },
 ];
 
-// Vendor navigation (NO chat)
+// Vendor navigation (No chat)
 const vendorNavItems = [
   { path: "/", icon: Home },
   { path: "/properties", icon: Search },
@@ -41,7 +40,7 @@ const vendorNavItems = [
   { path: "/profile", icon: User },
 ];
 
-// Final nav selection
+
 const navItems =
   isAuthenticated && user?.role === "vendor"
     ? vendorNavItems

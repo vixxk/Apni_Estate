@@ -11,7 +11,9 @@ const upload = multer({
   limits: { files: 5 }, // max 5 images
 });
 
-// POST /api/upload/service-images
+// @route   POST /api/upload/service-images
+// @desc    IMAGE UPLOAD ENDPOINT
+// @access  for Vendors
 router.post(
   "/service-images",
   protect,

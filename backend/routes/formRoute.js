@@ -37,7 +37,6 @@ router.post(
   ],
   async (req, res) => {
     try {
-      // Validate input
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({
@@ -49,7 +48,6 @@ router.post(
 
       const { name, email, phone, message } = req.body;
 
-      // Create new contact form submission
       const contactForm = new ContactForm({
         name,
         email,
@@ -57,7 +55,6 @@ router.post(
         message
       });
 
-      // Save to database
       await contactForm.save();
 
       // Optional: Send email notification

@@ -1,13 +1,9 @@
-// src/context/AuthContext.jsx
 import React, { createContext, useContext, useState } from "react";
 
-// Create context
 const AuthContext = createContext(null);
 
-// Hook to use auth in components
 export const useAuth = () => useContext(AuthContext);
 
-// Named export – this is what App.jsx imports
 export const AuthProvider = ({ children }) => {
   // Initialize user from localStorage once
   const [user, setUser] = useState(() => {

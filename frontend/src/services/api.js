@@ -1,7 +1,5 @@
-// frontend/src/services/api.js
 import axios from 'axios';
 
-// Change this to match your backend server port (4000)
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const api = axios.create({

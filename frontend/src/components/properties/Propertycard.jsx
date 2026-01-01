@@ -1,4 +1,3 @@
-// PropertyCard.jsx
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +26,6 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
   const token = localStorage.getItem("token");
   const isFavourite = favourites?.some((p) => p === property._id);
 
-  // IMAGE HANDLING
   let imagesArray = [];
 
   if (Array.isArray(property.images) && property.images.length > 0) {
@@ -42,7 +40,6 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
   const mainImage = images[currentImageIndex] || images[0] || "/no-image.png";
   const imagesCount = images.length;
 
-  // VENDOR/OWNER INFO
   const vendorName = property.owner?.name || "Unknown Vendor";
   const vendorAvatar = property.owner?.avatar || null;
   const vendorId = property.owner?._id || property.owner;
@@ -97,7 +94,6 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
     // Determine action before API call
     const action = isFavourite ? "remove" : "add";
     
-    // Update UI immediately (optimistic update)
     onFavouritesChange?.(property._id, action);
   
     try {
@@ -112,7 +108,6 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
         }
       );
   
-      // Verify the action matches server response
       const serverAction = data?.message?.includes("removed") ? "remove" : "add";
       
       // If server response differs from optimistic update, revert
@@ -122,7 +117,6 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
     } catch (err) {
       console.error("Toggle favourite error:", err);
       
-      // Revert optimistic update on error
       const revertAction = action === "remove" ? "add" : "remove";
       onFavouritesChange?.(property._id, revertAction);
       
@@ -221,7 +215,7 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
           </motion.button>
         </div>
 
-        {/* Property tags - FIXED: Reduced padding, max-width to prevent overlap */}
+        {/* Property tags  */}
         {/* <div className="absolute top-2 sm:top-3 md:top-4 left-2 sm:left-3 md:left-4 flex flex-col gap-1 sm:gap-1.5 md:gap-2 max-w-[calc(100%-80px)] sm:max-w-[calc(100%-100px)]">
           <motion.span
             initial={{ opacity: 0, x: -20 }}
@@ -284,7 +278,7 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
             <span className="truncate">{property.location}</span>
           </div>
 
-          {/* Title - FIXED: Allows 2 lines, proper spacing */}
+          {/* Title */}
           <h3
             className="text-sm sm:text-base md:text-xl font-semibold text-gray-900 line-clamp-2
             group-hover:text-blue-600 transition-colors leading-tight pr-2"

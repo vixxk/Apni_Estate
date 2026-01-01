@@ -4,7 +4,9 @@ import { protect, authorize } from "../middleware/authmiddleware.js";
 
 const router = express.Router();
 
-// POST /api/vendor/services
+// @route   POST /api/vendor/services
+// @desc    Create a new service
+// @access  Vendor
 router.post("/", protect, authorize("vendor"), async (req, res) => {
   try {
     const { title, description, categories, priceRange, images } = req.body;
@@ -45,6 +47,9 @@ router.post("/", protect, authorize("vendor"), async (req, res) => {
   }
 });
 
+// @route   GET /api/services
+// @desc    Get all services
+// @access  Public
 router.get("/", async (req, res) => {
   try {
     const services = await Service.find({ isActive: true })
