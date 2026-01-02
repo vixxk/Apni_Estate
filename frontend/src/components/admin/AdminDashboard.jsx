@@ -12,33 +12,76 @@ import {
   Package,
   AlertTriangle,
   Search,
+  Home,
+  Building2,
+  Store,
+  Wrench,
+  BarChart3,
+  Grid3x3,
 } from "lucide-react";
 import { Backendurl } from "../../App";
 import PropertyReviewCard from "../admin/PropertyReviewCard";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  
   const [stats, setStats] = useState(null);
-  const [properties, setProperties] = useState([]);
+  const [categoryStats, setCategoryStats] = useState(null);
+  const [allProperties, setAllProperties] = useState([]); 
+  const [displayedProperties, setDisplayedProperties] = useState([]); 
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("pending");
+  const [initialLoad, setInitialLoad] = useState(true);
+  
+  // Filter states
+  const [statusFilter, setStatusFilter] = useState("pending");
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [pagination, setPagination] = useState(null);
+  const itemsPerPage = 10;
 
   const adminEmail = localStorage.getItem("adminEmail");
   const adminPassword = localStorage.getItem("adminPassword");
 
+  // Auth check
   useEffect(() => {
     if (!adminEmail || !adminPassword) {
       navigate("/admin/login");
       return;
     }
+    loadAllData();
+  }, []);
 
-    fetchStats();
-    fetchProperties();
-  }, [activeTab, currentPage]);
+  // Apply filters whenever filter states change
+  useEffect(() => {
+    if (!initialLoad) {
+      applyFilters();
+    }
+  }, [statusFilter, categoryFilter, searchQuery, allProperties]);
 
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter, categoryFilter, searchQuery]);
+
+  // Load all data once
+  const loadAllData = async () => {
+    setLoading(true);
+    try {
+      await Promise.all([
+        fetchStats(),
+        fetchAllProperties(),
+      ]);
+      setInitialLoad(false);
+    } catch (error) {
+      console.error("Error loading data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch stats
   const fetchStats = async () => {
     try {
       const { data } = await axios.get(`${Backendurl}/api/admin/stats`, {
@@ -47,7 +90,6 @@ const AdminDashboard = () => {
           password: adminPassword,
         },
       });
-
       setStats(data.data);
     } catch (error) {
       console.error("Failed to fetch stats:", error);
@@ -57,36 +99,70 @@ const AdminDashboard = () => {
     }
   };
 
-  const fetchProperties = async () => {
+  // Fetch ALL properties at once
+  const fetchAllProperties = async () => {
     try {
-      setLoading(true);
-      const endpoint =
-        activeTab === "pending"
-          ? `${Backendurl}/api/admin/properties/pending`
-          : `${Backendurl}/api/admin/properties/all`;
+      const { data } = await axios.get(
+        `${Backendurl}/api/admin/properties/all`,
+        {
+          headers: {
+            email: adminEmail,
+            password: adminPassword,
+          },
+          params: {
+            limit: 10000, 
+          },
+        }
+      );
 
-      const { data } = await axios.get(endpoint, {
-        headers: {
-          email: adminEmail,
-          password: adminPassword,
-        },
-        params: {
-          status: activeTab === "all" ? undefined : activeTab,
-          page: currentPage,
-          limit: 20,
-        },
+      setAllProperties(data.data || []);
+      
+      const categories = {};
+      data.data.forEach((property) => {
+        const type = property.type || "others";
+        categories[type] = (categories[type] || 0) + 1;
       });
-
-      setProperties(data.data);
-      setPagination(data.pagination);
+      setCategoryStats(categories);
+      
     } catch (error) {
       console.error("Failed to fetch properties:", error);
       if (error.response?.status === 401) {
         handleLogout();
       }
-    } finally {
-      setLoading(false);
     }
+  };
+
+  // Apply filters to properties (client-side filtering)
+  const applyFilters = () => {
+    let filtered = [...allProperties];
+
+    if (statusFilter !== "all") {
+      filtered = filtered.filter(
+        (property) => property.status === statusFilter
+      );
+    }
+
+    if (categoryFilter !== "all") {
+      filtered = filtered.filter(
+        (property) => property.type === categoryFilter
+      );
+    }
+
+    if (searchQuery.trim()) {
+      filtered = filtered.filter((property) =>
+        property.title?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    console.log("Applied filters:", {
+      statusFilter,
+      categoryFilter,
+      searchQuery,
+      originalCount: allProperties.length,
+      filteredCount: filtered.length,
+    });
+
+    setDisplayedProperties(filtered);
   };
 
   const handleLogout = () => {
@@ -108,9 +184,7 @@ const AdminDashboard = () => {
           },
         }
       );
-
-      fetchStats();
-      fetchProperties();
+      await loadAllData(); 
     } catch (error) {
       console.error("Failed to approve property:", error);
       alert(error.response?.data?.message || "Failed to approve property");
@@ -129,9 +203,7 @@ const AdminDashboard = () => {
           },
         }
       );
-
-      fetchStats();
-      fetchProperties();
+      await loadAllData(); 
     } catch (error) {
       console.error("Failed to reject property:", error);
       alert(error.response?.data?.message || "Failed to reject property");
@@ -149,324 +221,355 @@ const AdminDashboard = () => {
           password: adminPassword,
         },
       });
-
-      fetchStats();
-      fetchProperties();
+      await loadAllData(); 
     } catch (error) {
       console.error("Failed to delete property:", error);
       alert(error.response?.data?.message || "Failed to delete property");
     }
   };
 
-  const filteredProperties = properties.filter((property) =>
-    property.title.toLowerCase().includes(searchQuery.toLowerCase())
+  // Pagination
+  const totalPages = Math.ceil(displayedProperties.length / itemsPerPage);
+  const paginatedProperties = displayedProperties.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
-  const tabs = [
-    { id: "pending", label: "Pending", icon: Clock, color: "yellow" },
-    { id: "approved", label: "Approved", icon: CheckCircle, color: "green" },
-    { id: "rejected", label: "Rejected", icon: XCircle, color: "red" },
-    { id: "all", label: "All", icon: Package, color: "blue" },
-  ];
+  // Category icons mapping
+  const categoryIcons = {
+    house: Home,
+    apartment: Building2,
+    villa: Home,
+    commercial: Store,
+    sell: Store,
+    vastu: Home,
+    "home loan": Building2,
+    furniture: Package,
+    "construction services": Wrench,
+    others: Package,
+  };
 
-  if (loading && !stats) {
+  const totalCategoryCount = categoryStats
+    ? Object.values(categoryStats).reduce((sum, count) => sum + count, 0)
+    : 0;
+
+  if (loading && initialLoad) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center px-4">
-        <div className="text-center">
-          <div className="w-12 h-12 border-3 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-3"></div>
-          <p className="text-gray-600 font-medium text-sm">Loading dashboard...</p>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{
+              duration: 1,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full mx-auto mb-4"
+          />
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-white font-semibold text-lg"
+          >
+            Loading Dashboard...
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-blue-200 text-sm mt-2"
+          >
+            Please wait while we fetch the data
+          </motion.p>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-4 px-3 sm:px-4 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-6 px-3 sm:px-4 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-md p-3 mb-4">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-4 mb-6"
+        >
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                <Shield className="w-4 h-4 text-white" />
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-base sm:text-lg font-bold text-gray-900">
+                <h1 className="text-xl sm:text-2xl font-bold text-white">
                   Admin Dashboard
                 </h1>
-                <p className="text-xs text-gray-500 hidden sm:block">
-                  Property Management
+                <p className="text-sm text-blue-200 hidden sm:block">
+                  Property Management System
                 </p>
               </div>
             </div>
 
-            {/* Logout Button */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors text-xs sm:text-sm"
+              className="flex items-center gap-2 px-4 py-2 bg-red-500/90 hover:bg-red-600 text-white rounded-xl font-semibold transition-all shadow-lg text-sm backdrop-blur-sm"
             >
-              <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              <span>Logout</span>
+              <LogOut className="w-4 h-4" />
+              <span className="hidden sm:inline">Logout</span>
             </motion.button>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Stats Cards */}
+        {/* Status Stats Cards */}
         {stats && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 mb-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-2.5 mb-4">
             <motion.button
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.02, y: -2 }}
+              whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                setActiveTab("all");
-                setCurrentPage(1);
-              }}
-              className={`bg-white rounded-lg p-3 shadow-md border-2 transition-all text-left ${
-                activeTab === "all"
-                  ? "border-blue-500 ring-2 ring-blue-200"
-                  : "border-gray-200 hover:border-blue-300"
+              onClick={() => setStatusFilter("all")}
+              className={`bg-white/10 backdrop-blur-xl border-2 rounded-xl p-2.5 sm:p-3 shadow-lg transition-all text-left ${
+                statusFilter === "all"
+                  ? "border-blue-400 ring-2 ring-blue-400/30"
+                  : "border-white/20 hover:border-blue-400/50"
               }`}
             >
-              <div className="flex flex-col">
-                <Package className="w-5 h-5 text-blue-600 mb-1" />
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">
-                  {stats.totalProperties}
-                </span>
-                <p className="text-gray-600 text-[10px] sm:text-xs font-medium">
-                  Total Properties
-                </p>
+              <Package className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 mb-1" />
+              <div className="text-xl sm:text-2xl font-bold text-white mb-0.5">
+                {stats.totalProperties}
               </div>
+              <p className="text-blue-200 text-[10px] sm:text-xs font-medium">
+                Total Properties
+              </p>
             </motion.button>
 
             <motion.button
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
-              whileHover={{ scale: 1.02, y: -2 }}
+              whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                setActiveTab("pending");
-                setCurrentPage(1);
-              }}
-              className={`rounded-lg p-3 shadow-md transition-all text-left border-2 ${
-                activeTab === "pending"
-                  ? "bg-gradient-to-br from-yellow-500 to-orange-500 border-yellow-600 ring-2 ring-yellow-200"
-                  : "bg-gradient-to-br from-yellow-500 to-orange-500 border-transparent hover:border-yellow-600"
+              onClick={() => setStatusFilter("pending")}
+              className={`bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl p-2.5 sm:p-3 shadow-lg transition-all text-left border-2 ${
+                statusFilter === "pending"
+                  ? "border-yellow-300 ring-2 ring-yellow-400/30"
+                  : "border-transparent hover:border-yellow-300/50"
               }`}
             >
-              <div className="flex flex-col">
-                <Clock className="w-5 h-5 text-white mb-1" />
-                <span className="text-xl sm:text-2xl font-bold text-white">
-                  {stats.pendingProperties}
-                </span>
-                <p className="text-white text-[10px] sm:text-xs font-medium">
-                  Pending Review
-                </p>
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-white mb-1" />
+              <div className="text-xl sm:text-2xl font-bold text-white mb-0.5">
+                {stats.pendingProperties}
               </div>
+              <p className="text-white/90 text-[10px] sm:text-xs font-medium">
+                Pending Review
+              </p>
             </motion.button>
 
             <motion.button
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              whileHover={{ scale: 1.02, y: -2 }}
+              whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                setActiveTab("approved");
-                setCurrentPage(1);
-              }}
-              className={`rounded-lg p-3 shadow-md transition-all text-left border-2 ${
-                activeTab === "approved"
-                  ? "bg-gradient-to-br from-green-500 to-emerald-500 border-green-600 ring-2 ring-green-200"
-                  : "bg-gradient-to-br from-green-500 to-emerald-500 border-transparent hover:border-green-600"
+              onClick={() => setStatusFilter("approved")}
+              className={`bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl p-2.5 sm:p-3 shadow-lg transition-all text-left border-2 ${
+                statusFilter === "approved"
+                  ? "border-green-300 ring-2 ring-green-400/30"
+                  : "border-transparent hover:border-green-300/50"
               }`}
             >
-              <div className="flex flex-col">
-                <CheckCircle className="w-5 h-5 text-white mb-1" />
-                <span className="text-xl sm:text-2xl font-bold text-white">
-                  {stats.approvedProperties}
-                </span>
-                <p className="text-white text-[10px] sm:text-xs font-medium">
-                  Approved
-                </p>
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white mb-1" />
+              <div className="text-xl sm:text-2xl font-bold text-white mb-0.5">
+                {stats.approvedProperties}
               </div>
+              <p className="text-white/90 text-[10px] sm:text-xs font-medium">
+                Approved
+              </p>
             </motion.button>
 
             <motion.button
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 }}
-              whileHover={{ scale: 1.02, y: -2 }}
+              whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                setActiveTab("rejected");
-                setCurrentPage(1);
-              }}
-              className={`rounded-lg p-3 shadow-md transition-all text-left border-2 ${
-                activeTab === "rejected"
-                  ? "bg-gradient-to-br from-red-500 to-pink-500 border-red-600 ring-2 ring-red-200"
-                  : "bg-gradient-to-br from-red-500 to-pink-500 border-transparent hover:border-red-600"
+              onClick={() => setStatusFilter("rejected")}
+              className={`bg-gradient-to-br from-red-500 to-pink-600 rounded-xl p-2.5 sm:p-3 shadow-lg transition-all text-left border-2 ${
+                statusFilter === "rejected"
+                  ? "border-red-300 ring-2 ring-red-400/30"
+                  : "border-transparent hover:border-red-300/50"
               }`}
             >
-              <div className="flex flex-col">
-                <XCircle className="w-5 h-5 text-white mb-1" />
-                <span className="text-xl sm:text-2xl font-bold text-white">
-                  {stats.rejectedProperties}
-                </span>
-                <p className="text-white text-[10px] sm:text-xs font-medium">
-                  Rejected
-                </p>
+              <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white mb-1" />
+              <div className="text-xl sm:text-2xl font-bold text-white mb-0.5">
+                {stats.rejectedProperties}
               </div>
+              <p className="text-white/90 text-[10px] sm:text-xs font-medium">
+                Rejected
+              </p>
             </motion.button>
 
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg p-3 shadow-md col-span-2 sm:col-span-1"
+              className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl p-2.5 sm:p-3 shadow-lg col-span-2 sm:col-span-1"
             >
-              <div className="flex flex-col">
-                <TrendingUp className="w-5 h-5 text-white mb-1" />
-                <span className="text-xl sm:text-2xl font-bold text-white">
-                  {stats.todaySubmissions}
-                </span>
-                <p className="text-white text-[10px] sm:text-xs font-medium">
-                  Today's Submissions
-                </p>
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-white mb-1" />
+              <div className="text-xl sm:text-2xl font-bold text-white mb-0.5">
+                {stats.todaySubmissions}
               </div>
+              <p className="text-white/90 text-[10px] sm:text-xs font-medium">
+                Today's Submissions
+              </p>
             </motion.div>
           </div>
         )}
 
-        {/* Tabs - Desktop Only */}
-        <div className="hidden lg:block bg-white rounded-lg shadow-md p-2 mb-4">
-          <div className="flex gap-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const count =
-                tab.id === "pending"
-                  ? stats?.pendingProperties
-                  : tab.id === "approved"
-                  ? stats?.approvedProperties
-                  : tab.id === "rejected"
-                  ? stats?.rejectedProperties
-                  : stats?.totalProperties;
+        {/* Category Distribution */}
+        {categoryStats && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl shadow-lg p-3 mb-4"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <BarChart3 className="w-4 h-4 text-blue-400" />
+              <h2 className="text-base font-bold text-white">
+                Filter by Category
+              </h2>
+            </div>
+            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+              {/* All Categories Button */}
+              <motion.button
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setCategoryFilter("all")}
+                className={`backdrop-blur-sm border-2 rounded-lg p-2 text-center transition-all ${
+                  categoryFilter === "all"
+                    ? "bg-blue-500/30 border-blue-400 ring-2 ring-blue-400/50"
+                    : "bg-white/10 border-white/20 hover:bg-white/20 hover:border-blue-400/50"
+                }`}
+              >
+                <Grid3x3 className="w-4 h-4 text-blue-300 mx-auto mb-0.5" />
+                <div className="text-base sm:text-lg font-bold text-white">
+                  {totalCategoryCount}
+                </div>
+                <p className="text-blue-200 text-[9px] sm:text-[10px] font-medium">
+                  All Types
+                </p>
+              </motion.button>
 
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    setActiveTab(tab.id);
-                    setCurrentPage(1);
-                  }}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all whitespace-nowrap text-sm ${
-                    activeTab === tab.id
-                      ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md"
-                      : "text-gray-600 hover:bg-gray-100"
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{tab.label}</span>
-                  {count !== undefined && (
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                        activeTab === tab.id
-                          ? "bg-white/20 text-white"
-                          : "bg-gray-200 text-gray-700"
+              {/* Individual Category Buttons */}
+              {Object.entries(categoryStats)
+                .sort(([, a], [, b]) => b - a)
+                .map(([category, count]) => {
+                  const Icon =
+                    categoryIcons[category.toLowerCase()] || Package;
+                  return (
+                    <motion.button
+                      key={category}
+                      whileHover={{ scale: 1.03, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setCategoryFilter(category)}
+                      className={`backdrop-blur-sm border-2 rounded-lg p-2 text-center transition-all ${
+                        categoryFilter === category
+                          ? "bg-blue-500/30 border-blue-400 ring-2 ring-blue-400/50"
+                          : "bg-white/10 border-white/20 hover:bg-white/20 hover:border-blue-400/50"
                       }`}
                     >
-                      {count}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Current Active Tab Indicator (Mobile Only) */}
-        <div className="lg:hidden bg-white rounded-lg shadow-md p-3 mb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              {tabs.map((tab) => {
-                if (tab.id === activeTab) {
-                  const Icon = tab.icon;
-                  const count =
-                    tab.id === "pending"
-                      ? stats?.pendingProperties
-                      : tab.id === "approved"
-                      ? stats?.approvedProperties
-                      : tab.id === "rejected"
-                      ? stats?.rejectedProperties
-                      : stats?.totalProperties;
-
-                  return (
-                    <div
-                      key={tab.id}
-                      className="flex items-center gap-2 text-gray-900"
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span className="font-semibold text-sm">
-                        {tab.label}
-                      </span>
-                      <span className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">
+                      <Icon className="w-4 h-4 text-blue-300 mx-auto mb-0.5" />
+                      <div className="text-base sm:text-lg font-bold text-white">
                         {count}
-                      </span>
-                    </div>
+                      </div>
+                      <p className="text-blue-200 text-[9px] sm:text-[10px] capitalize truncate font-medium">
+                        {category}
+                      </p>
+                    </motion.button>
                   );
-                }
-                return null;
-              })}
+                })}
             </div>
+          </motion.div>
+        )}
+
+        {/* Active Filters Display */}
+        <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl p-3 mb-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-white/70 text-sm font-medium">
+              Active Filters:
+            </span>
+            <span className="px-3 py-1 bg-blue-500/30 border border-blue-400/50 rounded-lg text-white text-sm font-semibold capitalize">
+              Status: {statusFilter}
+            </span>
+            <span className="px-3 py-1 bg-blue-500/30 border border-blue-400/50 rounded-lg text-white text-sm font-semibold capitalize">
+              Category: {categoryFilter}
+            </span>
+            <span className="px-3 py-1 bg-purple-500/30 border border-purple-400/50 rounded-lg text-white text-sm font-semibold">
+              Showing: {displayedProperties.length} properties
+            </span>
           </div>
         </div>
 
         {/* Search Bar */}
-        <div className="bg-white rounded-lg shadow-md p-2.5 mb-4">
+        <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-3 mb-4">
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search properties by title..."
-              className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-11 pr-4 py-2.5 text-sm bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
             />
           </div>
         </div>
 
         {/* Properties List */}
-        <div className="space-y-3">
-          {loading ? (
-            <div className="text-center py-12">
-              <div className="w-10 h-10 border-3 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-3"></div>
-              <p className="text-gray-600 text-sm">Loading properties...</p>
-            </div>
-          ) : filteredProperties.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-8 text-center">
-              <AlertTriangle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <h3 className="text-base font-bold text-gray-900 mb-1">
+        <div className="space-y-4">
+          {paginatedProperties.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-12 text-center"
+            >
+              <AlertTriangle className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-white mb-2">
                 No Properties Found
               </h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-blue-200 text-sm mb-4">
                 {searchQuery
-                  ? "No properties match your search."
-                  : `No ${activeTab} properties at the moment.`}
+                  ? "No properties match your search criteria."
+                  : `No ${categoryFilter !== "all" ? categoryFilter : ""} properties with ${statusFilter} status.`}
               </p>
-            </div>
+              <button
+                onClick={() => {
+                  setStatusFilter("all");
+                  setCategoryFilter("all");
+                  setSearchQuery("");
+                }}
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold transition-colors"
+              >
+                Clear All Filters
+              </button>
+            </motion.div>
           ) : (
             <AnimatePresence mode="popLayout">
-              {filteredProperties.map((property, index) => (
+              {paginatedProperties.map((property, index) => (
                 <motion.div
                   key={property._id}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ delay: index * 0.02 }}
+                  transition={{ delay: index * 0.03 }}
                 >
                   <PropertyReviewCard
                     property={property}
@@ -481,26 +584,26 @@ const AdminDashboard = () => {
         </div>
 
         {/* Pagination */}
-        {pagination && pagination.pages > 1 && (
+        {totalPages > 1 && (
           <div className="mt-6 flex items-center justify-center gap-2">
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 text-sm bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/20 transition-all"
             >
               Prev
             </button>
 
-            <div className="flex gap-1.5">
-              {pagination.pages <= 5 ? (
-                [...Array(pagination.pages)].map((_, i) => (
+            <div className="flex gap-2">
+              {totalPages <= 5 ? (
+                [...Array(totalPages)].map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrentPage(i + 1)}
-                    className={`w-8 h-8 text-sm rounded-lg font-semibold transition-all ${
+                    className={`w-10 h-10 text-sm rounded-xl font-semibold transition-all ${
                       currentPage === i + 1
-                        ? "bg-blue-600 text-white shadow-md"
-                        : "bg-white border border-gray-300 hover:bg-gray-50"
+                        ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg"
+                        : "bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20"
                     }`}
                   >
                     {i + 1}
@@ -511,44 +614,44 @@ const AdminDashboard = () => {
                   {currentPage > 2 && (
                     <button
                       onClick={() => setCurrentPage(1)}
-                      className="w-8 h-8 text-sm bg-white border border-gray-300 rounded-lg font-semibold hover:bg-gray-50"
+                      className="w-10 h-10 text-sm bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-xl font-semibold hover:bg-white/20"
                     >
                       1
                     </button>
                   )}
                   {currentPage > 3 && (
-                    <span className="flex items-center px-2 text-gray-500 text-sm">
+                    <span className="flex items-center px-2 text-white/70 text-sm">
                       ...
                     </span>
                   )}
                   {[...Array(3)].map((_, i) => {
                     const pageNum = currentPage - 1 + i;
-                    if (pageNum < 1 || pageNum > pagination.pages) return null;
+                    if (pageNum < 1 || pageNum > totalPages) return null;
                     return (
                       <button
                         key={pageNum}
                         onClick={() => setCurrentPage(pageNum)}
-                        className={`w-8 h-8 text-sm rounded-lg font-semibold transition-all ${
+                        className={`w-10 h-10 text-sm rounded-xl font-semibold transition-all ${
                           currentPage === pageNum
-                            ? "bg-blue-600 text-white shadow-md"
-                            : "bg-white border border-gray-300 hover:bg-gray-50"
+                            ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg"
+                            : "bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20"
                         }`}
                       >
                         {pageNum}
                       </button>
                     );
                   })}
-                  {currentPage < pagination.pages - 2 && (
-                    <span className="flex items-center px-2 text-gray-500 text-sm">
+                  {currentPage < totalPages - 2 && (
+                    <span className="flex items-center px-2 text-white/70 text-sm">
                       ...
                     </span>
                   )}
-                  {currentPage < pagination.pages - 1 && (
+                  {currentPage < totalPages - 1 && (
                     <button
-                      onClick={() => setCurrentPage(pagination.pages)}
-                      className="w-8 h-8 text-sm bg-white border border-gray-300 rounded-lg font-semibold hover:bg-gray-50"
+                      onClick={() => setCurrentPage(totalPages)}
+                      className="w-10 h-10 text-sm bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-xl font-semibold hover:bg-white/20"
                     >
-                      {pagination.pages}
+                      {totalPages}
                     </button>
                   )}
                 </>
@@ -556,11 +659,9 @@ const AdminDashboard = () => {
             </div>
 
             <button
-              onClick={() =>
-                setCurrentPage((p) => Math.min(pagination.pages, p + 1))
-              }
-              disabled={currentPage === pagination.pages}
-              className="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 text-sm bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/20 transition-all"
             >
               Next
             </button>
