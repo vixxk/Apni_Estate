@@ -136,11 +136,14 @@ const Hero = () => {
   const handleServiceClick = (serviceTitle) => {
     const title = serviceTitle.toLowerCase();
 
-    if (title === "buy" || title === "sell") {
+    if (title === "buy") {
       navigate("/properties", {
         state: { filterType: "buy-sell" },
       });
-    } else if (title === "rent") {
+    } else if (title === "sell") {
+      navigate("/vendor/add-service");
+    } 
+    else if (title === "rent") {
       navigate("/properties", {
         state: { filterType: "rent" },
       });
@@ -287,11 +290,11 @@ const Hero = () => {
             {/* Heading */}
             <motion.div variants={itemVariants} className="mb-8">
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-4">
-              <span className="text-gray-900">Turn Your House Dream</span>
-                <br />
                 <RadialGradient gradient={["circle, #3f5efb 0%, #fc466b 100%"]}>
-                  To A Dream House 
+                  Find Your Perfect
                 </RadialGradient>
+                <br />
+                <span className="text-gray-900">Dream Home</span>
               </h1>
 
               <p className="hidden sm:block text-xl sm:text-2xl text-gray-700 max-w-3xl mx-auto">
