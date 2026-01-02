@@ -18,7 +18,7 @@ import uploadRoutes from "./routes/uploadRoute.js";
 import vendorServiceRoutes from "./routes/vendorServiceRoute.js";
 import serviceUploadRoutes from "./routes/serviceUploadRoute.js";
 
-console.log("RAW env JWTSECRET:", process.env.JWTSECRET);
+// console.log("RAW env JWTSECRET:", process.env.JWTSECRET);
 
 const app = express();
 const PORT = process.env.PORT || 4000;

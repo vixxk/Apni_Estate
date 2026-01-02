@@ -11,8 +11,8 @@ export const appConfig = {
   SMTP_USER: process.env.SMTP_USER,
   SMTP_PASS: process.env.SMTP_PASS,
   EMAIL: process.env.EMAIL,
-  ADMIN_EMAIL: process.env.ADMIN_EMAIL || "admin@ApniEstate.com",
-  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "apnipass",
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL ,
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
 
   WEBSITE_URL: process.env.WEBSITE_URL || "http://localhost:5173",
   

@@ -11,10 +11,10 @@ import { appConfig as config } from "../config/config.js";
 import multer from "multer";
 import { uploadToImageKit } from "../config/imagekit.js";
 
-console.log("ENV JWTSECRET in UserRoute:", process.env.JWTSECRET);
-console.log("=== CONFIG IN UserRoute ===");
-console.log("ADMIN_EMAIL:", config.ADMIN_EMAIL);
-console.log("JWT_SECRET:", config.JWT_SECRET);
+// console.log("ENV JWTSECRET in UserRoute:", process.env.JWTSECRET);
+// console.log("=== CONFIG IN UserRoute ===");
+// console.log("ADMIN_EMAIL:", config.ADMIN_EMAIL);
+// console.log("JWT_SECRET:", config.JWT_SECRET);
 
 const router = express.Router();
 
