@@ -109,7 +109,7 @@ const VendorAddProperty = () => {
     "Play Area",
   ];
 
-  // Determine if property fields are needed (for Sell/Rent)
+  // Determine if property fields are needed 
   const needsPropertyDetails = ["sell", "rent"].includes(form.type);
 
   const handleInputChange = (e) => {
