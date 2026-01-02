@@ -126,7 +126,7 @@ const AIPropertyHub = () => {
       <div className="flex flex-col items-center justify-center py-8 sm:py-12">
         {/* Loading animation with property icon - adjusted for better mobile view */}
         <div className="relative mb-8 sm:mb-12 pt-12 sm:pt-16">
-          {/* Main circle - smaller on mobile */}
+          {/* Main circle -   on mobile */}
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center relative shadow-lg shadow-blue-500/30">
             {loadingStage === "properties" ? (
               <Building className="w-10 h-10 sm:w-12 sm:h-12 text-white animate-pulse" />

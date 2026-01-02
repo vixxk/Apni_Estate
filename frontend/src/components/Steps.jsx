@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
 
+
 // Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -17,6 +18,7 @@ const containerVariants = {
     },
   },
 };
+
 
 const itemVariants = {
   hidden: { opacity: 0, y: 50, scale: 0.9 },
@@ -33,6 +35,7 @@ const itemVariants = {
   },
 };
 
+
 const headerVariants = {
   hidden: { opacity: 0, y: -30 },
   visible: {
@@ -45,6 +48,7 @@ const headerVariants = {
   },
 };
 
+
 const floatingAnimation = {
   y: [-8, 8, -8],
   transition: {
@@ -54,6 +58,7 @@ const floatingAnimation = {
   },
 };
 
+
 const pulseAnimation = {
   scale: [1, 1.05, 1],
   transition: {
@@ -62,6 +67,7 @@ const pulseAnimation = {
     ease: "easeInOut",
   },
 };
+
 
 const sparkleAnimation = {
   scale: [1, 1.3, 1],
@@ -73,6 +79,7 @@ const sparkleAnimation = {
     ease: "easeInOut",
   },
 };
+
 
 const glowAnimation = {
   boxShadow: [
@@ -87,8 +94,10 @@ const glowAnimation = {
   },
 };
 
+
 function Step({ icon: Icon, title, description, stepNumber }) {
   const [isHovered, setIsHovered] = useState(false);
+
 
   return (
     <motion.div
@@ -100,25 +109,27 @@ function Step({ icon: Icon, title, description, stepNumber }) {
     >
       {/* Step number indicator */}
       <motion.div
-        className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 
-          rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg z-10"
+        className="absolute -top-3 md:-top-4 -left-3 md:-left-4 w-7 h-7 md:w-8 md:h-8 bg-gradient-to-r from-blue-600 to-indigo-600 
+          rounded-full flex items-center justify-center text-white text-xs md:text-sm font-bold shadow-lg z-10"
         animate={pulseAnimation}
       >
         {stepNumber}
       </motion.div>
 
+
       {/* Floating sparkles */}
       <motion.div
-        className="absolute -top-2 -right-2 text-yellow-400"
+        className="absolute -top-1 md:-top-2 -right-1 md:-right-2 text-yellow-400"
         animate={sparkleAnimation}
       >
-        <Sparkles className="w-4 h-4" />
+        <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
       </motion.div>
+
 
       {/* Icon container with glassmorphism effect */}
       <motion.div
-        className="w-24 h-24 bg-gradient-to-br from-white/80 to-blue-50/80 backdrop-blur-sm 
-          rounded-3xl flex items-center justify-center mb-6 shadow-xl border border-white/20 
+        className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-white/80 to-blue-50/80 backdrop-blur-sm 
+          rounded-2xl md:rounded-3xl flex items-center justify-center mb-4 md:mb-6 shadow-xl border border-white/20 
           relative overflow-hidden group-hover:shadow-2xl transition-all duration-500"
         animate={isHovered ? glowAnimation : {}}
       >
@@ -136,25 +147,28 @@ function Step({ icon: Icon, title, description, stepNumber }) {
           transition={{ duration: 3, repeat: Infinity }}
         />
 
+
         {/* Icon */}
         <Icon
-          className="h-12 w-12 text-blue-600 group-hover:text-white relative z-10 
+          className="h-10 w-10 md:h-12 md:w-12 text-blue-600 group-hover:text-white relative z-10 
           transition-all duration-500 group-hover:scale-110"
         />
 
+
         {/* Glow effect */}
         <motion.div
-          className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 
+          className="absolute inset-0 rounded-2xl md:rounded-3xl opacity-0 group-hover:opacity-100 
             bg-gradient-to-r from-blue-400/30 to-indigo-400/30 blur-xl transition-opacity duration-500"
           animate={{ scale: [1, 1.1, 1] }}
           transition={{ duration: 2, repeat: Infinity }}
         />
       </motion.div>
 
+
       {/* Content with enhanced typography */}
-      <div className="text-center space-y-3 max-w-sm">
+      <div className="text-center space-y-2 md:space-y-3 max-w-sm">
         <motion.h3
-          className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 
+          className="text-lg md:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 
             bg-clip-text text-transparent group-hover:from-blue-600 group-hover:to-indigo-600 
             transition-all duration-300"
           animate={isHovered ? { scale: 1.05 } : { scale: 1 }}
@@ -162,36 +176,40 @@ function Step({ icon: Icon, title, description, stepNumber }) {
           {title}
         </motion.h3>
 
+
         <motion.p
-          className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300"
+          className="text-sm md:text-base text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300"
           animate={isHovered ? { y: -2 } : { y: 0 }}
         >
           {description}
         </motion.p>
       </div>
 
+
       {/* Interactive completion indicator */}
       <motion.div
-        className="mt-6 p-3 bg-gradient-to-r from-green-100 to-emerald-100 
+        className="mt-4 md:mt-6 p-2 md:p-3 bg-gradient-to-r from-green-100 to-emerald-100 
           rounded-full cursor-pointer group-hover:from-green-200 group-hover:to-emerald-200 
           transition-all duration-300 shadow-lg"
         whileHover={{ scale: 1.15, rotate: 360 }}
         whileTap={{ scale: 0.95 }}
       >
-        <CheckCircle2 className="h-6 w-6 text-green-600" />
+        <CheckCircle2 className="h-5 w-5 md:h-6 md:w-6 text-green-600" />
       </motion.div>
+
 
       {/* Progress indicator */}
       <motion.div
-        className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-16 h-1 
+        className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-12 md:w-16 h-1 
           bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full opacity-0 
           group-hover:opacity-100 transition-opacity duration-300"
         initial={{ width: 0 }}
-        animate={isHovered ? { width: 64 } : { width: 0 }}
+        animate={isHovered ? { width: window.innerWidth >= 768 ? 64 : 48 } : { width: 0 }}
       />
     </motion.div>
   );
 }
+
 
 Step.propTypes = {
   icon: PropTypes.elementType.isRequired,
@@ -200,12 +218,14 @@ Step.propTypes = {
   stepNumber: PropTypes.number.isRequired,
 };
 
+
 export default function HowItWorks() {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(null);
 
+
   return (
-    <section className="relative py-32 bg-gradient-to-b from-white via-blue-50/30 to-indigo-50/30 overflow-hidden">
+    <section className="relative py-16 md:py-32 bg-gradient-to-b from-white via-blue-50/30 to-indigo-50/30 overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
@@ -227,6 +247,7 @@ export default function HowItWorks() {
         />
       </div>
 
+
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -234,23 +255,24 @@ export default function HowItWorks() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="text-center mb-24"
+          className="text-center mb-12 md:mb-24"
         >
           {/* Badge */}
           <motion.span
             className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-indigo-100 
-              text-blue-700 px-6 py-2 rounded-full text-sm font-semibold tracking-wide uppercase 
+              text-blue-700 px-4 md:px-6 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-semibold tracking-wide uppercase 
               shadow-lg border border-blue-200/50 backdrop-blur-sm"
             animate={pulseAnimation}
           >
-            <Zap className="w-4 h-4" />
+            <Zap className="w-3 h-3 md:w-4 md:h-4" />
             Simple Process
-            <Sparkles className="w-4 h-4" />
+            <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
           </motion.span>
+
 
           {/* Main heading */}
           <motion.h2
-            className="text-5xl lg:text-6xl font-bold mt-6 mb-6"
+            className="text-3xl md:text-5xl lg:text-6xl font-bold mt-4 md:mt-6 mb-4 md:mb-6"
             animate={{
               backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
             }}
@@ -267,12 +289,13 @@ export default function HowItWorks() {
             How It Works
           </motion.h2>
 
+
           {/* Decorative line */}
           <motion.div
-            className="w-32 h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 
-              mx-auto mb-8 rounded-full relative overflow-hidden"
+            className="w-24 md:w-32 h-1 md:h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 
+              mx-auto mb-6 md:mb-8 rounded-full relative overflow-hidden"
             initial={{ width: 0 }}
-            whileInView={{ width: 128 }}
+            whileInView={{ width: window.innerWidth >= 768 ? 128 : 96 }}
             transition={{ duration: 1, delay: 0.5 }}
           >
             <motion.div
@@ -282,9 +305,10 @@ export default function HowItWorks() {
             />
           </motion.div>
 
+
           {/* Description */}
           <motion.p
-            className="text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
+            className="text-base md:text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
@@ -294,9 +318,10 @@ export default function HowItWorks() {
             three-step process
           </motion.p>
 
+
           {/* Stats */}
           <motion.div
-            className="flex justify-center items-center gap-8 mt-8 flex-wrap"
+            className="flex justify-center items-center gap-4 md:gap-8 mt-6 md:mt-8 flex-wrap"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 1 }}
@@ -308,17 +333,18 @@ export default function HowItWorks() {
             ].map((stat, index) => (
               <motion.div
                 key={index}
-                className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 
+                className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 
                   rounded-full shadow-lg border border-gray-100"
                 whileHover={{ scale: 1.05 }}
               >
-                <stat.icon className="w-4 h-4 text-blue-600" />
-                <span className="font-bold text-gray-900">{stat.value}</span>
-                <span className="text-gray-600 text-sm">{stat.label}</span>
+                <stat.icon className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-600" />
+                <span className="font-bold text-gray-900 text-sm md:text-base">{stat.value}</span>
+                <span className="text-gray-600 text-xs md:text-sm">{stat.label}</span>
               </motion.div>
             ))}
           </motion.div>
         </motion.div>
+
 
         {/* Steps */}
         <motion.div
@@ -326,7 +352,7 @@ export default function HowItWorks() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-20 lg:gap-12 relative"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-12 md:gap-20 lg:gap-12 relative"
         >
           {/* Animated connection line - desktop */}
           <div className="hidden lg:block absolute top-12 left-[16%] right-[16%] h-1 bg-gray-100 rounded-full">
@@ -337,6 +363,7 @@ export default function HowItWorks() {
               transition={{ duration: 2, delay: 1 }}
             />
           </div>
+
 
           {steps.map((step, index) => (
             <React.Fragment key={index}>
@@ -351,6 +378,7 @@ export default function HowItWorks() {
                   stepNumber={index + 1}
                 />
               </motion.div>
+
 
               {/* connection arrows - desktop */}
               {index < steps.length - 1 && (
@@ -382,13 +410,14 @@ export default function HowItWorks() {
           ))}
         </motion.div>
 
+
         {/*  CTA Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
-          className="flex flex-col items-center mt-20"
+          className="flex flex-col items-center mt-12 md:mt-20"
         >
           {/* CTA button with styling */}
           <motion.a
@@ -396,41 +425,44 @@ export default function HowItWorks() {
               navigate("/properties");
               window.scrollTo(0, 0);
             }}
-            className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r 
-              from-blue-600 via-indigo-600 to-purple-600 text-white font-semibold rounded-2xl 
+            className="group relative inline-flex items-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r 
+              from-blue-600 via-indigo-600 to-purple-600 text-white font-semibold rounded-xl md:rounded-2xl 
               shadow-2xl shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300 
-              text-lg border border-blue-500/20"
+              text-base md:text-lg border border-blue-500/20"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.98 }}
           >
             {/* Button glow effect */}
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 
-                rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-300"
+                rounded-xl md:rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-300"
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
+
 
             <span className="relative z-10">Start Your Journey</span>
             <motion.div
               animate={{ x: [0, 4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             >
-              <ArrowRight className="w-5 h-5 relative z-10" />
+              <ArrowRight className="w-4 h-4 md:w-5 md:h-5 relative z-10" />
             </motion.div>
           </motion.a>
 
+
           {/* Additional info */}
           <motion.p
-            className="text-gray-500 text-sm mt-4 flex items-center gap-2"
+            className="text-gray-500 text-xs md:text-sm mt-3 md:mt-4 flex items-center gap-2"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
           >
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
+            <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-500" />
             No registration required • Free to start
           </motion.p>
         </motion.div>
+
 
         {/* Testimonial with modern design */}
         <motion.div
@@ -438,11 +470,11 @@ export default function HowItWorks() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.8, duration: 0.6 }}
-          className="mt-24 max-w-4xl mx-auto"
+          className="mt-16 md:mt-24 max-w-4xl mx-auto"
         >
           <div
             className="relative bg-gradient-to-br from-white/80 to-blue-50/80 backdrop-blur-sm 
-            p-10 rounded-3xl shadow-2xl border border-white/20 text-center overflow-hidden"
+            p-6 md:p-10 rounded-2xl md:rounded-3xl shadow-2xl border border-white/20 text-center overflow-hidden"
           >
             {/* Background decorative elements */}
             <div className="absolute top-0 left-0 w-full h-full">
@@ -451,32 +483,35 @@ export default function HowItWorks() {
               <div className="absolute top-1/2 right-8 w-6 h-6 bg-purple-200/30 rounded-full"></div>
             </div>
 
+
             {/* Quote */}
             <motion.div className="relative z-10" animate={floatingAnimation}>
-              <div className="text-6xl text-blue-600/20 font-serif leading-none">
+              <div className="text-4xl md:text-6xl text-blue-600/20 font-serif leading-none">
                 &ldquo;
               </div>
-              <p className="text-gray-700 italic text-xl lg:text-2xl mb-6 leading-relaxed -mt-4">
+              <p className="text-gray-700 italic text-base md:text-xl lg:text-2xl mb-4 md:mb-6 leading-relaxed -mt-2 md:-mt-4">
                 The 3-step process was incredibly smooth. Within a week, I found
                 and secured my dream apartment!
               </p>
 
+
               {/* Author info */}
-              <div className="flex items-center justify-center gap-4">
+              <div className="flex items-center justify-center gap-3 md:gap-4">
                 <div
-                  className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 
-                  rounded-full flex items-center justify-center text-white font-bold text-lg"
+                  className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-blue-500 to-indigo-500 
+                  rounded-full flex items-center justify-center text-white font-bold text-base md:text-lg"
                 >
                   D
                 </div>
                 <div className="text-left">
-                  <p className="font-bold text-gray-900">Deepak Yadav</p>
-                  <p className="text-gray-600 text-sm">Agartala,Tripura</p>
+                  <p className="font-bold text-gray-900 text-sm md:text-base">Deepak Yadav</p>
+                  <p className="text-gray-600 text-xs md:text-sm">Agartala,Tripura</p>
                 </div>
               </div>
 
+
               {/* Stars */}
-              <div className="flex justify-center mt-4 gap-1">
+              <div className="flex justify-center mt-3 md:mt-4 gap-1">
                 {[...Array(5)].map((_, i) => (
                   <motion.div
                     key={i}
@@ -484,7 +519,7 @@ export default function HowItWorks() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 1 + i * 0.1 }}
                   >
-                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
+                    <Star className="w-4 h-4 md:w-5 md:h-5 text-yellow-400 fill-current" />
                   </motion.div>
                 ))}
               </div>

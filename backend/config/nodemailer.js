@@ -51,7 +51,7 @@ export const emailTemplates = {
         <p>Thank you for joining our real estate platform. We're excited to help you find your perfect property!</p>
         <p>Here's what you can do:</p>
         <ul>
-          <li>Browse thousands of properties</li>
+          <li>Browse thousands of properties and services</li>
           <li>Schedule property viewings</li>
           <li>Get AI-powered property recommendations</li>
           <li>Save your favorite listings</li>

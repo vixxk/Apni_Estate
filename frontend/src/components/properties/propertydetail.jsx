@@ -24,6 +24,7 @@ import {
 import { Backendurl } from "../../App.jsx";
 import ScheduleViewing from "./ScheduleViewing";
 
+
 const PropertyDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -35,17 +36,22 @@ const PropertyDetails = () => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [showCallRequest, setShowCallRequest] = useState(false);
 
+
   const normalizeAmenities = (raw) => {
     if (!raw) return [];
 
+
     let s = raw;
+
 
     if (Array.isArray(s)) {
       if (s.length === 0) return [];
       s = s[0];
     }
 
+
     if (typeof s !== "string") s = String(s);
+
 
     s = s.trim();
     if (
@@ -55,9 +61,11 @@ const PropertyDetails = () => {
       s = s.slice(1, -1);
     }
 
+
     for (let i = 0; i < 4; i++) {
       s = s.replace(/\\\\/g, "\\").replace(/\\"/g, '"').replace(/\\'/g, "'");
     }
+
 
     const trimmed = s.trim();
     if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
@@ -73,6 +81,7 @@ const PropertyDetails = () => {
       }
     }
 
+
     return trimmed
       .split(",")
       .map((a) =>
@@ -84,6 +93,7 @@ const PropertyDetails = () => {
       .filter(Boolean);
   };
 
+
   const formatAvailability = (availability) => {
     if (!availability) return "";
     const av = availability.toLowerCase();
@@ -93,12 +103,15 @@ const PropertyDetails = () => {
     return availability.charAt(0).toUpperCase() + availability.slice(1);
   };
 
+
   useEffect(() => {
     const fetchProperty = async () => {
       try {
         setLoading(true);
 
+
         const response = await axios.get(`${Backendurl}/api/properties/${id}`);
+
 
         if (response.data.success) {
           const p =
@@ -106,11 +119,13 @@ const PropertyDetails = () => {
             response.data.data ||
             response.data.property;
 
+
           if (!p) {
             setError("Property not found.");
             setProperty(null);
             return;
           }
+
 
           const toFullUrl = (val) => {
             if (!val) return null;
@@ -118,7 +133,9 @@ const PropertyDetails = () => {
             return `${Backendurl}${val.startsWith("/") ? val : `/${val}`}`;
           };
 
+
           let imagesArray = [];
+
 
           if (Array.isArray(p.images) && p.images.length > 0) {
             imagesArray = p.images
@@ -132,13 +149,16 @@ const PropertyDetails = () => {
             imagesArray = [toFullUrl(p.image)];
           }
 
+
           const firstImage = imagesArray[0] || null;
+
 
           const amenitiesSource =
             p.amenities ||
             p.Amenities ||
             p.features?.amenities ||
             p.features?.Amenities;
+
 
           const mapped = {
             _id: p._id,
@@ -183,6 +203,7 @@ const PropertyDetails = () => {
             owner: p.owner,
           };
 
+
           setProperty(mapped);
           setError(null);
         } else {
@@ -198,13 +219,16 @@ const PropertyDetails = () => {
       }
     };
 
+
     fetchProperty();
   }, [id]);
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
     setActiveImage(0);
   }, [id]);
+
 
   const handleKeyNavigation = useCallback(
     (e) => {
@@ -215,6 +239,7 @@ const PropertyDetails = () => {
           ? [property.image]
           : [];
       if (!images.length) return;
+
 
       if (e.key === "ArrowLeft") {
         setActiveImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -227,10 +252,12 @@ const PropertyDetails = () => {
     [property, showSchedule]
   );
 
+
   useEffect(() => {
     window.addEventListener("keydown", handleKeyNavigation);
     return () => window.removeEventListener("keydown", handleKeyNavigation);
   }, [handleKeyNavigation]);
+
 
   const handleShare = async () => {
     try {
@@ -250,6 +277,7 @@ const PropertyDetails = () => {
     }
   };
 
+
   const handleRequestCall = () => {
     setShowCallRequest(true);
     setTimeout(() => {
@@ -257,9 +285,11 @@ const PropertyDetails = () => {
     }, 3000);
   };
 
+
   const handleChatClick = () => {
     navigate("/chat");
   };
+
 
   if (loading) {
     return (
@@ -282,6 +312,7 @@ const PropertyDetails = () => {
               <HomeIcon className="w-12 h-12 text-white" />
             </motion.div>
 
+
             <motion.div
               className="absolute w-3 h-3 bg-blue-300 rounded-full right-4 bottom-10"
               animate={{
@@ -290,6 +321,7 @@ const PropertyDetails = () => {
               }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
             />
+
 
             <motion.div
               className="absolute w-2 h-2 bg-indigo-400 rounded-full"
@@ -300,19 +332,23 @@ const PropertyDetails = () => {
               transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
             />
 
+
             <div
               className="absolute inset-0 bg-blue-500/10 rounded-full animate-ping"
               style={{ animationDuration: "3s" }}
             ></div>
           </div>
 
+
           <h3 className="text-2xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             Loading Property
           </h3>
 
+
           <p className="text-gray-600 mb-5 max-w-xs text-center">
             Fetching property details...
           </p>
+
 
           <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
             <motion.div
@@ -329,6 +365,7 @@ const PropertyDetails = () => {
             />
           </div>
 
+
           <div className="flex items-center mt-4 text-xs text-blue-600">
             <motion.div
               animate={{ opacity: [0.5, 1, 0.5] }}
@@ -341,6 +378,7 @@ const PropertyDetails = () => {
       </div>
     );
   }
+
 
   if (error || !property) {
     return (
@@ -367,6 +405,7 @@ const PropertyDetails = () => {
     );
   }
 
+
   const images =
     Array.isArray(property.images) && property.images.length > 0
       ? property.images
@@ -374,6 +413,7 @@ const PropertyDetails = () => {
       ? [property.image]
       : [];
   const hasImages = Array.isArray(images) && images.length > 0;
+
 
   const propertyFeatures = [
     {
@@ -396,42 +436,14 @@ const PropertyDetails = () => {
     },
   ].filter((feature) => feature.value > 0);
 
+
   const hasContactInfo =
     property.phone || property.email || property.alternatePhone;
+
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16 md:pt-20 pb-16 md:pb-12">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
-        {/* Navigation Bar */}
-        <nav className="flex items-center justify-between mb-4 md:mb-6">
-          <button
-            onClick={() => navigate("/properties")}
-            className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors font-medium"
-          >
-            <div className="p-1.5 md:p-2 rounded-lg md:rounded-xl bg-white shadow hover:shadow-md transition-shadow">
-              <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
-            </div>
-            <span className="hidden sm:inline text-sm md:text-base">Back to Properties</span>
-          </button>
-
-          <button
-            onClick={handleShare}
-            className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2.5 rounded-lg md:rounded-xl bg-white shadow hover:shadow-md transition-shadow font-medium text-sm md:text-base"
-          >
-            {copySuccess ? (
-              <span className="text-green-600 flex items-center gap-2">
-                <Check className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="hidden sm:inline">Copied!</span>
-              </span>
-            ) : (
-              <span className="flex items-center gap-2 text-gray-700">
-                <Share2 className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="hidden sm:inline">Share</span>
-              </span>
-            )}
-          </button>
-        </nav>
-
         {/* Call Request Notification */}
         {showCallRequest && (
           <motion.div
@@ -444,6 +456,7 @@ const PropertyDetails = () => {
             <p className="font-semibold">Call request sent!</p>
           </motion.div>
         )}
+
 
         {/* Main Content Card */}
         <div className="bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden">
@@ -476,10 +489,25 @@ const PropertyDetails = () => {
               )}
             </AnimatePresence>
 
+
             {/* Gradient overlay */}
             {hasImages && (
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none"></div>
             )}
+
+
+            {/* Share Button - Top Right */}
+            <button
+              onClick={handleShare}
+              className="absolute top-3 md:top-4 right-3 md:right-4 p-2 md:p-3 rounded-full bg-white/90 hover:bg-white shadow-lg transition-all z-10"
+            >
+              {copySuccess ? (
+                <Check className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
+              ) : (
+                <Share2 className="w-4 h-4 md:w-5 md:h-5 text-gray-800" />
+              )}
+            </button>
+
 
             {/* Navigation Controls */}
             {hasImages && images.length > 1 && (
@@ -507,6 +535,7 @@ const PropertyDetails = () => {
               </>
             )}
 
+
             {/* Image Counter */}
             {hasImages && (
               <div className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 bg-black/75 text-white px-3 py-1.5 md:px-5 md:py-2.5 rounded-full text-xs md:text-base font-semibold z-10 border border-white/20">
@@ -514,6 +543,7 @@ const PropertyDetails = () => {
               </div>
             )}
           </div>
+
 
           {/* Property Content */}
           <div className="p-4 md:p-6 lg:p-10">
@@ -531,6 +561,7 @@ const PropertyDetails = () => {
                     </div>
                   )}
                 </div>
+
 
                 {/* Price Card */}
                 <div className="lg:min-w-[280px]">
@@ -553,6 +584,7 @@ const PropertyDetails = () => {
                 </div>
               </div>
 
+
               {/* Property Type Badge */}
               {property.type && (
                 <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-purple-100 rounded-lg md:rounded-xl border border-purple-200">
@@ -563,6 +595,7 @@ const PropertyDetails = () => {
                 </div>
               )}
             </div>
+
 
             {/* Features Grid */}
             {propertyFeatures.length > 0 && (
@@ -591,6 +624,7 @@ const PropertyDetails = () => {
               </div>
             )}
 
+
             {/* Two Column Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
               {/* Left Column - CTA & Contact */}
@@ -603,6 +637,7 @@ const PropertyDetails = () => {
                   <Calendar className="w-5 h-5 md:w-6 md:h-6" />
                   <span>Schedule Viewing</span>
                 </button>
+
 
                 {/* Contact Card */}
                 {hasContactInfo && (
@@ -632,6 +667,7 @@ const PropertyDetails = () => {
                         </div>
                       </button>
 
+
                       {/* Chat Button */}
                       <button
                         onClick={handleChatClick}
@@ -652,6 +688,7 @@ const PropertyDetails = () => {
                 )}
               </div>
 
+
               {/* Right Column - Details */}
               <div className="lg:col-span-2 space-y-6 md:space-y-8">
                 {/* Description */}
@@ -664,6 +701,7 @@ const PropertyDetails = () => {
                     {property.description}
                   </p>
                 </div>
+
 
                 {/* Amenities */}
                 <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 lg:p-8 border border-gray-200">
@@ -699,6 +737,7 @@ const PropertyDetails = () => {
           </div>
         </div>
 
+
         {/* Location Card */}
         {property.location && (
           <div className="mt-6 md:mt-8 bg-white rounded-xl md:rounded-2xl p-4 md:p-6 lg:p-8 shadow-lg border border-gray-200">
@@ -712,6 +751,7 @@ const PropertyDetails = () => {
               </div>
             </div>
 
+
             <div className="bg-gray-50 rounded-lg md:rounded-xl p-4 md:p-6 mb-4 md:mb-6 border border-gray-200">
               <div className="flex items-start gap-2 md:gap-3">
                 <MapPin className="w-4 h-4 md:w-6 md:h-6 text-blue-600 mt-0.5 md:mt-1 flex-shrink-0" />
@@ -720,6 +760,7 @@ const PropertyDetails = () => {
                 </p>
               </div>
             </div>
+
 
             <a
               href={`https://maps.google.com/?q=${encodeURIComponent(
@@ -736,6 +777,7 @@ const PropertyDetails = () => {
           </div>
         )}
 
+
         {/* Schedule Viewing Modal */}
         <AnimatePresence>
           {showSchedule && (
@@ -749,5 +791,6 @@ const PropertyDetails = () => {
     </div>
   );
 };
+
 
 export default PropertyDetails;

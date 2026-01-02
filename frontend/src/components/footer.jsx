@@ -15,9 +15,12 @@ import {
   Heart,
   Star,
   Zap,
+  Shield,
+  Award,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
+
 
 // Animation Variants
 const containerVariants = {
@@ -30,6 +33,7 @@ const containerVariants = {
     },
   },
 };
+
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -45,6 +49,7 @@ const sectionVariants = {
   },
 };
 
+
 const floatingAnimation = {
   y: [-2, 2, -2],
   transition: {
@@ -53,6 +58,7 @@ const floatingAnimation = {
     ease: "easeInOut",
   },
 };
+
 
 const glowAnimation = {
   boxShadow: [
@@ -67,9 +73,11 @@ const glowAnimation = {
   },
 };
 
+
 // Mobile Collapsible Footer Section
 const MobileFooterSection = ({ title, children, icon: Icon }) => {
   const [isOpen, setIsOpen] = useState(false);
+
 
   return (
     <motion.div
@@ -95,6 +103,7 @@ const MobileFooterSection = ({ title, children, icon: Icon }) => {
         </motion.div>
       </button>
 
+
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -111,6 +120,7 @@ const MobileFooterSection = ({ title, children, icon: Icon }) => {
     </motion.div>
   );
 };
+
 
 // Footer Column Component
 const FooterColumn = ({
@@ -146,6 +156,7 @@ const FooterColumn = ({
   );
 };
 
+
 // Footer Link Component
 const FooterLink = ({ href, children, icon: Icon }) => {
   return (
@@ -167,28 +178,8 @@ const FooterLink = ({ href, children, icon: Icon }) => {
   );
 };
 
+
 const socialLinks = [
-  // {
-  //   icon: Twitter,
-  //   href: "#",
-  //   label: "Twitter",
-  //   color: "from-[#1DA1F2] to-[#0d8bd9]",
-  //   hoverColor: "hover:shadow-[#1DA1F2]/25",
-  // },
-  // {
-  //   icon: Facebook,
-  //   href: "#",
-  //   label: "Facebook",
-  //   color: "from-[#1877F2] to-[#0d65d9]",
-  //   hoverColor: "hover:shadow-[#1877F2]/25",
-  // },
-  // {
-  //   icon: Instagram,
-  //   href: "#",
-  //   label: "Instagram",
-  //   color: "from-[#fd5949] via-[#d6249f] to-[#285AEB]",
-  //   hoverColor: "hover:shadow-pink-500/25",
-  // },
   {
     icon: Linkedin,
     href: "https://www.linkedin.com/company/apni-estate/",
@@ -197,6 +188,7 @@ const socialLinks = [
     hoverColor: "hover:shadow-[#0077B5]/25",
   },
 ];
+
 
 const SocialLinks = () => {
   return (
@@ -223,6 +215,7 @@ const SocialLinks = () => {
   );
 };
 
+
 // Main Footer Component
 const companyLinks = [
   { name: "Home", href: "/", icon: Home },
@@ -232,10 +225,11 @@ const companyLinks = [
   { name: "AI Property Hub", href: "/ai-property-hub", icon: Zap },
 ];
 
+
 const contactInfo = [
   {
     icon: MapPin,
-    text: "Tripura,Agartala",
+    text: "Tripura, Agartala",
     href: "https://www.google.com/maps/place/Tripura/@23.6880803,91.200007,9.39z",
   },
   {
@@ -250,12 +244,14 @@ const contactInfo = [
   },
 ];
 
+
 const Footer = () => {
   return (
     <footer className="relative">
       {/* Decorative background elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/50"></div>
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-300 to-transparent"></div>
+
 
       {/* Main Footer */}
       <div className="relative pt-16 lg:pt-20 pb-12">
@@ -285,6 +281,7 @@ const Footer = () => {
               </div>
             </div>
 
+
             <motion.p
               className="text-gray-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed text-lg"
               initial={{ opacity: 0 }}
@@ -296,12 +293,14 @@ const Footer = () => {
               cutting-edge technology and personalized service.
             </motion.p>
 
+
             <div className="flex justify-center lg:justify-start">
               <SocialLinks />
             </div>
           </motion.div>
 
-          {/* Desktop layout - UPDATED */}
+
+          {/* Desktop layout */}
           <div className="hidden lg:flex justify-between gap-16 mb-12 max-w-4xl">
             {/* Quick Links Column */}
             <FooterColumn
@@ -320,6 +319,7 @@ const Footer = () => {
                 ))}
               </ul>
             </FooterColumn>
+
 
             {/* Contact Info */}
             <FooterColumn
@@ -353,6 +353,7 @@ const Footer = () => {
             </FooterColumn>
           </div>
 
+
           {/* Mobile Accordions */}
           <motion.div
             className="lg:hidden space-y-4 mb-8"
@@ -372,6 +373,7 @@ const Footer = () => {
                 ))}
               </ul>
             </MobileFooterSection>
+
 
             <MobileFooterSection title="Contact Us" icon={MapPin}>
               <ul className="space-y-3">
@@ -396,37 +398,44 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="relative bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 border-t border-gray-700/50">
-        <div className="absolute inset-0 opacity-10">
-          <div className="w-full h-full bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[length:20px_20px]"></div>
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <motion.p
-              className="text-sm text-gray-300 text-center md:text-left flex items-center gap-2"
-              initial={{ opacity: 0, y: 20 }}
+
+      {/* Bottom Bar - COMPLETELY REDESIGNED */}
+      <div className="relative border-t border-gray-200 bg-white/80 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            {/* Copyright Section */}
+            <motion.div
+              className="flex flex-col md:flex-row items-center gap-3 text-center md:text-left"
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <span>
-                © {new Date().getFullYear()} ApniEstate. All Rights Reserved.
-              </span>
-            </motion.p>
+              <div className="flex items-center gap-2 text-gray-600 text-sm">
+                <Shield className="w-4 h-4 text-blue-600" />
+                <span>© {new Date().getFullYear()} ApniEstate.</span>
+              </div>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <span className="text-gray-500 text-sm">All Rights Reserved.</span>
+            </motion.div>
 
-            {/* <motion.a
-              href="/properties"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
-              initial={{ opacity: 0, y: 20 }}
+
+            {/* Trust Badges */}
+            <motion.div
+              className="flex items-center gap-4"
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <Sparkles className="w-4 h-4" />
-              Explore Properties
-              <ArrowRight className="w-4 h-4" />
-            </motion.a> */}
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 rounded-lg">
+                <Award className="w-4 h-4 text-blue-600" />
+                <span className="text-xs font-medium text-blue-700">Verified</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 rounded-lg">
+                <Shield className="w-4 h-4 text-green-600" />
+                <span className="text-xs font-medium text-green-700">Secure</span>
+              </div>
+            </motion.div>
+
           </div>
         </div>
       </div>
@@ -434,17 +443,20 @@ const Footer = () => {
   );
 };
 
+
 Footer.propTypes = {
   title: PropTypes.string,
   children: PropTypes.node,
   icon: PropTypes.elementType,
 };
 
+
 MobileFooterSection.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   icon: PropTypes.elementType,
 };
+
 
 FooterColumn.propTypes = {
   title: PropTypes.string,
@@ -454,10 +466,12 @@ FooterColumn.propTypes = {
   icon: PropTypes.elementType,
 };
 
+
 FooterLink.propTypes = {
   href: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   icon: PropTypes.elementType,
 };
+
 
 export default Footer;
