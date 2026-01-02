@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -83,8 +82,6 @@ const sparkleVariants = {
   },
 };
 
-
-
 // Skeleton Loading Component
 const SkeletonLoader = () => (
   <div className="max-w-4xl mx-auto p-4 sm:p-6 mt-16 sm:mt-20 animate-pulse">
@@ -92,11 +89,11 @@ const SkeletonLoader = () => (
 
     <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
       {/* Avatar Section Skeleton */}
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 sm:p-8 flex flex-col items-center border-b">
-        <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gray-300"></div>
-        <div className="mt-4 space-y-2 flex flex-col items-center">
-          <div className="h-10 bg-gray-200 rounded-lg w-32"></div>
-          <div className="h-6 bg-gray-200 rounded w-48"></div>
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 sm:p-6 flex flex-col items-center border-b">
+        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gray-300"></div>
+        <div className="mt-3 space-y-2 flex flex-col items-center">
+          <div className="h-6 bg-gray-200 rounded-lg w-32"></div>
+          <div className="h-4 bg-gray-200 rounded w-40"></div>
         </div>
       </div>
 
@@ -312,7 +309,7 @@ function Profile() {
             transition={{ duration: 4, repeat: Infinity, delay: 2 }}
             className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-pink-400 to-indigo-400 rounded-full blur-3xl"
           />
-  
+
           {/* Icon with Animation */}
           <motion.div
             variants={iconVariants}
@@ -340,14 +337,14 @@ function Profile() {
             >
               <Sparkles className="w-4 h-4 text-pink-400" />
             </motion.div>
-  
+
             {/* Pulse Ring */}
             <motion.div
               animate={pulseAnimation}
               className="absolute inset-0 rounded-full border-4 border-blue-400/30"
             />
           </motion.div>
-  
+
           {/* Heading */}
           <motion.h1
             variants={itemVariants}
@@ -355,7 +352,7 @@ function Profile() {
           >
             Your Profile Awaits
           </motion.h1>
-  
+
           {/* Description */}
           <motion.p
             variants={itemVariants}
@@ -364,7 +361,7 @@ function Profile() {
             Sign in to manage your profile, upload a photo, update your details,
             and get a personalized experience.
           </motion.p>
-  
+
           {/* Benefits */}
           <motion.div
             variants={itemVariants}
@@ -415,7 +412,7 @@ function Profile() {
               </motion.li>
             </ul>
           </motion.div>
-  
+
           {/* Actions */}
           <motion.div
             variants={itemVariants}
@@ -432,7 +429,7 @@ function Profile() {
                 className="absolute inset-0 bg-gradient-to-r from-blue-700 to-indigo-700 opacity-0 group-hover:opacity-100 transition-opacity"
               />
             </motion.button>
-  
+
             <motion.button
               whileHover={{ 
                 scale: 1.05, 
@@ -448,7 +445,7 @@ function Profile() {
               </span>
             </motion.button>
           </motion.div>
-  
+
           {/* Footer note */}
           <motion.p
             initial={{ opacity: 0 }}
@@ -474,16 +471,13 @@ function Profile() {
           </div>
         )}
 
-        {/* <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
-          My Profile
-        </h1> */}
-
         <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-          {/* Avatar Section */}
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 sm:p-8 border-b">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="relative group">
-                <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-gradient-to-br from-blue-400 to-indigo-500 shadow-xl ring-4 ring-white">
+          {/* Compact Avatar Section */}
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 sm:p-6 border-b">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+              {/* Avatar */}
+              <div className="relative group flex-shrink-0">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden bg-gradient-to-br from-blue-400 to-indigo-500 shadow-lg ring-4 ring-white">
                   {avatarPreview ? (
                     <img
                       src={avatarPreview}
@@ -492,14 +486,14 @@ function Profile() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <User className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
+                      <User className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
                     </div>
                   )}
                 </div>
 
                 {/* Camera Icon Overlay */}
-                <label className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 sm:p-2.5 cursor-pointer shadow-lg transition-all hover:scale-110">
-                  <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
+                <label className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-1.5 sm:p-2 cursor-pointer shadow-lg transition-all hover:scale-110">
+                  <Camera className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <input
                     type="file"
                     accept="image/*"
@@ -509,41 +503,44 @@ function Profile() {
                 </label>
               </div>
 
-              <div className="text-center">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                  {name || "User"}
-                </h2>
-                <p className="text-sm text-gray-600 mt-1">{user.email}</p>
+              {/* User Info & Actions */}
+              <div className="flex-1 text-center sm:text-left space-y-3">
+                <div>
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                    {name || "User"}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-gray-600">{user.email}</p>
+                </div>
+
+                {/* Avatar Actions - Compact */}
+                <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                  {selectedFile && (
+                    <button
+                      onClick={handleAvatarUpload}
+                      disabled={uploadingAvatar}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg"
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      {uploadingAvatar ? "Uploading..." : "Upload"}
+                    </button>
+                  )}
+
+                  {user.avatar && !selectedFile && (
+                    <button
+                      onClick={handleRemoveAvatar}
+                      disabled={uploadingAvatar}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg text-xs font-medium disabled:opacity-60 transition-all"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      Remove
+                    </button>
+                  )}
+                </div>
+
+                <p className="text-[10px] sm:text-xs text-gray-500">
+                  Max 5MB • JPG, PNG, GIF
+                </p>
               </div>
-
-              {/* Avatar Actions */}
-              <div className="flex flex-wrap gap-2 justify-center">
-                {selectedFile && (
-                  <button
-                    onClick={handleAvatarUpload}
-                    disabled={uploadingAvatar}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg"
-                  >
-                    <Upload className="w-4 h-4" />
-                    {uploadingAvatar ? "Uploading..." : "Upload"}
-                  </button>
-                )}
-
-                {user.avatar && !selectedFile && (
-                  <button
-                    onClick={handleRemoveAvatar}
-                    disabled={uploadingAvatar}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg text-sm font-medium disabled:opacity-60 transition-all"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                    Remove
-                  </button>
-                )}
-              </div>
-
-              <p className="text-xs text-gray-500 text-center">
-                Max 5MB • JPG, PNG, GIF
-              </p>
             </div>
           </div>
 
