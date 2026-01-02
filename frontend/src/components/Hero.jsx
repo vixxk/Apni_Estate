@@ -287,11 +287,11 @@ const Hero = () => {
             {/* Heading */}
             <motion.div variants={itemVariants} className="mb-8">
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-4">
-                <RadialGradient gradient={["circle, #3f5efb 0%, #fc466b 100%"]}>
-                  Find Your Perfect
-                </RadialGradient>
+              <span className="text-gray-900">Turn Your House Dream</span>
                 <br />
-                <span className="text-gray-900">Dream Home</span>
+                <RadialGradient gradient={["circle, #3f5efb 0%, #fc466b 100%"]}>
+                  To A Dream House 
+                </RadialGradient>
               </h1>
 
               <p className="hidden sm:block text-xl sm:text-2xl text-gray-700 max-w-3xl mx-auto">
