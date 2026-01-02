@@ -98,3 +98,40 @@ export const optionalAuth = async (req, res, next) => {
     next();
   }
 };
+
+// Admin authentication middleware
+export const adminProtect = async (req, res, next) => {
+  try {
+    const { email, password } = req.headers;
+
+    if (!email || !password) {
+      return res.status(401).json({
+        success: false,
+        message: "Admin credentials required in headers",
+      });
+    }
+
+    // Check against environment variables
+    if (
+      email === process.env.ADMIN_EMAIL &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
+      req.admin = {
+        email: process.env.ADMIN_EMAIL,
+        role: "admin",
+      };
+      next();
+    } else {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid admin credentials",
+      });
+    }
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      message: "Admin authentication failed",
+      error: error.message,
+    });
+  }
+};

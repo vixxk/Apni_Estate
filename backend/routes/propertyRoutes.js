@@ -12,7 +12,6 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024, files: 5 }, // 10MB per file, max 5 files
 });
 
-
 // @route   POST /api/properties/upload-images
 // @desc    IMAGE UPLOAD ENDPOINT
 // @access  for Vendors
@@ -56,9 +55,8 @@ router.post(
   }
 );
 
-
 // @route   POST /api/properties/vendor-add
-// @desc    VENDOR ADD PROPERTY ENDPOINT
+// @desc    VENDOR ADD PROPERTY ENDPOINT (SUBMITS FOR ADMIN APPROVAL)
 // @access  for Vendors
 router.post("/vendor-add", protect, authorize("vendor"), async (req, res) => {
   try {
@@ -122,7 +120,7 @@ router.post("/vendor-add", protect, authorize("vendor"), async (req, res) => {
         email: contactInfo?.email || "",
         alternatePhone: contactInfo?.alternatePhone || "",
       },
-      status: "available",
+      status: "pending", 
       metadata: {
         yearBuilt: metadata?.yearBuilt ? Number(metadata.yearBuilt) : null,
         propertyTax: metadata?.propertyTax ? Number(metadata.propertyTax) : null,
@@ -142,7 +140,7 @@ router.post("/vendor-add", protect, authorize("vendor"), async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Listing created successfully",
+      message: "Listing submitted for admin review", 
       data: savedProperty,
     });
   } catch (error) {
@@ -165,9 +163,8 @@ router.post("/vendor-add", protect, authorize("vendor"), async (req, res) => {
   }
 });
 
-
 // @route   GET /api/properties
-// @desc    GET ALL PROPERTIES (with filters)
+// @desc    GET ALL PROPERTIES (with filters) - ONLY APPROVED PROPERTIES
 // @access  Public
 router.get("/", async (req, res) => {
   try {
@@ -184,7 +181,8 @@ router.get("/", async (req, res) => {
       limit = 12,
     } = req.query;
 
-    let filter = { status: "available" };
+    // CHANGED: Only show approved properties to public
+    let filter = { status: "approved" };
 
     if (owner) {
       filter.owner = owner;
@@ -239,7 +237,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-
 // @route   GET /api/properties/:id
 // @desc    GET SINGLE PROPERTY
 // @access  Public
@@ -271,8 +268,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// @route   GET /api/properties/:vendor/my-properties
-// @desc    GET VENDOR'S PROPERTIES
+// @route   GET /api/properties/vendor/my-properties
+// @desc    GET VENDOR'S PROPERTIES (ALL STATUSES)
 // @access  Vendor
 router.get("/vendor/my-properties", protect, authorize("vendor"), async (req, res) => {
   try {
@@ -292,7 +289,6 @@ router.get("/vendor/my-properties", protect, authorize("vendor"), async (req, re
     });
   }
 });
-
 
 // @route   PUT /api/properties/:id
 // @desc    UPDATE PROPERTY
@@ -434,7 +430,7 @@ router.post("/:id/favorite", protect, async (req, res) => {
   }
 });
 
-// @route   POST /api/properties/nearby
+// @route   GET /api/properties/nearby/:id
 // @desc    GET NEARBY PROPERTIES
 // @access  Public
 router.get("/nearby/:id", async (req, res) => {

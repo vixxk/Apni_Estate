@@ -359,7 +359,7 @@ const VendorAddProperty = () => {
       // Scroll to top immediately on success
       window.scrollTo({ top: 0, behavior: "smooth" });
       
-      setSuccess("Listing created successfully! 🎉");
+      setSuccess("Listing submitted for admin review! You'll be notified once approved. 🎉");
 
       setTimeout(() => {
         resetForm();
