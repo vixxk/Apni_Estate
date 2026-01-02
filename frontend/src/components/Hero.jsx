@@ -136,11 +136,14 @@ const Hero = () => {
   const handleServiceClick = (serviceTitle) => {
     const title = serviceTitle.toLowerCase();
 
-    if (title === "buy" || title === "sell") {
+    if (title === "buy") {
       navigate("/properties", {
         state: { filterType: "buy-sell" },
       });
-    } else if (title === "rent") {
+    } else if (title === "sell") {
+      navigate("/vendor/add-service");
+    } 
+    else if (title === "rent") {
       navigate("/properties", {
         state: { filterType: "rent" },
       });

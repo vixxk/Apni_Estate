@@ -23,8 +23,8 @@ const propertySchema = new mongoose.Schema({
     enum: [
       'apartment', 'house', 'villa', 'plot', 'commercial', 'office',
       'construction services', 'interior', 'legal service', 'vastu',
-      'construction consulting', 'home loan', 'construction materials',
-      'houses', 'apartments', 'shops', 'commercial plots', 'farm house',
+      'construction consulting', 'home loan', 'construction materials','furniture','decoratives',
+      'houses', 'apartments', 'shops', 'commercial plots', 'farm house','others',
       'buy','rent', 'sell', 'lease'
     ],
     lowercase: true
@@ -32,7 +32,7 @@ const propertySchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'Property category is required'],
-    enum: ['rent', 'sell', 'buy', 'lease','none'], // Added 'buy'
+    enum: ['rent', 'sell', 'buy', 'lease','none'],
     lowercase: true
   },
   location: {
@@ -77,7 +77,7 @@ const propertySchema = new mongoose.Schema({
       default: 0
     },
     area: {
-      type: Number, // in sq ft
+      type: Number,
       min: 0
     },
     floor: Number,
@@ -117,8 +117,29 @@ const propertySchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['available', 'sold', 'rented', 'pending', 'inactive'],
-    default: 'available'
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending' 
+  },
+
+  adminReview: {
+    reviewedBy: {
+      type: String, 
+      default: null
+    },
+    reviewedAt: {
+      type: Date,
+      default: null
+    },
+    rejectionReason: {
+      type: String,
+      trim: true,
+      maxlength: [500, 'Rejection reason cannot exceed 500 characters']
+    },
+    notes: {
+      type: String,
+      trim: true,
+      maxlength: [1000, 'Notes cannot exceed 1000 characters']
+    }
   },
   views: {
     type: Number,
@@ -150,6 +171,7 @@ propertySchema.index({ price: 1 });
 propertySchema.index({ status: 1 });
 propertySchema.index({ createdAt: -1 });
 propertySchema.index({ tags: 1 });
+propertySchema.index({ owner: 1 });
 
 // Virtual for primary image
 propertySchema.virtual('primaryImage').get(function () {
@@ -181,7 +203,8 @@ propertySchema.statics.findNearby = function (latitude, longitude, radiusKm = 10
     'location.coordinates.longitude': {
       $gte: longitude - (radiusKm / 111.32),
       $lte: longitude + (radiusKm / 111.32)
-    }
+    },
+    status: 'approved' 
   });
 };
 
@@ -193,7 +216,6 @@ propertySchema.pre('save', function (next) {
   next();
 });
 
-// Force collection name to match existing Atlas collection 
 const Property = mongoose.model('Property', propertySchema, 'properties');
 
 export default Property;
