@@ -363,7 +363,7 @@ const VendorAddProperty = () => {
 
       setTimeout(() => {
         resetForm();
-      }, 2000);
+      }, 4000);
     } catch (err) {
       setError(err.message || "An error occurred");
       window.scrollTo({ top: 0, behavior: "smooth" });
