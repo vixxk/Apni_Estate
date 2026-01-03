@@ -2,7 +2,7 @@ import express from 'express';
 import ContactRequest from '../models/ContactRequest.js';
 import Property from '../models/propertymodel.js';
 import User from '../models/Usermodel.js';
-import { protect } from '../middleware/authmiddleware.js'; 
+import { protect } from '../middleware/authmiddleware.js';
 
 const router = express.Router();
 
@@ -10,26 +10,18 @@ const router = express.Router();
 router.use(protect);
 
 // @route   POST /api/contact-requests/create
-// @desc    Create a new contact request
+// @desc    Create a new contact request (property-specific or general)
 // @access  Private
 router.post('/create', async (req, res) => {
   try {
-    const { propertyId, message } = req.body;
+    const { propertyId, vendorId, message } = req.body;
     const userId = req.user._id;
 
-    const property = await Property.findById(propertyId).populate('owner');
-    if (!property) {
-      return res.status(404).json({
-        success: false,
-        message: 'Property not found'
-      });
-    }
-
-    // Check if property is approved
-    if (property.status !== 'approved') {
+    // Validate that either propertyId or vendorId is provided
+    if (!propertyId && !vendorId) {
       return res.status(400).json({
         success: false,
-        message: 'This property is not available for contact'
+        message: 'Either propertyId or vendorId must be provided'
       });
     }
 
@@ -41,52 +33,127 @@ router.post('/create', async (req, res) => {
       });
     }
 
-    // Check if user is trying to contact their own property
-    if (property.owner._id.toString() === userId.toString()) {
-      return res.status(400).json({
-        success: false,
-        message: 'You cannot contact yourself for your own property'
-      });
-    }
+    let property = null;
+    let vendor = null;
+    let contactType = 'general';
+    let propertyInfo = {
+      title: '',
+      price: 0,
+      type: '',
+      location: ''
+    };
 
-    // Check for duplicate request (within last 24 hours)
-    const existingRequest = await ContactRequest.findOne({
-      property: propertyId,
-      user: userId,
-      createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
-    });
+    // Handle property-specific contact request
+    if (propertyId) {
+      property = await Property.findById(propertyId).populate('owner');
+      if (!property) {
+        return res.status(404).json({
+          success: false,
+          message: 'Property not found'
+        });
+      }
 
-    if (existingRequest) {
-      return res.status(400).json({
-        success: false,
-        message: 'You have already sent a contact request for this property in the last 24 hours',
-        data: existingRequest
+      // Check if property is approved
+      if (property.status !== 'approved') {
+        return res.status(400).json({
+          success: false,
+          message: 'This property is not available for contact'
+        });
+      }
+
+      // Check if user is trying to contact their own property
+      if (property.owner._id.toString() === userId.toString()) {
+        return res.status(400).json({
+          success: false,
+          message: 'You cannot contact yourself for your own property'
+        });
+      }
+
+      vendor = property.owner;
+      contactType = 'property';
+      propertyInfo = {
+        title: property.title,
+        price: property.price,
+        type: property.type,
+        location: property.location?.city || property.location?.address || 'Location not specified'
+      };
+
+      // Check for duplicate request (within last 24 hours)
+      const existingRequest = await ContactRequest.findOne({
+        property: propertyId,
+        user: userId,
+        createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
       });
+
+      if (existingRequest) {
+        return res.status(400).json({
+          success: false,
+          message: 'You have already sent a contact request for this property in the last 24 hours',
+          data: existingRequest
+        });
+      }
+    } 
+    // Handle general contact request to vendor
+    else if (vendorId) {
+      vendor = await User.findById(vendorId);
+      if (!vendor) {
+        return res.status(404).json({
+          success: false,
+          message: 'Vendor not found'
+        });
+      }
+
+      // Check if user is trying to contact themselves
+      if (vendorId.toString() === userId.toString()) {
+        return res.status(400).json({
+          success: false,
+          message: 'You cannot contact yourself'
+        });
+      }
+
+      // Check for duplicate general request (within last 24 hours)
+      const existingRequest = await ContactRequest.findOne({
+        vendor: vendorId,
+        user: userId,
+        property: null,
+        createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+      });
+
+      if (existingRequest) {
+        return res.status(400).json({
+          success: false,
+          message: 'You have already sent a contact request to this vendor in the last 24 hours',
+          data: existingRequest
+        });
+      }
     }
 
     const contactRequest = await ContactRequest.create({
-      property: propertyId,
+      property: propertyId || null,
       user: userId,
-      vendor: property.owner._id,
+      vendor: vendor._id,
       userInfo: {
         name: user.name || user.username,
         email: user.email,
         phone: user.phone || user.contactNumber || 'Not provided'
       },
-      propertyInfo: {
-        title: property.title,
-        price: property.price,
-        type: property.type,
-        location: property.location?.city || property.location?.address || 'Location not specified'
-      },
-      message: message || 'I am interested in this property. Please contact me.'
+      propertyInfo,
+      contactType,
+      message: message || (propertyId 
+        ? 'I am interested in this property. Please contact me.'
+        : 'I am interested in your services. Please contact me.')
     });
 
-    await contactRequest.populate([
-      { path: 'property', select: 'title price type location images' },
+    const populateOptions = [
       { path: 'user', select: 'name email phone username' },
       { path: 'vendor', select: 'name email phone username' }
-    ]);
+    ];
+
+    if (propertyId) {
+      populateOptions.push({ path: 'property', select: 'title price type location images' });
+    }
+
+    await contactRequest.populate(populateOptions);
 
     res.status(201).json({
       success: true,
@@ -109,18 +176,23 @@ router.post('/create', async (req, res) => {
 router.get('/my-requests', async (req, res) => {
   try {
     const userId = req.user._id;
-    const { page = 1, limit = 20 } = req.query;
+    const { page = 1, limit = 20, type } = req.query;
+
+    const query = { user: userId };
+    if (type) {
+      query.contactType = type;
+    }
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    const contactRequests = await ContactRequest.find({ user: userId })
+    const contactRequests = await ContactRequest.find(query)
       .populate('property', 'title price type location images')
       .populate('vendor', 'name email phone username')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(parseInt(limit));
 
-    const total = await ContactRequest.countDocuments({ user: userId });
+    const total = await ContactRequest.countDocuments(query);
 
     res.status(200).json({
       success: true,
@@ -148,11 +220,14 @@ router.get('/my-requests', async (req, res) => {
 router.get('/vendor/requests', async (req, res) => {
   try {
     const vendorId = req.user._id;
-    const { status, page = 1, limit = 20 } = req.query;
+    const { status, type, page = 1, limit = 20 } = req.query;
 
     const query = { vendor: vendorId };
     if (status) {
       query.status = status;
+    }
+    if (type) {
+      query.contactType = type;
     }
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -203,6 +278,16 @@ router.get('/vendor/stats', async (req, res) => {
       }
     ]);
 
+    const typeStats = await ContactRequest.aggregate([
+      { $match: { vendor: vendorId } },
+      {
+        $group: {
+          _id: '$contactType',
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
     const total = await ContactRequest.countDocuments({ vendor: vendorId });
     const thisMonth = await ContactRequest.countDocuments({
       vendor: vendorId,
@@ -217,7 +302,11 @@ router.get('/vendor/stats', async (req, res) => {
       byStatus: stats.reduce((acc, stat) => {
         acc[stat._id] = stat.count;
         return acc;
-      }, { pending: 0, contacted: 0, closed: 0 })
+      }, { pending: 0, contacted: 0, closed: 0 }),
+      byType: typeStats.reduce((acc, stat) => {
+        acc[stat._id] = stat.count;
+        return acc;
+      }, { property: 0, general: 0 })
     };
 
     res.status(200).json({
@@ -271,10 +360,15 @@ router.patch('/vendor/:id', async (req, res) => {
 
     await contactRequest.save();
 
-    await contactRequest.populate([
-      { path: 'property', select: 'title price type location images' },
+    const populateOptions = [
       { path: 'user', select: 'name email phone username' }
-    ]);
+    ];
+
+    if (contactRequest.property) {
+      populateOptions.push({ path: 'property', select: 'title price type location images' });
+    }
+
+    await contactRequest.populate(populateOptions);
 
     res.status(200).json({
       success: true,

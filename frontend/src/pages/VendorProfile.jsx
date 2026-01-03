@@ -16,7 +16,6 @@ import {
 import { Backendurl } from "../App";
 import PropertyCard from "../components/properties/Propertycard";
 
-
 const VendorProfile = () => {
   const { vendorId } = useParams();
   const navigate = useNavigate();
@@ -26,30 +25,33 @@ const VendorProfile = () => {
   const [error, setError] = useState(null);
   const [favourites, setFavourites] = useState([]);
   const [showCallRequest, setShowCallRequest] = useState(false);
-
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [customMessage, setCustomMessage] = useState(
+    "I would like to request a call. Please contact me."
+  );
+  const [contactLoading, setContactLoading] = useState(false);
+  const [showContactSuccess, setShowContactSuccess] = useState(false);
 
   const token = localStorage.getItem("token");
-
 
   useEffect(() => {
     fetchVendorData();
     fetchFavourites();
   }, [vendorId]);
 
-
   const fetchVendorData = async () => {
     try {
       setLoading(true);
 
-
       // Fetch vendor info
-      const vendorRes = await axios.get(`${Backendurl}/api/users/vendor/${vendorId}`);
-      
+      const vendorRes = await axios.get(
+        `${Backendurl}/api/users/vendor/${vendorId}`
+      );
+
       // Fetch vendor's properties
       const propertiesRes = await axios.get(
         `${Backendurl}/api/properties?owner=${vendorId}`
       );
-
 
       // Helper: Convert location object to string
       const toFullUrl = (val) => {
@@ -58,7 +60,6 @@ const VendorProfile = () => {
         return `${Backendurl}${val.startsWith("/") ? val : `/${val}`}`;
       };
 
-
       // Map properties to handle location object
       const mappedProperties = (propertiesRes.data.data || []).map((p) => {
         // Handle images
@@ -66,7 +67,6 @@ const VendorProfile = () => {
         if (Array.isArray(p.images) && p.images.length > 0) {
           firstImage = toFullUrl(p.images[0].url || p.images[0]);
         }
-
 
         // Handle location object properly - convert to string
         let locationString = "";
@@ -77,11 +77,10 @@ const VendorProfile = () => {
             p.location.address,
             p.location.city,
             p.location.state,
-            p.location.pincode
+            p.location.pincode,
           ].filter(Boolean);
           locationString = parts.join(", ");
         }
-
 
         return {
           ...p,
@@ -100,7 +99,6 @@ const VendorProfile = () => {
         };
       });
 
-
       setVendor(vendorRes.data.data);
       setProperties(mappedProperties);
       setError(null);
@@ -111,7 +109,6 @@ const VendorProfile = () => {
       setLoading(false);
     }
   };
-
 
   const fetchFavourites = async () => {
     if (!token) return;
@@ -126,7 +123,6 @@ const VendorProfile = () => {
     }
   };
 
-
   const handleFavouritesChange = (propertyId, action) => {
     setFavourites((prev) => {
       if (action === "add") {
@@ -139,20 +135,55 @@ const VendorProfile = () => {
     });
   };
 
-
   const handleRequestCall = () => {
-    setShowCallRequest(true);
-    // Simulate request completion
-    setTimeout(() => {
-      setShowCallRequest(false);
-    }, 3000);
+    setShowMessageModal(true);
   };
-
 
   const handleChatClick = () => {
     navigate("/chat");
   };
 
+  const submitContactRequest = async () => {
+    try {
+      setContactLoading(true);
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        alert("Please login to contact vendor");
+        setShowMessageModal(false);
+        navigate("/login");
+        return;
+      }
+
+      const response = await axios.post(
+        `${Backendurl}/api/contact-requests/create`,
+        {
+          vendorId: vendor._id,
+          message: customMessage,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        setShowContactSuccess(true);
+        setShowMessageModal(false);
+        setCustomMessage("I would like to request a call. Please contact me.");
+
+        setTimeout(() => {
+          setShowContactSuccess(false);
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Error requesting call:", error);
+      alert(error.response?.data?.message || "Failed to send request");
+    } finally {
+      setContactLoading(false);
+    }
+  };
 
   // Simple loading state
   if (loading) {
@@ -160,12 +191,13 @@ const VendorProfile = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-16">
         <div className="text-center">
           <div className="w-12 h-12 md:w-16 md:h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-3 md:mb-4"></div>
-          <p className="text-sm md:text-base text-gray-600 font-medium">Loading vendor profile...</p>
+          <p className="text-sm md:text-base text-gray-600 font-medium">
+            Loading vendor profile...
+          </p>
         </div>
       </div>
     );
   }
-
 
   if (error || !vendor) {
     return (
@@ -174,8 +206,12 @@ const VendorProfile = () => {
           <div className="w-16 h-16 md:w-20 md:h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
             <User className="w-8 h-8 md:w-10 md:h-10 text-red-600" />
           </div>
-          <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">Oops!</h3>
-          <p className="text-sm md:text-base text-red-600 mb-4 md:mb-6">{error || "Vendor not found"}</p>
+          <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+            Oops!
+          </h3>
+          <p className="text-sm md:text-base text-red-600 mb-4 md:mb-6">
+            {error || "Vendor not found"}
+          </p>
           <button
             onClick={() => navigate("/properties")}
             className="px-5 md:px-6 py-2.5 md:py-3 bg-blue-600 text-white rounded-lg md:rounded-xl hover:bg-blue-700 transition-colors font-semibold text-sm md:text-base"
@@ -186,7 +222,6 @@ const VendorProfile = () => {
       </div>
     );
   }
-
 
   // Calculate stats
   const stats = [
@@ -199,17 +234,23 @@ const VendorProfile = () => {
     {
       icon: TrendingUp,
       label: "Active Listings",
-      value: properties.filter(p => p.status === "active" || p.availability === "For Sale" || p.availability === "For Rent").length,
+      value: properties.filter(
+        (p) =>
+          p.status === "active" ||
+          p.availability === "For Sale" ||
+          p.availability === "For Rent"
+      ).length,
       color: "bg-emerald-500",
     },
     {
       icon: Award,
       label: "Member Since",
-      value: vendor.createdAt ? new Date(vendor.createdAt).getFullYear() : "2024",
+      value: vendor.createdAt
+        ? new Date(vendor.createdAt).getFullYear()
+        : "2024",
       color: "bg-purple-500",
     },
   ];
-
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16 md:pt-20 pb-16 md:pb-20 lg:pb-12">
@@ -225,12 +266,10 @@ const VendorProfile = () => {
           <span>Back</span>
         </button> */}
 
-
         {/* Vendor Header Card */}
         <div className="bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden mb-6 md:mb-8">
           {/* Header Background */}
           <div className="h-24 md:h-32 bg-gradient-to-r from-blue-600 to-indigo-600"></div>
-
 
           <div className="px-4 md:px-6 pb-6 md:pb-8">
             {/* Avatar */}
@@ -250,7 +289,6 @@ const VendorProfile = () => {
                 <div className="absolute -bottom-1 md:-bottom-2 -right-1 md:-right-2 bg-green-500 w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl border-4 border-white"></div>
               </div>
 
-
               {/* Info */}
               <div className="flex-1 text-center lg:text-left lg:mt-4">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
@@ -258,9 +296,10 @@ const VendorProfile = () => {
                 </h1>
                 <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-blue-100 text-blue-700 rounded-full font-semibold text-xs md:text-sm mb-3 md:mb-4">
                   <Award className="w-3 h-3 md:w-4 md:h-4" />
-                  {vendor.role === "vendor" ? "Verified Property Vendor" : vendor.role}
+                  {vendor.role === "vendor"
+                    ? "Verified Property Vendor"
+                    : vendor.role}
                 </div>
-
 
                 {/* Contact Buttons Row */}
                 <div className="grid grid-cols-2 gap-3 md:gap-4 mt-4 md:mt-6 mb-3 md:mb-4">
@@ -273,13 +312,14 @@ const VendorProfile = () => {
                       <Phone className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
                     </div>
                     <div className="text-left">
-                      <p className="text-xs text-gray-500 font-medium">Contact</p>
+                      <p className="text-xs text-gray-500 font-medium">
+                        Contact
+                      </p>
                       <p className="text-xs md:text-sm font-semibold text-gray-900">
                         Request a Call
                       </p>
                     </div>
                   </button>
-
 
                   {/* Chat Button */}
                   <button
@@ -290,12 +330,15 @@ const VendorProfile = () => {
                       <MessageCircle className="w-4 h-4 md:w-5 md:h-5 text-emerald-600" />
                     </div>
                     <div className="text-left">
-                      <p className="text-xs text-gray-500 font-medium">Message</p>
-                      <p className="text-xs md:text-sm font-semibold text-gray-900">Start Chat</p>
+                      <p className="text-xs text-gray-500 font-medium">
+                        Message
+                      </p>
+                      <p className="text-xs md:text-sm font-semibold text-gray-900">
+                        Start Chat
+                      </p>
                     </div>
                   </button>
                 </div>
-
 
                 {/* Stats Cards Row */}
                 <div className="grid grid-cols-3 gap-2 md:gap-3">
@@ -305,11 +348,17 @@ const VendorProfile = () => {
                       className="bg-gray-50 rounded-lg md:rounded-xl p-3 md:p-4 hover:shadow-md transition-shadow"
                     >
                       <div className="flex flex-col items-center text-center">
-                        <div className={`p-2 md:p-2.5 ${stat.color} rounded-lg md:rounded-xl shadow-sm mb-2`}>
+                        <div
+                          className={`p-2 md:p-2.5 ${stat.color} rounded-lg md:rounded-xl shadow-sm mb-2`}
+                        >
                           <stat.icon className="w-4 h-4 md:w-5 md:h-5 text-white" />
                         </div>
-                        <p className="text-lg md:text-xl font-bold text-gray-900">{stat.value}</p>
-                        <p className="text-xs text-gray-600 font-medium">{stat.label}</p>
+                        <p className="text-lg md:text-xl font-bold text-gray-900">
+                          {stat.value}
+                        </p>
+                        <p className="text-xs text-gray-600 font-medium">
+                          {stat.label}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -319,9 +368,8 @@ const VendorProfile = () => {
           </div>
         </div>
 
-
         {/* Call Request Notification */}
-        {showCallRequest && (
+        {showContactSuccess && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -332,7 +380,6 @@ const VendorProfile = () => {
             <p className="font-semibold">Call request sent successfully!</p>
           </motion.div>
         )}
-
 
         {/* Properties Section */}
         <div>
@@ -346,11 +393,11 @@ const VendorProfile = () => {
                 Listed Properties
               </h2>
               <p className="text-sm md:text-base text-gray-600">
-                {properties.length} {properties.length === 1 ? "property" : "properties"} available
+                {properties.length}{" "}
+                {properties.length === 1 ? "property" : "properties"} available
               </p>
             </div>
           </div>
-
 
           {/* Properties Grid */}
           {properties.length > 0 ? (
@@ -374,7 +421,8 @@ const VendorProfile = () => {
                 No Properties Listed Yet
               </h3>
               <p className="text-sm md:text-base text-gray-600 max-w-md mx-auto mb-4 md:mb-6 px-4">
-                This vendor hasn't added any properties to their portfolio. Check back later for new listings!
+                This vendor hasn't added any properties to their portfolio.
+                Check back later for new listings!
               </p>
               <button
                 onClick={() => navigate("/properties")}
@@ -384,11 +432,62 @@ const VendorProfile = () => {
               </button>
             </div>
           )}
+          {showMessageModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+              onClick={() => setShowMessageModal(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white rounded-xl md:rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden"
+              >
+                {/* Header */}
+                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 md:p-5">
+                  <h3 className="text-white text-lg md:text-xl font-bold">
+                    Request a Call
+                  </h3>
+                </div>
+
+                {/* Body */}
+                <div className="p-4 md:p-5">
+                  <textarea
+                    value={customMessage}
+                    onChange={(e) => setCustomMessage(e.target.value)}
+                    rows={4}
+                    maxLength={500}
+                    className="w-full border border-gray-300 rounded-lg p-3 text-sm md:text-base"
+                  />
+
+                  <div className="flex gap-3 mt-4">
+                    <button
+                      onClick={() => setShowMessageModal(false)}
+                      className="flex-1 bg-gray-100 hover:bg-gray-200 py-2.5 rounded-lg font-semibold"
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      onClick={submitContactRequest}
+                      disabled={contactLoading}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-semibold"
+                    >
+                      {contactLoading ? "Sending..." : "Send Request"}
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
         </div>
       </div>
     </div>
   );
 };
-
 
 export default VendorProfile;

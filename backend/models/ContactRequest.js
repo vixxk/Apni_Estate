@@ -4,7 +4,7 @@ const contactRequestSchema = new mongoose.Schema({
   property: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Property',
-    required: [true, 'Property reference is required']
+    required: false 
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -55,7 +55,12 @@ const contactRequestSchema = new mongoose.Schema({
   message: {
     type: String,
     maxlength: [500, 'Message cannot exceed 500 characters'],
-    default: 'I am interested in this property. Please contact me.'
+    default: 'I am interested in your services. Please contact me.'
+  },
+  contactType: {
+    type: String,
+    enum: ['property', 'general'],
+    default: 'property'
   },
   status: {
     type: String,
@@ -80,6 +85,7 @@ contactRequestSchema.index({ vendor: 1 });
 contactRequestSchema.index({ status: 1 });
 contactRequestSchema.index({ createdAt: -1 });
 contactRequestSchema.index({ vendor: 1, status: 1, createdAt: -1 });
+contactRequestSchema.index({ contactType: 1 });
 
 const ContactRequest = mongoose.model('ContactRequest', contactRequestSchema);
 

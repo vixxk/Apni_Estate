@@ -259,10 +259,7 @@ const PropertyDetails = () => {
   };
 
   const handleRequestCall = () => {
-    setShowCallRequest(true);
-    setTimeout(() => {
-      setShowCallRequest(false);
-    }, 3000);
+    setShowMessageModal(true);
   };
 
   const handleChatClick = () => {
@@ -480,7 +477,9 @@ const PropertyDetails = () => {
               className="fixed top-16 md:top-20 right-3 md:right-4 bg-green-500 text-white px-4 py-2.5 md:px-6 md:py-3 rounded-lg md:rounded-xl shadow-lg z-50 flex items-center gap-2 text-sm md:text-base max-w-[calc(100vw-24px)] md:max-w-md"
             >
               <Check className="w-4 h-4 md:w-5 md:h-5" />
-              <p className="font-semibold">Contact request sent successfully!</p>
+              <p className="font-semibold">
+                Contact request sent successfully!
+              </p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -664,16 +663,16 @@ const PropertyDetails = () => {
               {/* Left Column - CTA & Contact */}
               <div className="lg:col-span-1 space-y-3">
                 {/* Action Buttons */}
-                <div className="grid grid-cols-2 gap-2 lg:grid-cols-1 lg:gap-3">
+                <div className="grid grid-cols-1 gap-2 lg:grid-cols-1 lg:gap-3">
                   {/* Contact Vendor Button */}
-                  <button
+                  {/* <button
                     onClick={handleContactVendor}
                     disabled={contactLoading}
                     className="w-full bg-gradient-to-r from-emerald-600 to-green-600 text-white py-2.5 md:py-3 rounded-lg md:rounded-xl hover:shadow-lg transition-shadow flex items-center justify-center gap-1.5 text-sm md:text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Phone className="w-4 h-4 md:w-5 md:h-5" />
                     <span>Contact</span>
-                  </button>
+                  </button> */}
 
                   {/* Schedule Viewing Button */}
                   <button
