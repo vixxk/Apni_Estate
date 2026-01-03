@@ -572,14 +572,14 @@ const PropertyDetails = () => {
                     <p className="text-2xl md:text-4xl font-bold text-white mb-2">
                       ₹{Number(property.price).toLocaleString("en-IN")}
                     </p>
-                    {property.availability && property.availability.toLowerCase() !== "none" && (
+                    {/* {property.availability && property.availability.toLowerCase() !== "none" && (
                       <div className="inline-flex items-center gap-1.5 md:gap-2 px-2.5 py-1 md:px-3 md:py-1.5 bg-white/20 rounded-lg">
                         <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-400 rounded-full"></div>
                         <p className="text-white text-xs md:text-sm font-semibold">
                           {formatAvailability(property.availability)}
                         </p>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>
