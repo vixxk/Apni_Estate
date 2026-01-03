@@ -460,7 +460,7 @@ const VendorContactRequests = () => {
                           <span className="text-[10px] sm:text-xs text-gray-700 group-hover:text-blue-600 transition-colors truncate flex-1">
                             {request.userInfo.email}
                           </span>
-                          <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                          {/* <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 group-hover:text-emerald-600 transition-colors" /> */}
                         </a>
                         <a
                           href={`tel:${request.userInfo.phone}`}
@@ -472,7 +472,7 @@ const VendorContactRequests = () => {
                           <span className="text-[10px] sm:text-xs text-gray-700 group-hover:text-emerald-600 transition-colors">
                             {request.userInfo.phone}
                           </span>
-                          <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 group-hover:text-emerald-600 transition-colors" />
+                          {/* <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 group-hover:text-emerald-600 transition-colors" /> */}
                         </a>
                       </div>
                     </div>
