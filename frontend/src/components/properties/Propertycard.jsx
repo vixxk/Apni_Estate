@@ -190,7 +190,7 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
           </div>
         )}
 
-        {/* Favourite & share buttons - Smaller on mobile */}
+        {/* Favourite & share buttons -   on mobile */}
         <div className="absolute top-2 sm:top-3 md:top-4 right-2 sm:right-3 md:right-4 flex flex-col gap-1 sm:gap-1.5 md:gap-2">
           <motion.button
             whileHover={{ scale: 1.1 }}
@@ -235,7 +235,7 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
           </motion.span>
         </div> */}
 
-        {/* Vendor Avatar - Smaller on mobile */}
+        {/* Vendor Avatar -   on mobile */}
         <motion.div
           whileHover={{ scale: 1.1 }}
           onClick={handleNavigateToVendorProfile}
@@ -272,7 +272,7 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
             </div>
           </div>
 
-          {/* Location - Smaller text on mobile */}
+          {/* Location -   text on mobile */}
           <div className="flex items-center text-gray-500 text-[10px] sm:text-xs md:text-sm">
             <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 mr-1 text-blue-500 flex-shrink-0" />
             <span className="truncate">{property.location}</span>
