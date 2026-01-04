@@ -447,7 +447,7 @@ const PropertyDetails = () => {
   ].filter((feature) => feature.value > 0);
 
   const hasContactInfo =
-    property.phone || property.email || property.alternatePhone;
+    property.phone || property.email || property.alternatePhone || true;
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16 md:pt-20 pb-8 md:pb-12">
