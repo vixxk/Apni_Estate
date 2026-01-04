@@ -31,6 +31,7 @@ import SalesItemsPage from "./pages/SalesItemsPage";
 import EverythingPage from "./pages/EverythingPage";
 import AdminLogin from "./components/admin/AdminLogin";
 import AdminDashboard from "./components/admin/AdminDashboard";
+import VendorContactRequests from './pages/VendorContactRequests';
 
 export const Backendurl = import.meta.env.VITE_API_BASE_URL;
 
@@ -106,6 +107,8 @@ const App = () => {
 
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+                <Route path="/vendor/contact-requests" element={<VendorContactRequests />} />
 
                 <Route path="*" element={<NotFoundPage />} />
               </Routes>

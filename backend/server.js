@@ -17,8 +17,8 @@ import adminRoutes from "./routes/adminRoute.js";
 import uploadRoutes from "./routes/uploadRoute.js";
 import vendorServiceRoutes from "./routes/vendorServiceRoute.js";
 import serviceUploadRoutes from "./routes/serviceUploadRoute.js";
+import contactRequestRoutes from "./routes/contactRequestRoute.js";
 
-// console.log("RAW env JWTSECRET:", process.env.JWTSECRET);
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -70,6 +70,9 @@ app.use("/api/vendor/services", vendorServiceRoutes);
 // Upload routes 
 app.use("/api/upload/property", uploadRoutes);
 app.use("/api/upload/service", serviceUploadRoutes);
+
+// Contact request routes
+app.use("/api/contact-requests", contactRequestRoutes);
 
 // Status endpoint
 app.get("/status", (req, res) => {

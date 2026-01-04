@@ -25,6 +25,8 @@ import govLogo from "../assets/gov.png";
 import { useAuth } from "../context/AuthContext";
 import PropTypes from "prop-types";
 import { useMobileMenu } from "../context/MobileMenuContext";
+import axios from "axios";
+import { Backendurl } from "../App";
 
 
 // Animation Variants
@@ -129,16 +131,51 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { isMobileMenuOpen, setIsMobileMenuOpen } = useMobileMenu();
   const [scrolled, setScrolled] = useState(false);
+  const [pendingRequestsCount, setPendingRequestsCount] = useState(0);
   const dropdownRef = useRef(null);
-
 
   const { user, logout, isAuthenticated } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
-
   const isVendor = user?.role === "vendor";
 
+  // Fetch pending requests count for vendors
+  useEffect(() => {
+    const fetchPendingCount = async () => {
+      if (!isAuthenticated || !isVendor) {
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const response = await axios.get(
+          `${Backendurl}/api/contact-requests/vendor/stats`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.data.success) {
+          const pendingCount = response.data.data.byStatus.pending || 0;
+          setPendingRequestsCount(pendingCount);
+        }
+      } catch (err) {
+        console.error("Error fetching pending requests count:", err);
+      }
+    };
+
+    fetchPendingCount();
+
+    // Poll for updates every 30 seconds
+    const interval = setInterval(fetchPendingCount, 30000);
+
+    return () => clearInterval(interval);
+  }, [isAuthenticated, isVendor]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -147,37 +184,30 @@ const Navbar = () => {
       }
     };
 
-
     if (isDropdownOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownOpen]);
 
-
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
 
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname, setIsMobileMenuOpen]);
 
-
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
-
 
   const handleLogout = () => {
     logout();
@@ -186,12 +216,10 @@ const Navbar = () => {
     navigate("/");
   };
 
-
   const handleGoToProfile = () => {
     setIsDropdownOpen(false);
     navigate("/profile");
   };
-
 
   const getInitials = (name) => {
     if (!name) return "U";
@@ -202,12 +230,10 @@ const Navbar = () => {
       .toUpperCase();
   };
 
-
   const handleNotificationClick = () => {
-    navigate("/chat");
+    navigate("/vendor/contact-requests");
     setIsMobileMenuOpen(false);
   };
-
 
   return (
     <>
@@ -222,7 +248,6 @@ const Navbar = () => {
         }`}
       >
         <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
-
 
         <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -243,7 +268,6 @@ const Navbar = () => {
                   className="w-full h-full object-cover rounded-xl shadow-lg"
                 />
 
-
                 <motion.div
                   animate={floatingAnimation}
                   className="absolute -top-1 -right-1"
@@ -252,10 +276,8 @@ const Navbar = () => {
                 </motion.div>
               </motion.div>
 
-
               {/* Vertical Divider Line */}
-              <div className="h-12 w-px bg-gradient-to-b  from-transparent via-gray-300 to-transparent"></div>
-
+              <div className="h-12 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
 
               {/* Government Recognition Logo */}
               <motion.div
@@ -271,7 +293,6 @@ const Navbar = () => {
                 />
               </motion.div>
 
-
               <div className="flex flex-col">
                 <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent group-hover:from-indigo-600 group-hover:via-blue-600 group-hover:to-purple-600 transition-all duration-500">
                   ApniEstate
@@ -282,11 +303,9 @@ const Navbar = () => {
               </div>
             </Link>
 
-
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               <NavLinks currentPath={location.pathname} isVendor={isVendor} />
-
 
               <div className="flex items-center space-x-4">
                 {/* Bell icon - only visible if authenticated AND vendor */}
@@ -300,14 +319,18 @@ const Navbar = () => {
                   >
                     <Bell className="w-5 h-5 text-gray-700" />
 
-
                     {/* Notification badge */}
-                    <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow">
-                      3
-                    </span>
+                    {pendingRequestsCount > 0 && (
+                      <motion.span
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow"
+                      >
+                        {pendingRequestsCount > 99 ? "99+" : pendingRequestsCount}
+                      </motion.span>
+                    )}
                   </motion.button>
                 )}
-
 
                 {isAuthenticated ? (
                   <div className="flex items-center space-x-3">
@@ -345,7 +368,6 @@ const Navbar = () => {
                           <ChevronDown className="w-4 h-4 text-gray-400" />
                         </motion.div>
                       </motion.button>
-
 
                       <AnimatePresence>
                         {isDropdownOpen && (
@@ -389,7 +411,6 @@ const Navbar = () => {
                               </div>
                             </div>
 
-
                             <div className="py-2">
                               <motion.button
                                 whileHover={{
@@ -402,7 +423,6 @@ const Navbar = () => {
                                 <UserCircle className="w-4 h-4" />
                                 <span>My Profile</span>
                               </motion.button>
-
 
                               {isVendor && (
                                 <motion.button
@@ -421,7 +441,6 @@ const Navbar = () => {
                                 </motion.button>
                               )}
 
-
                               <motion.button
                                 whileHover={{
                                   x: 4,
@@ -436,7 +455,6 @@ const Navbar = () => {
                                 <Heart className="w-4 h-4" />
                                 <span>Favourite Properties</span>
                               </motion.button>
-
 
                               <div className="border-t border-gray-100 my-2" />
                               <motion.button
@@ -491,7 +509,6 @@ const Navbar = () => {
               </div>
             </div>
 
-
             {/* Mobile: Bell icon (only for authenticated vendors) + Hamburger */}
             <div className="md:hidden flex items-center space-x-2">
               {/* Bell icon - Mobile (only for authenticated vendors) */}
@@ -505,14 +522,18 @@ const Navbar = () => {
                 >
                   <Bell className="w-5 h-5 text-gray-700" />
 
-
                   {/* Notification badge */}
-                  <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow">
-                    3
-                  </span>
+                  {pendingRequestsCount > 0 && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute -top-0.5 -right-0.5 min-w-[20px] h-5 px-1 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow"
+                    >
+                      {pendingRequestsCount > 99 ? "99+" : pendingRequestsCount}
+                    </motion.span>
+                  )}
                 </motion.button>
               )}
-
 
               {/* Hamburger Menu Button */}
               <motion.button
@@ -538,7 +559,6 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
-
       {/* Mobile Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -553,8 +573,7 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
-
-      {/* Mobile Drawer Menu - MADE   */}
+      {/* Mobile Drawer Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -564,7 +583,7 @@ const Navbar = () => {
             exit="exit"
             className="md:hidden fixed right-0 top-0 h-full w-72 bg-white z-50 shadow-2xl overflow-y-auto"
           >
-            {/* Drawer Header - REDUCED PADDING */}
+            {/* Drawer Header */}
             <div
               className={`relative bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 transition-all ${
                 isAuthenticated ? "p-4 pb-6" : "p-3"
@@ -578,8 +597,7 @@ const Navbar = () => {
                 <X className="w-4 h-4 text-white" />
               </button>
 
-
-              {/* Logo & Brand -   */}
+              {/* Logo & Brand */}
               <div
                 className={`flex items-center space-x-2 ${
                   isAuthenticated ? "mb-4" : "mb-2"
@@ -593,7 +611,6 @@ const Navbar = () => {
                   />
                 </div>
 
-
                 <div className="flex flex-col">
                   <span className="text-xl font-bold text-white">
                     ApniEstate
@@ -604,8 +621,7 @@ const Navbar = () => {
                 </div>
               </div>
 
-
-              {/* User Info -   */}
+              {/* User Info */}
               {isAuthenticated ? (
                 <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 border border-white/30">
                   <div className="flex items-center space-x-2">
@@ -642,10 +658,9 @@ const Navbar = () => {
               ) : null}
             </div>
 
-
-            {/* Navigation Links - REDUCED PADDING */}
+            {/* Navigation Links */}
             <div className="px-3 py-4">
-              {/* Special Feature -   */}
+              {/* Special Feature */}
               <div className="mb-3">
                 <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">
                   AI Feature
@@ -659,11 +674,10 @@ const Navbar = () => {
                       : "bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-indigo-800 border-indigo-200 hover:shadow-lg"
                   }`}
                 >
-                  {/* Icon Box -   */}
+                  {/* Icon Box */}
                   <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-lg">
                     <BotMessageSquare className="w-6 h-6 text-indigo-600" />
                   </div>
-
 
                   {/* Text */}
                   <div className="flex flex-col flex-1 min-w-0">
@@ -673,7 +687,6 @@ const Navbar = () => {
                     </span>
                   </div>
 
-
                   {/* NEW badge */}
                   <span className="text-xs bg-yellow-400 text-yellow-900 px-2 py-0.5 rounded-full font-bold shadow">
                     NEW
@@ -681,8 +694,7 @@ const Navbar = () => {
                 </Link>
               </div>
 
-
-              {/* Navigation Section -   */}
+              {/* Navigation Section */}
               <div className="mb-3">
                 <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">
                   Navigation
@@ -721,8 +733,7 @@ const Navbar = () => {
                 />
               </div>
 
-
-              {/* Register Button -   */}
+              {/* Register Button */}
               {!isAuthenticated && (
                 <div className="mb-4 space-y-2 mt-3">
                   <Link
@@ -736,8 +747,7 @@ const Navbar = () => {
                 </div>
               )}
 
-
-              {/* Account Section - When Authenticated -   */}
+              {/* Account Section - When Authenticated */}
               {isAuthenticated && (
                 <div className="border-t border-gray-200 pt-3">
                   <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">
@@ -776,8 +786,7 @@ const Navbar = () => {
                 </div>
               )}
 
-
-              {/* Account Section - When Not Authenticated -   */}
+              {/* Account Section - When Not Authenticated */}
               {!isAuthenticated && (
                 <div className="border-t border-gray-200 pt-3">
                   <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">
@@ -858,29 +867,23 @@ const NavLinks = ({ currentPath, isVendor }) => {
     },
   ];
 
-
   const [sparkleKey, setSparkleKey] = useState(0);
-
 
   useEffect(() => {
     const interval = setInterval(() => {
       setSparkleKey((prev) => prev + 1);
     }, 3000);
 
-
     return () => clearInterval(interval);
   }, []);
 
-
   const isAIHubActive = currentPath.startsWith("/ai-property-hub");
-
 
   return (
     <div className="flex space-x-2 items-center">
       {navLinks.map(({ name, path, icon: Icon, color, description }) => {
         const isActive =
           path === "/" ? currentPath === path : currentPath.startsWith(path);
-
 
         return (
           <motion.div
@@ -907,14 +910,12 @@ const NavLinks = ({ currentPath, isVendor }) => {
               />
               <span className="font-semibold">{name}</span>
 
-
               <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                 <div className="bg-gray-900 text-white text-xs px-2 py-1 rounded-lg whitespace-nowrap">
                   {description}
                   <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
                 </div>
               </div>
-
 
               {isActive && (
                 <motion.div
@@ -927,7 +928,6 @@ const NavLinks = ({ currentPath, isVendor }) => {
           </motion.div>
         );
       })}
-
 
       <motion.div
         whileHover={{ y: -2, scale: 1.02 }}
@@ -965,13 +965,11 @@ const NavLinks = ({ currentPath, isVendor }) => {
           </div>
           <span>AI Property Hub</span>
 
-
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             animate={isAIHubActive ? { x: [-100, 100] } : {}}
             transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
           />
-
 
           {isAIHubActive && (
             <motion.div
@@ -980,7 +978,6 @@ const NavLinks = ({ currentPath, isVendor }) => {
               initial={false}
             />
           )}
-
 
           <div className="absolute -bottom-14 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
             <div className="bg-gray-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap">
@@ -995,7 +992,7 @@ const NavLinks = ({ currentPath, isVendor }) => {
 };
 
 
-// Mobile NavItem Component - MADE  
+// Mobile NavItem Component
 const MobileNavItem = ({
   icon: Icon,
   label,
@@ -1006,7 +1003,6 @@ const MobileNavItem = ({
 }) => {
   const isActive =
     path === "/" ? currentPath === path : currentPath.startsWith(path);
-
 
   return (
     <Link

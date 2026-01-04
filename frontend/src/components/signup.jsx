@@ -319,8 +319,7 @@ const Signup = () => {
                 >
                   <AlertCircle className="w-4 h-4 text-blue-600" />
                   <span>
-                    You'll need to <strong>sign in after signing up</strong> to
-                    continue
+                    You'll need to <strong>sign in after signing up</strong> 
                   </span>
                 </motion.div>
 
