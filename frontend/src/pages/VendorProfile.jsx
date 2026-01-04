@@ -16,6 +16,89 @@ import {
 import { Backendurl } from "../App";
 import PropertyCard from "../components/properties/Propertycard";
 
+const VendorProfileSkeleton = () => {
+  return (
+    <div className="min-h-screen bg-gray-50 pt-16 md:pt-20 pb-16 md:pb-20 lg:pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-pulse">
+        {/* Header Skeleton */}
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden mb-6 md:mb-8">
+          <div className="h-24 md:h-32 bg-gradient-to-r from-slate-200 to-slate-300"></div>
+
+          <div className="px-4 md:px-6 pb-6 md:pb-8">
+            <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 md:gap-6 -mt-12 md:-mt-16 lg:-mt-12">
+              {/* Avatar */}
+              <div className="relative">
+                <div className="w-24 h-24 md:w-32 md:h-32 rounded-xl md:rounded-2xl bg-slate-200 border-4 border-white shadow-lg" />
+                <div className="absolute -bottom-1 md:-bottom-2 -right-1 md:-right-2 bg-slate-200 w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl border-4 border-white" />
+              </div>
+
+              {/* Info skeleton */}
+              <div className="flex-1 text-center lg:text-left lg:mt-4 w-full">
+                <div className="h-6 md:h-7 bg-slate-200 rounded-md w-40 md:w-56 mx-auto lg:mx-0 mb-3" />
+                <div className="h-7 bg-slate-200 rounded-full w-44 md:w-56 mx-auto lg:mx-0 mb-4" />
+
+                {/* Contact buttons row */}
+                <div className="grid grid-cols-2 gap-3 md:gap-4 mt-4 md:mt-6 mb-3 md:mb-4">
+                  <div className="h-14 md:h-16 bg-slate-100 rounded-lg md:rounded-xl" />
+                  <div className="h-14 md:h-16 bg-slate-100 rounded-lg md:rounded-xl" />
+                </div>
+
+                {/* Stats cards row */}
+                <div className="grid grid-cols-3 gap-2 md:gap-3">
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className="bg-gray-50 rounded-lg md:rounded-xl p-3 md:p-4"
+                    >
+                      <div className="flex flex-col items-center text-center gap-2">
+                        <div className="w-8 h-8 md:w-9 md:h-9 bg-slate-200 rounded-lg md:rounded-xl" />
+                        <div className="h-5 w-10 bg-slate-200 rounded-md" />
+                        <div className="h-3 w-16 bg-slate-200 rounded-md" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Properties section header skeleton */}
+        <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
+          <div className="p-2 md:p-3 bg-slate-200 rounded-lg md:rounded-xl shadow-sm">
+            <div className="w-5 h-5 md:w-6 md:h-6 bg-slate-300 rounded-md" />
+          </div>
+          <div className="flex-1">
+            <div className="h-5 md:h-6 bg-slate-200 rounded-md w-40 md:w-52 mb-2" />
+            <div className="h-3 md:h-4 bg-slate-200 rounded-md w-32 md:w-40" />
+          </div>
+        </div>
+
+        {/* Properties grid skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="bg-white rounded-xl md:rounded-2xl shadow-sm overflow-hidden"
+            >
+              <div className="h-40 md:h-44 bg-slate-200" />
+              <div className="p-3 md:p-4 space-y-3">
+                <div className="h-4 bg-slate-200 rounded-md w-3/4" />
+                <div className="h-3 bg-slate-200 rounded-md w-1/2" />
+                <div className="flex items-center justify-between gap-2">
+                  <div className="h-3 bg-slate-200 rounded-md w-16" />
+                  <div className="h-3 bg-slate-200 rounded-md w-12" />
+                </div>
+                <div className="h-8 bg-slate-200 rounded-lg w-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const VendorProfile = () => {
   const { vendorId } = useParams();
   const navigate = useNavigate();
@@ -43,32 +126,26 @@ const VendorProfile = () => {
     try {
       setLoading(true);
 
-      // Fetch vendor info
       const vendorRes = await axios.get(
         `${Backendurl}/api/users/vendor/${vendorId}`
       );
 
-      // Fetch vendor's properties
       const propertiesRes = await axios.get(
         `${Backendurl}/api/properties?owner=${vendorId}`
       );
 
-      // Helper: Convert location object to string
       const toFullUrl = (val) => {
         if (!val) return null;
         if (/^https?:\/\//i.test(val)) return val;
         return `${Backendurl}${val.startsWith("/") ? val : `/${val}`}`;
       };
 
-      // Map properties to handle location object
       const mappedProperties = (propertiesRes.data.data || []).map((p) => {
-        // Handle images
         let firstImage = null;
         if (Array.isArray(p.images) && p.images.length > 0) {
           firstImage = toFullUrl(p.images[0].url || p.images[0]);
         }
 
-        // Handle location object properly - convert to string
         let locationString = "";
         if (typeof p.location === "string") {
           locationString = p.location;
@@ -185,18 +262,8 @@ const VendorProfile = () => {
     }
   };
 
-  // Simple loading state
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-16">
-        <div className="text-center">
-          <div className="w-12 h-12 md:w-16 md:h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-3 md:mb-4"></div>
-          <p className="text-sm md:text-base text-gray-600 font-medium">
-            Loading vendor profile...
-          </p>
-        </div>
-      </div>
-    );
+    return <VendorProfileSkeleton />;
   }
 
   if (error || !vendor) {
@@ -223,7 +290,6 @@ const VendorProfile = () => {
     );
   }
 
-  // Calculate stats
   const stats = [
     {
       icon: Building2,
@@ -255,24 +321,11 @@ const VendorProfile = () => {
   return (
     <div className="min-h-screen bg-gray-50 pt-16 md:pt-20 pb-16 md:pb-20 lg:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Back Button */}
-        {/* <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-gray-600 hover:text-blue-600 mb-4 md:mb-6 transition-colors font-medium text-sm md:text-base"
-        >
-          <div className="p-1.5 md:p-2 rounded-lg md:rounded-xl bg-white shadow hover:shadow-md transition-shadow">
-            <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
-          </div>
-          <span>Back</span>
-        </button> */}
-
         {/* Vendor Header Card */}
         <div className="bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden mb-6 md:mb-8">
-          {/* Header Background */}
           <div className="h-24 md:h-32 bg-gradient-to-r from-blue-600 to-indigo-600"></div>
 
           <div className="px-4 md:px-6 pb-6 md:pb-8">
-            {/* Avatar */}
             <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 md:gap-6 -mt-12 md:-mt-16 lg:-mt-12">
               <div className="relative">
                 {vendor.avatar ? (
@@ -289,7 +342,6 @@ const VendorProfile = () => {
                 <div className="absolute -bottom-1 md:-bottom-2 -right-1 md:-right-2 bg-green-500 w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl border-4 border-white"></div>
               </div>
 
-              {/* Info */}
               <div className="flex-1 text-center lg:text-left lg:mt-4">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                   {vendor.name}
@@ -303,7 +355,6 @@ const VendorProfile = () => {
 
                 {/* Contact Buttons Row */}
                 <div className="grid grid-cols-2 gap-3 md:gap-4 mt-4 md:mt-6 mb-3 md:mb-4">
-                  {/* Request Call Button */}
                   <button
                     onClick={handleRequestCall}
                     className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 hover:bg-blue-50 rounded-lg md:rounded-xl transition-colors"
@@ -321,7 +372,6 @@ const VendorProfile = () => {
                     </div>
                   </button>
 
-                  {/* Chat Button */}
                   <button
                     onClick={handleChatClick}
                     className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-gray-50 hover:bg-emerald-50 rounded-lg md:rounded-xl transition-colors"
@@ -383,7 +433,6 @@ const VendorProfile = () => {
 
         {/* Properties Section */}
         <div>
-          {/* Section Header */}
           <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
             <div className="p-2 md:p-3 bg-blue-600 rounded-lg md:rounded-xl shadow-sm">
               <Home className="w-5 h-5 md:w-6 md:h-6 text-white" />
@@ -399,7 +448,6 @@ const VendorProfile = () => {
             </div>
           </div>
 
-          {/* Properties Grid */}
           {properties.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {properties.map((property) => (
@@ -432,6 +480,7 @@ const VendorProfile = () => {
               </button>
             </div>
           )}
+
           {showMessageModal && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -447,14 +496,12 @@ const VendorProfile = () => {
                 onClick={(e) => e.stopPropagation()}
                 className="bg-white rounded-xl md:rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden"
               >
-                {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 md:p-5">
                   <h3 className="text-white text-lg md:text-xl font-bold">
                     Request a Call
                   </h3>
                 </div>
 
-                {/* Body */}
                 <div className="p-4 md:p-5">
                   <textarea
                     value={customMessage}
