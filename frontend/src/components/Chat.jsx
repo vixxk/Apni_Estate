@@ -42,13 +42,24 @@ const Chat = () => {
   const { vendorId } = useParams();
   const { vendorName, vendorAvatar } = location.state || {};
 
+  useEffect(() => {
+    setChatHeader({
+      name: vendorName || "Chat",
+      avatar: vendorAvatar || null,
+    });
+  }, []);
+
   const [currentUser, setCurrentUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loadingMessages, setLoadingMessages] = useState(true);
   const [sending, setSending] = useState(false);
   const [selfChatError, setSelfChatError] = useState(false);
-
+  const [chatHeader, setChatHeader] = useState({
+    name: "",
+    avatar: null,
+  });
+  
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -169,17 +180,6 @@ const Chat = () => {
     navigate(-1);
   };
 
-  const getOtherParty = () => {
-    if (!currentUser)
-      return { name: vendorName || "Vendor", avatar: vendorAvatar || null };
-    if (currentUser.role === "user") {
-      return { name: vendorName || "Vendor", avatar: vendorAvatar || null };
-    }
-    return { name: "User", avatar: null };
-  };
-
-  const other = getOtherParty();
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-16 md:pt-20 pb-24 md:pb-20 flex items-center justify-center px-4">
       <div className="w-full max-w-3xl">
@@ -200,13 +200,13 @@ const Chat = () => {
               <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
             </motion.button> */}
 
-            {other.avatar ? (
+            {chatHeader.avatar ? (
               <motion.img
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                src={other.avatar}
-                alt={other.name}
+                src={chatHeader.avatar}
+                alt={chatHeader.name}
                 className="w-9 h-9 md:w-11 md:h-11 rounded-full border-2 border-white/60 object-cover shadow-md"
               />
             ) : (
@@ -223,7 +223,7 @@ const Chat = () => {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <h1 className="text-white font-semibold text-sm md:text-base truncate">
-                  {other.name}
+                  {chatHeader.name}
                 </h1>
                 <motion.span
                   initial={{ opacity: 0, scale: 0.8 }}
