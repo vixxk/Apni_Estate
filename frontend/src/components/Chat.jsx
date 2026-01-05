@@ -41,12 +41,13 @@ const Chat = () => {
 
   const { vendorId } = useParams();
   const { vendorName, vendorAvatar } = location.state || {};
-  
+
   const [currentUser, setCurrentUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loadingMessages, setLoadingMessages] = useState(true);
   const [sending, setSending] = useState(false);
+  const [selfChatError, setSelfChatError] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -55,11 +56,27 @@ const Chat = () => {
       navigate("/login");
       return;
     }
+
     if (!vendorId) {
-      console.warn("Missing vendorId in chat route");
       navigate("/properties", { replace: true });
+      return;
     }
-  }, [token, vendorId, navigate]);
+
+    // Prevent vendor chatting with himself
+    if (
+      currentUser &&
+      currentUser.role === "vendor" &&
+      currentUser._id === vendorId
+    ) {
+      setSelfChatError(true);
+
+      const timer = setTimeout(() => {
+        navigate(-1);
+      }, 4000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [token, vendorId, currentUser, navigate]);
 
   useEffect(() => {
     const fetchMe = async () => {
@@ -92,7 +109,7 @@ const Chat = () => {
         );
 
         const newMessages = data?.data?.messages || [];
-        
+
         if (newMessages.length > 0) {
           const latestId = newMessages[newMessages.length - 1]._id;
           if (latestId !== lastMessageIdRef.current) {
@@ -102,7 +119,7 @@ const Chat = () => {
         } else {
           setMessages([]);
         }
-        
+
         setLoadingMessages(false);
       } catch (err) {
         console.error("Polling error:", err);
@@ -130,20 +147,14 @@ const Chat = () => {
       setSending(true);
 
       const payload = {
-        vendorId:
-          currentUser.role === "vendor" ? currentUser._id : vendorId,
-        userId:
-          currentUser.role === "user" ? currentUser._id : vendorId,
+        vendorId: currentUser.role === "vendor" ? currentUser._id : vendorId,
+        userId: currentUser.role === "user" ? currentUser._id : vendorId,
         message: input.trim(),
       };
 
-      const { data } = await axios.post(
-        `${Backendurl}/api/chats`,
-        payload,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const { data } = await axios.post(`${Backendurl}/api/chats`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setMessages((prev) => [...prev, data.data]);
       setInput("");
@@ -378,6 +389,38 @@ const Chat = () => {
           🔐 Chats are secure and for information purposes only
         </motion.p> */}
       </div>
+      <AnimatePresence>
+        {selfChatError && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ y: 20 }}
+              animate={{ y: 0 }}
+              className="bg-white rounded-xl shadow-2xl px-6 py-5 max-w-sm w-full text-center"
+            >
+              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3">
+                <UserIcon className="w-6 h-6 text-red-600" />
+              </div>
+
+              <h3 className="text-lg font-bold text-gray-900 mb-1">
+                Action Not Allowed
+              </h3>
+
+              <p className="text-sm text-gray-600">
+                You cannot contact yourself.
+              </p>
+
+              <p className="text-xs text-gray-400 mt-3">
+                Redirecting you back…
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
