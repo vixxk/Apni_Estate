@@ -263,7 +263,24 @@ const PropertyDetails = () => {
   };
 
   const handleChatClick = () => {
-    navigate("/chat");
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+  
+    if (!property?.owner?._id) {
+      alert("Vendor information not available");
+      return;
+    }
+  
+    navigate("/chat", {
+      state: {
+        vendorId: property.owner._id,
+        vendorName: property.owner.name,
+        vendorAvatar: property.owner.avatar || null,
+      },
+    });
   };
 
   const handleContactVendor = () => {
