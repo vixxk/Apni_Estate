@@ -32,6 +32,7 @@ import EverythingPage from "./pages/EverythingPage";
 import AdminLogin from "./components/admin/AdminLogin";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import VendorContactRequests from './pages/VendorContactRequests';
+import ChatList from "./pages/ChatList.jsx";
 
 export const Backendurl = import.meta.env.VITE_API_BASE_URL;
 
@@ -103,7 +104,9 @@ const App = () => {
                 />
                 <Route path="/vendor/:vendorId" element={<VendorProfile />} />
                 <Route path="/saved" element={<SavedProperties />} />
+ 
                 <Route path="/chat" element={<Chat />} />
+                <Route path="/messages" element={<ChatList />} />
 
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />

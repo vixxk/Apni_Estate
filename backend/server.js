@@ -18,6 +18,7 @@ import uploadRoutes from "./routes/uploadRoute.js";
 import vendorServiceRoutes from "./routes/vendorServiceRoute.js";
 import serviceUploadRoutes from "./routes/serviceUploadRoute.js";
 import contactRequestRoutes from "./routes/contactRequestRoute.js";
+import chatRoutes from "./routes/ChatRoute.js";
 
 
 const app = express();
@@ -34,12 +35,12 @@ connectDB();
 app.use(helmet());
 
 // Rate limiting 
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 500,
-  })
-);
+// app.use(
+//   rateLimit({
+//     windowMs: 15 * 60 * 1000,
+//     max: 500,
+//   })
+// );
 
 app.use(cors());
 
@@ -73,6 +74,8 @@ app.use("/api/upload/service", serviceUploadRoutes);
 
 // Contact request routes
 app.use("/api/contact-requests", contactRequestRoutes);
+
+app.use("/api/chats", chatRoutes); // ← add this
 
 // Status endpoint
 app.get("/status", (req, res) => {

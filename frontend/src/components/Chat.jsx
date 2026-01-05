@@ -1,186 +1,379 @@
-import { motion } from "framer-motion";
-import { MessageCircle, Mail, Bell, Sparkles, ArrowRight } from "lucide-react";
+import React, { useEffect, useState, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  MessageCircle,
+  ArrowLeft,
+  Send,
+  User as UserIcon,
+  Loader2,
+  CheckCheck,
+} from "lucide-react";
+import { Backendurl } from "../App";
+
+const LoadingSkeleton = () => (
+  <div className="space-y-3 md:space-y-4 px-3 md:px-4 py-3 md:py-4">
+    {[1, 2, 3, 4, 5].map((i) => (
+      <div
+        key={i}
+        className={`flex ${i % 2 === 0 ? "justify-end" : "justify-start"}`}
+      >
+        <div
+          className={`max-w-[75%] md:max-w-[70%] rounded-2xl px-3 py-2 md:px-4 md:py-2.5 ${
+            i % 2 === 0 ? "bg-blue-100 rounded-br-sm" : "bg-white rounded-bl-sm"
+          } animate-pulse`}
+        >
+          <div className="h-3 md:h-4 bg-gray-300 rounded w-32 md:w-40 mb-2"></div>
+          <div className="h-2 md:h-3 bg-gray-200 rounded w-16 md:w-20"></div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
 
 const Chat = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const messagesEndRef = useRef(null);
+  const lastMessageIdRef = useRef(null);
+
+  const { vendorId, vendorName, vendorAvatar } = location.state || {};
+
+  const [currentUser, setCurrentUser] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [loadingMessages, setLoadingMessages] = useState(true);
+  const [sending, setSending] = useState(false);
+
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    if (!vendorId) {
+      navigate("/properties");
+    }
+  }, [token, vendorId, navigate]);
+
+  useEffect(() => {
+    const fetchMe = async () => {
+      try {
+        const { data } = await axios.get(`${Backendurl}/api/users/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setCurrentUser(data.data.user);
+      } catch (err) {
+        console.error("Failed to fetch current user:", err);
+      }
+    };
+    if (token) {
+      fetchMe();
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (!currentUser || !vendorId || !token) return;
+
+    let intervalId;
+
+    const fetchMessages = async () => {
+      try {
+        const { data } = await axios.get(
+          `${Backendurl}/api/chats/room/${vendorId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const newMessages = data?.data?.messages || [];
+        
+        if (newMessages.length > 0) {
+          const latestId = newMessages[newMessages.length - 1]._id;
+          if (latestId !== lastMessageIdRef.current) {
+            lastMessageIdRef.current = latestId;
+            setMessages(newMessages);
+          }
+        } else {
+          setMessages([]);
+        }
+        
+        setLoadingMessages(false);
+      } catch (err) {
+        console.error("Polling error:", err);
+        setLoadingMessages(false);
+      }
+    };
+
+    fetchMessages();
+    intervalId = setInterval(fetchMessages, 2000);
+
+    return () => clearInterval(intervalId);
+  }, [currentUser, vendorId, token]);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
+  const handleSend = async (e) => {
+    e.preventDefault();
+    if (!input.trim() || !currentUser || !vendorId || !token) return;
+
+    try {
+      setSending(true);
+
+      const payload = {
+        vendorId:
+          currentUser.role === "vendor" ? currentUser._id : vendorId,
+        userId:
+          currentUser.role === "user" ? currentUser._id : vendorId,
+        message: input.trim(),
+      };
+
+      const { data } = await axios.post(
+        `${Backendurl}/api/chats`,
+        payload,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setMessages((prev) => [...prev, data.data]);
+      setInput("");
+    } catch (err) {
+      console.error("Failed to send message:", err);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const getOtherParty = () => {
+    if (!currentUser)
+      return { name: vendorName || "Vendor", avatar: vendorAvatar || null };
+    if (currentUser.role === "user") {
+      return { name: vendorName || "Vendor", avatar: vendorAvatar || null };
+    }
+    return { name: "User", avatar: null };
+  };
+
+  const other = getOtherParty();
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center px-4 py-8 md:py-12">
-      <div className="w-full max-w-2xl">
-        {/* Main Card */}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-16 md:pt-20 pb-24 md:pb-20 flex items-center justify-center px-4">
+      <div className="w-full max-w-3xl">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="bg-white rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden"
+          transition={{ duration: 0.4 }}
+          className="bg-white rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[70vh] md:h-[75vh]"
         >
-          {/* Header Section */}
-          <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-6 py-8 md:px-10 md:py-12 text-center">
-            {/* Animated Background Elements */}
-            <motion.div
-              animate={{
-                scale: [1, 1.2, 1],
-                rotate: [0, 180, 360],
-              }}
-              transition={{
-                duration: 20,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              className="absolute top-0 right-0 w-32 h-32 md:w-48 md:h-48 bg-white/10 rounded-full blur-3xl"
-            />
-            <motion.div
-              animate={{
-                scale: [1.2, 1, 1.2],
-                rotate: [360, 180, 0],
-              }}
-              transition={{
-                duration: 15,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              className="absolute bottom-0 left-0 w-32 h-32 md:w-48 md:h-48 bg-white/10 rounded-full blur-3xl"
-            />
-
-            {/* Icon */}
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="relative inline-block"
+          {/* Header */}
+          <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4 shadow-lg">
+            {/* <motion.button
+              onClick={handleBack}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="p-1.5 md:p-2 rounded-full bg-white/10 hover:bg-white/25 text-white transition-all"
             >
-              <div className="bg-white/20 backdrop-blur-sm p-4 md:p-6 rounded-2xl md:rounded-3xl">
-                <MessageCircle className="w-12 h-12 md:w-16 md:h-16 text-white" strokeWidth={1.5} />
-              </div>
+              <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
+            </motion.button> */}
+
+            {other.avatar ? (
+              <motion.img
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                src={other.avatar}
+                alt={other.name}
+                className="w-9 h-9 md:w-11 md:h-11 rounded-full border-2 border-white/60 object-cover shadow-md"
+              />
+            ) : (
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                className="absolute -top-1 -right-1 md:-top-2 md:-right-2"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-white/20 flex items-center justify-center border-2 border-white/60 shadow-md"
               >
-                <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-yellow-300" />
+                <UserIcon className="w-5 h-5 md:w-6 md:h-6 text-white" />
               </motion.div>
-            </motion.div>
+            )}
 
-            {/* Title */}
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="relative mt-6 text-3xl md:text-5xl font-bold text-white mb-2 md:mb-3"
-            >
-              Chat Coming Soon
-            </motion.h1>
-
-            {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="relative text-blue-100 text-sm md:text-lg max-w-md mx-auto"
-            >
-              We're building something amazing for real-time conversations
-            </motion.p>
-          </div>
-
-          {/* Content Section */}
-          <div className="px-6 py-8 md:px-10 md:py-12">
-            {/* Feature Pills */}
-            <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-8 md:mb-10">
-              {[
-                "Real-time Messaging",
-                "File Sharing",
-                "Voice Messages",
-                "Group Chats",
-              ].map((feature, index) => (
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <h1 className="text-white font-semibold text-sm md:text-base truncate">
+                  {other.name}
+                </h1>
                 <motion.span
-                  key={index}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5 + index * 0.1 }}
-                  className="px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 rounded-full text-xs md:text-sm font-medium"
+                  className="px-2 py-0.5 rounded-full bg-white/20 text-[10px] md:text-xs text-white backdrop-blur-sm whitespace-nowrap"
                 >
-                  {feature}
+                  Secure Chat
                 </motion.span>
-              ))}
+              </div>
+              <p className="text-[11px] md:text-xs text-blue-100 mt-0.5 truncate">
+                You can discuss property details and ask questions here.
+              </p>
             </div>
 
-            {/* Description */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="text-center mb-8 md:mb-10"
-            >
-              <p className="text-gray-600 text-sm md:text-base leading-relaxed max-w-lg mx-auto">
-                Our chat feature is currently under development. Get notified when we launch and be among the first to experience seamless real-time communication.
-              </p>
-            </motion.div>
+            <div className="hidden md:flex items-center gap-1 text-blue-100 text-xs bg-white/10 px-2 py-1 rounded-full backdrop-blur-sm">
+              <MessageCircle className="w-4 h-4" />
+              <span>ApniEstate</span>
+            </div>
 
-            {/* Notify Form */}
-            {/* <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1 }}
-              className="max-w-md mx-auto"
-            >
-              <div className="relative">
-                <Mail className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400" />
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full pl-10 md:pl-12 pr-3 md:pr-4 py-3 md:py-4 border-2 border-gray-200 rounded-xl md:rounded-2xl focus:border-blue-500 focus:outline-none transition-colors text-sm md:text-base"
-                />
-              </div>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full mt-3 md:mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 md:py-4 rounded-xl md:rounded-2xl font-semibold flex items-center justify-center gap-2 hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl text-sm md:text-base"
-              >
-                <Bell className="w-4 h-4 md:w-5 md:h-5" />
-                Notify Me When Ready
-                <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-              </motion.button>
-            </motion.div> */}
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.2 }}
-              className="mt-8 md:mt-12 grid grid-cols-3 gap-4 md:gap-6 pt-6 md:pt-8 border-t border-gray-200"
-            >
-              {[
-                { label: "Users Waiting", value: "2,450+" },
-                { label: "Features", value: "15+" },
-                { label: "Launch", value: "Q1 2026" },
-              ].map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                    {stat.value}
-                  </div>
-                  <div className="text-[10px] md:text-sm text-gray-500 mt-1">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </motion.div>
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl -z-10" />
           </div>
+
+          {/* Messages area */}
+          <div className="flex-1 bg-gradient-to-b from-slate-50/80 to-slate-50/50 overflow-y-auto">
+            {loadingMessages ? (
+              <LoadingSkeleton />
+            ) : messages.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 }}
+                className="h-full flex items-center justify-center"
+              >
+                <div className="text-center max-w-xs mx-auto px-4">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 15,
+                    }}
+                    className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg flex items-center justify-center mx-auto mb-3"
+                  >
+                    <MessageCircle className="w-6 h-6 md:w-7 md:h-7 text-white" />
+                  </motion.div>
+                  <h2 className="text-gray-800 font-semibold text-sm md:text-base mb-1">
+                    Start your first conversation
+                  </h2>
+                  <p className="text-xs md:text-sm text-gray-500">
+                    Say hello and ask any questions you have about the property
+                    or services.
+                  </p>
+                </div>
+              </motion.div>
+            ) : (
+              <div className="px-3 md:px-4 py-3 md:py-4">
+                <div className="space-y-3 md:space-y-4">
+                  <AnimatePresence initial={false}>
+                    {messages.map((m, index) => {
+                      const isMe =
+                        currentUser &&
+                        (m.sender === currentUser.id ||
+                          m.sender === currentUser._id ||
+                          m.sender?._id === currentUser.id ||
+                          m.sender?._id === currentUser._id);
+                      return (
+                        <motion.div
+                          key={m._id}
+                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          transition={{ duration: 0.2 }}
+                          className={`flex ${
+                            isMe ? "justify-end" : "justify-start"
+                          }`}
+                        >
+                          <motion.div
+                            whileHover={{ scale: 1.01 }}
+                            className={`max-w-[75%] md:max-w-[70%] rounded-2xl px-3 py-2 md:px-4 md:py-2.5 text-xs md:text-sm shadow-md ${
+                              isMe
+                                ? "bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-br-sm"
+                                : "bg-white text-gray-900 rounded-bl-sm border border-gray-100"
+                            }`}
+                          >
+                            <p className="whitespace-pre-wrap break-words leading-relaxed">
+                              {m.message}
+                            </p>
+                            <div className="flex items-center justify-end gap-1 mt-1">
+                              <p
+                                className={`text-[10px] md:text-[11px] ${
+                                  isMe ? "text-blue-100" : "text-gray-400"
+                                }`}
+                              >
+                                {new Date(m.createdAt).toLocaleTimeString([], {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </p>
+                              {isMe && (
+                                <CheckCheck
+                                  className={`w-3 h-3 ${
+                                    index === messages.length - 1
+                                      ? "text-blue-200"
+                                      : "text-blue-300"
+                                  }`}
+                                />
+                              )}
+                            </div>
+                          </motion.div>
+                        </motion.div>
+                      );
+                    })}
+                  </AnimatePresence>
+                  <div ref={messagesEndRef} />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Input area */}
+          <form
+            onSubmit={handleSend}
+            className="border-t border-slate-200 bg-white px-3 md:px-4 py-2.5 md:py-3 flex items-center gap-2 md:gap-3"
+          >
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type your message..."
+              maxLength={500}
+              className="flex-1 text-xs md:text-sm px-3 py-2 md:px-4 md:py-2.5 rounded-full border-2 border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-50 hover:bg-white transition-all placeholder:text-gray-400"
+            />
+            <motion.button
+              type="submit"
+              whileHover={{
+                scale: sending || !input.trim() ? 1 : 1.05,
+              }}
+              whileTap={{ scale: sending || !input.trim() ? 1 : 0.95 }}
+              disabled={sending || !input.trim()}
+              className={`inline-flex items-center justify-center rounded-full px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-medium text-white shadow-lg transition-all ${
+                sending || !input.trim()
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-blue-500/25"
+              }`}
+            >
+              {sending ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Send className="w-4 h-4" />
+              )}
+            </motion.button>
+          </form>
         </motion.div>
 
-        {/* Bottom Text */}
-        <motion.p
+        {/* Bottom helper */}
+        {/* <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.4 }}
-          className="text-center mt-6 md:mt-8 text-xs md:text-sm text-gray-500"
+          transition={{ delay: 0.3 }}
+          className="text-center mt-4 text-[11px] md:text-xs text-gray-500 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 mx-auto inline-block"
         >
-          Have questions?{" "}
-          <a
-            href="mailto:apniestateofficial@gmail.com"
-            className="text-blue-600 hover:text-blue-700 font-medium underline"
-          >
-            Contact us
-          </a>
-        </motion.p>
+          🔐 Chats are secure and for information purposes only
+        </motion.p> */}
       </div>
     </div>
   );

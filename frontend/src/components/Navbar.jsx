@@ -21,13 +21,12 @@ import {
   Bell,
 } from "lucide-react";
 import logo from "../assets/images/apniestate-logo.png";
-import govLogo from "../assets/gov.png"; 
+import govLogo from "../assets/gov.png";
 import { useAuth } from "../context/AuthContext";
 import PropTypes from "prop-types";
 import { useMobileMenu } from "../context/MobileMenuContext";
 import axios from "axios";
 import { Backendurl } from "../App";
-
 
 // Animation Variants
 const navVariants = {
@@ -43,7 +42,6 @@ const navVariants = {
   },
 };
 
-
 const logoVariants = {
   hidden: { opacity: 0, scale: 0.8 },
   visible: {
@@ -57,7 +55,6 @@ const logoVariants = {
   },
 };
 
-
 const floatingAnimation = {
   y: [-2, 2, -2],
   transition: {
@@ -66,7 +63,6 @@ const floatingAnimation = {
     ease: "easeInOut",
   },
 };
-
 
 const glowAnimation = {
   boxShadow: [
@@ -81,7 +77,6 @@ const glowAnimation = {
   },
 };
 
-
 const sparkleVariants = {
   animate: {
     scale: [1, 1.3, 1],
@@ -94,7 +89,6 @@ const sparkleVariants = {
     },
   },
 };
-
 
 // Mobile Drawer Animation Variants (from right)
 const drawerVariants = {
@@ -119,13 +113,11 @@ const drawerVariants = {
   },
 };
 
-
 const overlayVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
   exit: { opacity: 0 },
 };
-
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -305,7 +297,10 @@ const Navbar = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <NavLinks currentPath={location.pathname} isVendor={isVendor} />
+              <NavLinks
+                currentPath={location.pathname}
+                isAuthenticated={isAuthenticated}
+              />
 
               <div className="flex items-center space-x-4">
                 {/* Bell icon - only visible if authenticated AND vendor */}
@@ -326,7 +321,9 @@ const Navbar = () => {
                         animate={{ scale: 1 }}
                         className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow"
                       >
-                        {pendingRequestsCount > 99 ? "99+" : pendingRequestsCount}
+                        {pendingRequestsCount > 99
+                          ? "99+"
+                          : pendingRequestsCount}
                       </motion.span>
                     )}
                   </motion.button>
@@ -681,7 +678,9 @@ const Navbar = () => {
 
                   {/* Text */}
                   <div className="flex flex-col flex-1 min-w-0">
-                    <span className="text-sm font-bold truncate">AI Property Hub</span>
+                    <span className="text-sm font-bold truncate">
+                      AI Property Hub
+                    </span>
                     <span className="text-xs opacity-80 truncate">
                       Smart recommendations
                     </span>
@@ -834,54 +833,47 @@ const Navbar = () => {
   );
 };
 
-
-const NavLinks = ({ currentPath, isVendor }) => {
-  const navLinks = [
+const NavLinks = ({ currentPath, isAuthenticated }) => {
+  const links = [
     {
       name: "Home",
       path: "/",
       icon: Home,
       color: "from-blue-500 to-cyan-500",
-      description: "Welcome home",
     },
     {
       name: "Properties",
       path: "/properties",
       icon: Search,
       color: "from-green-500 to-emerald-500",
-      description: "Find your dream",
     },
     {
       name: "About Us",
       path: "/about",
       icon: Users,
       color: "from-purple-500 to-pink-500",
-      description: "Our story",
     },
     {
       name: "Contact",
       path: "/contact",
       icon: MessageCircle,
       color: "from-orange-500 to-red-500",
-      description: "Get in touch",
     },
+    ...(isAuthenticated
+      ? [
+          {
+            name: "Chat",
+            path: "/messages",
+            icon: MessageCircle,
+            color: "from-indigo-500 to-blue-500",
+          },
+        ]
+      : []),
   ];
 
-  const [sparkleKey, setSparkleKey] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSparkleKey((prev) => prev + 1);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const isAIHubActive = currentPath.startsWith("/ai-property-hub");
-
   return (
-    <div className="flex space-x-2 items-center">
-      {navLinks.map(({ name, path, icon: Icon, color, description }) => {
+    <div className="flex items-center space-x-2">
+      {links.map(({ name, path, icon: Icon, color }) => {
         const isActive =
           path === "/" ? currentPath === path : currentPath.startsWith(path);
 
@@ -893,106 +885,23 @@ const NavLinks = ({ currentPath, isVendor }) => {
           >
             <Link
               to={path}
-              className={`relative group font-medium transition-all duration-300 flex items-center gap-2 px-4 py-2.5 rounded-xl
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold transition-all
                 ${
                   isActive
-                    ? `text-white bg-gradient-to-r ${color} shadow-lg shadow-blue-500/30`
-                    : "text-gray-700 hover:text-blue-600 hover:bg-blue-50/80"
-                }
-              `}
-            >
-              <Icon
-                className={`w-4 h-4 ${
-                  isActive
-                    ? "text-white"
-                    : "text-gray-600 group-hover:text-blue-600"
+                    ? `text-white bg-gradient-to-r ${color} shadow-lg`
+                    : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
                 }`}
-              />
-              <span className="font-semibold">{name}</span>
-
-              <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                <div className="bg-gray-900 text-white text-xs px-2 py-1 rounded-lg whitespace-nowrap">
-                  {description}
-                  <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
-                </div>
-              </div>
-
-              {isActive && (
-                <motion.div
-                  layoutId="activeIndicator"
-                  className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/20 to-white/10 border border-white/20"
-                  initial={false}
-                />
-              )}
+            >
+              <Icon className="w-4 h-4" />
+              <span>{name}</span>
             </Link>
           </motion.div>
         );
       })}
-
-      <motion.div
-        whileHover={{ y: -2, scale: 1.02 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <Link
-          to="/ai-property-hub"
-          className={`relative group font-semibold transition-all duration-300 flex items-center gap-2.5 px-5 py-2.5 rounded-xl overflow-hidden ${
-            isAIHubActive
-              ? "text-white bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 shadow-xl shadow-purple-500/40"
-              : "text-indigo-700 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 hover:text-white border border-indigo-200 hover:border-transparent"
-          }`}
-        >
-          <div className="relative">
-            <BotMessageSquare
-              className={`w-5 h-5 ${
-                isAIHubActive
-                  ? "text-white"
-                  : "text-indigo-600 group-hover:text-white"
-              }`}
-            />
-            <motion.div
-              key={sparkleKey}
-              initial={{ opacity: 0, scale: 0, rotate: 0 }}
-              animate={{
-                opacity: [0, 1, 0],
-                scale: [0, 1.2, 0],
-                rotate: [0, 180, 360],
-              }}
-              transition={{ duration: 2, ease: "easeInOut" }}
-              className="absolute -top-1 -right-1"
-            >
-              <Sparkles className="w-3 h-3 text-yellow-400" />
-            </motion.div>
-          </div>
-          <span>AI Property Hub</span>
-
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            animate={isAIHubActive ? { x: [-100, 100] } : {}}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-          />
-
-          {isAIHubActive && (
-            <motion.div
-              layoutId="aiActiveIndicator"
-              className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/20 to-white/10 border border-white/30"
-              initial={false}
-            />
-          )}
-
-          <div className="absolute -bottom-14 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-            <div className="bg-gray-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap">
-              AI-powered property recommendations
-              <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
-            </div>
-          </div>
-        </Link>
-      </motion.div>
     </div>
   );
 };
 
-
-// Mobile NavItem Component
 const MobileNavItem = ({
   icon: Icon,
   label,
@@ -1018,7 +927,9 @@ const MobileNavItem = ({
       <div className="flex-1 min-w-0">
         <span className="text-sm font-medium truncate block">{label}</span>
         {description && !isActive && (
-          <span className="block text-xs text-gray-500 truncate">{description}</span>
+          <span className="block text-xs text-gray-500 truncate">
+            {description}
+          </span>
         )}
       </div>
       {isActive && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
@@ -1026,12 +937,10 @@ const MobileNavItem = ({
   );
 };
 
-
 NavLinks.propTypes = {
   currentPath: PropTypes.string.isRequired,
-  isVendor: PropTypes.bool,
+  isAuthenticated: PropTypes.bool,
 };
-
 
 MobileNavItem.propTypes = {
   icon: PropTypes.elementType.isRequired,
@@ -1042,11 +951,9 @@ MobileNavItem.propTypes = {
   description: PropTypes.string,
 };
 
-
 export const useMobileMenuState = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   return { isMobileMenuOpen, setIsMobileMenuOpen };
 };
-
 
 export default Navbar;
