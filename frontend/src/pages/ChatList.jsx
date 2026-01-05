@@ -67,17 +67,22 @@ const ChatList = () => {
   const openChat = (c) => {
     const payload = JSON.parse(atob(token.split(".")[1]));
     const loggedInUserId = payload.id;
-
+  
     const otherUser = c.vendor._id === loggedInUserId ? c.user : c.vendor;
-
-    navigate("/chat", {
+  
+    if (otherUser._id === loggedInUserId) {
+      console.warn("Attempted to open self chat from ChatList");
+      return;
+    }
+  
+    navigate(`/chat/${otherUser._id}`, {
       state: {
-        vendorId: otherUser._id,
         vendorName: otherUser.name,
         vendorAvatar: otherUser.avatar || null,
       },
     });
   };
+  
 
   const totalUnread = conversations.reduce(
     (sum, c) => sum + (c.unreadCount || 0),
