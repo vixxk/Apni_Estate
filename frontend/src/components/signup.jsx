@@ -16,6 +16,7 @@ import {
   User,
   Key,
   Home,
+  Phone,
   Building2,
 } from "lucide-react";
 import { Backendurl } from "../App";
@@ -97,6 +98,7 @@ const Signup = () => {
     name: "",
     email: "",
     password: "",
+    phone: "",      
     role: "user",
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -105,6 +107,7 @@ const Signup = () => {
     name: false,
     email: false,
     password: false,
+    phone: false
   });
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [validationErrors, setValidationErrors] = useState({});
@@ -142,11 +145,17 @@ const Signup = () => {
         else if (value.length < 6)
           errors.password = "Password must be at least 6 characters";
         break;
+      case "phone":  
+        if (!value.trim()) errors.phone = "Phone number is required";
+        else if (!/^\+?[\d\s\-\(\)]{10,}$/.test(value.trim()))
+          errors.phone = "Please enter a valid phone number";
+        break;
     }
-
+  
     setValidationErrors((prev) => ({ ...prev, ...errors }));
     return Object.keys(errors).length === 0;
   };
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -475,6 +484,74 @@ const Signup = () => {
                   )}
                 </AnimatePresence>
               </motion.div>
+
+              {/* Phone Field */}
+<motion.div variants={inputVariants}>
+  <label
+    htmlFor="phone"
+    className="block text-sm font-medium text-gray-700 mb-2"
+  >
+    Phone Number
+  </label>
+  <div className="relative group">
+    <div
+      className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${
+        fieldFocus.phone ? "text-blue-500" : "text-gray-400"
+      }`}
+    >
+      <Phone className="h-5 w-5" />  
+    </div>
+    <input
+      type="tel"
+      name="phone"
+      id="phone"
+      required
+      value={formData.phone}
+      onChange={handleChange}
+      onFocus={() => handleFocus("phone")}
+      onBlur={() => handleBlur("phone")}
+      className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${
+        validationErrors.phone
+          ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+          : fieldFocus.phone
+          ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
+          : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
+      } focus:ring-4 focus:outline-none`}
+      placeholder="+91 98765 43210"
+    />
+    {validationErrors.phone && (
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="absolute right-3 top-1/2 -translate-y-1/2"
+      >
+        <AlertCircle className="h-5 w-5 text-red-500" />
+      </motion.div>
+    )}
+    {formData.phone && !validationErrors.phone && (
+      <motion.div
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="absolute right-3 top-1/2 -translate-y-1/2"
+      >
+        <CheckCircle className="h-5 w-5 text-green-500" />
+      </motion.div>
+    )}
+  </div>
+  <AnimatePresence>
+    {validationErrors.phone && (
+      <motion.p
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        className="mt-1 text-sm text-red-600"
+      >
+        {validationErrors.phone}
+      </motion.p>
+    )}
+  </AnimatePresence>
+</motion.div>
+
 
               {/* Password Field */}
               <motion.div variants={inputVariants}>
