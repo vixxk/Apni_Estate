@@ -274,13 +274,13 @@ const PropertyDetails = () => {
       return;
     }
   
-    navigate("/chat", {
+    navigate(`/chat/${property.owner._id}`, {
       state: {
-        vendorId: property.owner._id,
         vendorName: property.owner.name,
         vendorAvatar: property.owner.avatar || null,
       },
     });
+    
   };
 
   const handleContactVendor = () => {

@@ -105,7 +105,7 @@ const App = () => {
                 <Route path="/vendor/:vendorId" element={<VendorProfile />} />
                 <Route path="/saved" element={<SavedProperties />} />
  
-                <Route path="/chat" element={<Chat />} />
+                <Route path="/chat/:vendorId" element={<Chat />} />
                 <Route path="/messages" element={<ChatList />} />
 
                 <Route path="/admin/login" element={<AdminLogin />} />

@@ -223,15 +223,18 @@ const VendorProfile = () => {
       return;
     }
   
-    // Pass vendor details to the Chat page
-    navigate("/chat", {
+    if (!vendor?._id) {
+      alert("Vendor information not available");
+      return;
+    }
+  
+    navigate(`/chat/${vendor._id}`, {
       state: {
-        vendorId: vendor._id,
         vendorName: vendor.name,
         vendorAvatar: vendor.avatar || null,
       },
     });
-  };
+  };  
   
 
   const submitContactRequest = async () => {

@@ -11,6 +11,7 @@ import {
   CheckCheck,
 } from "lucide-react";
 import { Backendurl } from "../App";
+import { useParams } from "react-router-dom";
 
 const LoadingSkeleton = () => (
   <div className="space-y-3 md:space-y-4 px-3 md:px-4 py-3 md:py-4">
@@ -38,8 +39,9 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const lastMessageIdRef = useRef(null);
 
-  const { vendorId, vendorName, vendorAvatar } = location.state || {};
-
+  const { vendorId } = useParams();
+  const { vendorName, vendorAvatar } = location.state || {};
+  
   const [currentUser, setCurrentUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -54,7 +56,8 @@ const Chat = () => {
       return;
     }
     if (!vendorId) {
-      navigate("/properties");
+      console.warn("Missing vendorId in chat route");
+      navigate("/properties", { replace: true });
     }
   }, [token, vendorId, navigate]);
 
