@@ -61,6 +61,7 @@ const Chat = () => {
     });
   }, [vendorName, vendorAvatar]);
 
+  // redirect if not logged in / no otherUserId
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -73,6 +74,7 @@ const Chat = () => {
     }
   }, [token, otherUserId, navigate]);
 
+  // fetch logged-in user
   useEffect(() => {
     const fetchMe = async () => {
       try {
@@ -89,13 +91,11 @@ const Chat = () => {
     }
   }, [token]);
 
+  // prevent chatting with self
   useEffect(() => {
     if (!token || !otherUserId || !currentUser) return;
 
-    if (
-      currentUser._id === otherUserId ||
-      currentUser.id === otherUserId
-    ) {
+    if (currentUser._id === otherUserId || currentUser.id === otherUserId) {
       setSelfChatError(true);
 
       const timer = setTimeout(() => {
@@ -106,6 +106,7 @@ const Chat = () => {
     }
   }, [token, otherUserId, currentUser, navigate]);
 
+  // polling for messages
   useEffect(() => {
     if (!currentUser || !otherUserId || !token) return;
 
@@ -145,9 +146,14 @@ const Chat = () => {
     return () => clearInterval(intervalId);
   }, [currentUser, otherUserId, token]);
 
+  // auto-scroll only the messages container, not whole page
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      messagesEndRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
     }
   }, [messages]);
 
@@ -163,13 +169,9 @@ const Chat = () => {
         message: input.trim(),
       };
 
-      const { data } = await axios.post(
-        `${Backendurl}/api/chats`,
-        payload,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const { data } = await axios.post(`${Backendurl}/api/chats`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setMessages((prev) => [...prev, data.data]);
       setInput("");
@@ -191,7 +193,6 @@ const Chat = () => {
         >
           {/* Header */}
           <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4 shadow-lg">
-
             {chatHeader.avatar ? (
               <motion.img
                 initial={{ scale: 0 }}
@@ -239,7 +240,10 @@ const Chat = () => {
           </div>
 
           {/* Messages area */}
-          <div className="flex-1 bg-gradient-to-b from-slate-50/80 to-slate-50/50 overflow-y-auto">
+          <div
+            className="flex-1 bg-gradient-to-b from-slate-50/80 to-slate-50/50 overflow-y-auto"
+            style={{ overscrollBehavior: "contain" }}
+          >
             {loadingMessages ? (
               <LoadingSkeleton />
             ) : messages.length === 0 ? (
