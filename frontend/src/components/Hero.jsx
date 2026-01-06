@@ -35,7 +35,7 @@ import { Backendurl } from "../App";
 /* ================= DATA ================= */
 const services = [
   { title: "Buy", img: sell },
-  { title: "Sell", img: sell },
+  // { title: "Sell", img: sell },
   { title: "Rent", img: rent },
   { title: "Construction Services", img: constructionServices },
   { title: "Interior Designing", img: interior },
@@ -112,15 +112,17 @@ const Hero = () => {
   const [unreadTotal, setUnreadTotal] = useState(0);
 
   // ROLE-BASED VISIBILITY
-  const visibleServices = services.filter((service) => {
-    if (service.title === "Sell") {
-      return isAuthenticated && user?.role === "vendor";
-    }
-    if (service.title === "Buy") {
-      return !isAuthenticated || user?.role !== "vendor";
-    }
-    return true;
-  });
+  // const visibleServices = services.filter((service) => {
+  //   if (service.title === "Sell") {
+  //     return isAuthenticated && user?.role === "vendor";
+  //   }
+  //   if (service.title === "Buy") {
+  //     return !isAuthenticated || user?.role !== "vendor";
+  //   }
+  //   return true;
+  // });
+
+  const visibleServices = services;
 
   // Hide button on scroll
   useEffect(() => {

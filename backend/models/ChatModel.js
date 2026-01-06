@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 
 const chatSchema = new mongoose.Schema(
   {
-    vendor: {
+    participantA: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    user: {
+    participantB: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -22,11 +22,12 @@ const chatSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    readByVendor: {
+
+    readByA: {
       type: Boolean,
       default: false,
     },
-    readByUser: {
+    readByB: {
       type: Boolean,
       default: false,
     },
@@ -37,8 +38,7 @@ const chatSchema = new mongoose.Schema(
 );
 
 // index for faster lookups by room
-chatSchema.index({ vendor: 1, user: 1, createdAt: 1 });
+chatSchema.index({ participantA: 1, participantB: 1, createdAt: 1 });
 
 const Chat = mongoose.model("Chat", chatSchema);
-
 export default Chat;

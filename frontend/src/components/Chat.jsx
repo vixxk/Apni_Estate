@@ -1,17 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle,
-  ArrowLeft,
+  // ArrowLeft,
   Send,
   User as UserIcon,
   Loader2,
   CheckCheck,
 } from "lucide-react";
 import { Backendurl } from "../App";
-import { useParams } from "react-router-dom";
 
 const LoadingSkeleton = () => (
   <div className="space-y-3 md:space-y-4 px-3 md:px-4 py-3 md:py-4">
@@ -39,15 +38,8 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const lastMessageIdRef = useRef(null);
 
-  const { vendorId } = useParams();
+  const { vendorId: otherUserId } = useParams();
   const { vendorName, vendorAvatar } = location.state || {};
-
-  useEffect(() => {
-    setChatHeader({
-      name: vendorName || "Chat",
-      avatar: vendorAvatar || null,
-    });
-  }, []);
 
   const [currentUser, setCurrentUser] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -59,8 +51,15 @@ const Chat = () => {
     name: "",
     avatar: null,
   });
-  
+
   const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    setChatHeader({
+      name: vendorName || "Chat",
+      avatar: vendorAvatar || null,
+    });
+  }, [vendorName, vendorAvatar]);
 
   useEffect(() => {
     if (!token) {
@@ -68,26 +67,11 @@ const Chat = () => {
       return;
     }
 
-    if (!vendorId) {
+    if (!otherUserId) {
       navigate("/properties", { replace: true });
       return;
     }
-
-    // Prevent vendor chatting with himself
-    if (
-      currentUser &&
-      currentUser.role === "vendor" &&
-      currentUser._id === vendorId
-    ) {
-      setSelfChatError(true);
-
-      const timer = setTimeout(() => {
-        navigate(-1);
-      }, 4000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [token, vendorId, currentUser, navigate]);
+  }, [token, otherUserId, navigate]);
 
   useEffect(() => {
     const fetchMe = async () => {
@@ -106,14 +90,31 @@ const Chat = () => {
   }, [token]);
 
   useEffect(() => {
-    if (!currentUser || !vendorId || !token) return;
+    if (!token || !otherUserId || !currentUser) return;
+
+    if (
+      currentUser._id === otherUserId ||
+      currentUser.id === otherUserId
+    ) {
+      setSelfChatError(true);
+
+      const timer = setTimeout(() => {
+        navigate(-1);
+      }, 4000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [token, otherUserId, currentUser, navigate]);
+
+  useEffect(() => {
+    if (!currentUser || !otherUserId || !token) return;
 
     let intervalId;
 
     const fetchMessages = async () => {
       try {
         const { data } = await axios.get(
-          `${Backendurl}/api/chats/room/${vendorId}`,
+          `${Backendurl}/api/chats/room/${otherUserId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -142,7 +143,7 @@ const Chat = () => {
     intervalId = setInterval(fetchMessages, 2000);
 
     return () => clearInterval(intervalId);
-  }, [currentUser, vendorId, token]);
+  }, [currentUser, otherUserId, token]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -152,20 +153,23 @@ const Chat = () => {
 
   const handleSend = async (e) => {
     e.preventDefault();
-    if (!input.trim() || !currentUser || !vendorId || !token) return;
+    if (!input.trim() || !currentUser || !otherUserId || !token) return;
 
     try {
       setSending(true);
 
       const payload = {
-        vendorId: currentUser.role === "vendor" ? currentUser._id : vendorId,
-        userId: currentUser.role === "user" ? currentUser._id : vendorId,
+        otherUserId,
         message: input.trim(),
       };
 
-      const { data } = await axios.post(`${Backendurl}/api/chats`, payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const { data } = await axios.post(
+        `${Backendurl}/api/chats`,
+        payload,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       setMessages((prev) => [...prev, data.data]);
       setInput("");
@@ -174,10 +178,6 @@ const Chat = () => {
     } finally {
       setSending(false);
     }
-  };
-
-  const handleBack = () => {
-    navigate(-1);
   };
 
   return (
@@ -191,14 +191,6 @@ const Chat = () => {
         >
           {/* Header */}
           <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4 shadow-lg">
-            {/* <motion.button
-              onClick={handleBack}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-1.5 md:p-2 rounded-full bg-white/10 hover:bg-white/25 text-white transition-all"
-            >
-              <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
-            </motion.button> */}
 
             {chatHeader.avatar ? (
               <motion.img
@@ -243,7 +235,6 @@ const Chat = () => {
               <span>ApniEstate</span>
             </div>
 
-            {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl -z-10" />
           </div>
 
@@ -379,48 +370,39 @@ const Chat = () => {
           </form>
         </motion.div>
 
-        {/* Bottom helper */}
-        {/* <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-center mt-4 text-[11px] md:text-xs text-gray-500 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 mx-auto inline-block"
-        >
-          🔐 Chats are secure and for information purposes only
-        </motion.p> */}
-      </div>
-      <AnimatePresence>
-        {selfChatError && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-          >
+        <AnimatePresence>
+          {selfChatError && (
             <motion.div
-              initial={{ y: 20 }}
-              animate={{ y: 0 }}
-              className="bg-white rounded-xl shadow-2xl px-6 py-5 max-w-sm w-full text-center"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
             >
-              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3">
-                <UserIcon className="w-6 h-6 text-red-600" />
-              </div>
+              <motion.div
+                initial={{ y: 20 }}
+                animate={{ y: 0 }}
+                className="bg-white rounded-xl shadow-2xl px-6 py-5 max-w-sm w-full text-center"
+              >
+                <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3">
+                  <UserIcon className="w-6 h-6 text-red-600" />
+                </div>
 
-              <h3 className="text-lg font-bold text-gray-900 mb-1">
-                Action Not Allowed
-              </h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">
+                  Action Not Allowed
+                </h3>
 
-              <p className="text-sm text-gray-600">
-                You cannot contact yourself.
-              </p>
+                <p className="text-sm text-gray-600">
+                  You cannot contact yourself.
+                </p>
 
-              <p className="text-xs text-gray-400 mt-3">
-                Redirecting you back…
-              </p>
+                <p className="text-xs text-gray-400 mt-3">
+                  Redirecting you back…
+                </p>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };

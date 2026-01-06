@@ -4,6 +4,7 @@ import Chat from "../models/ChatModel.js";
 import User from "../models/Usermodel.js";
 import { protect } from "../middleware/authmiddleware.js";
 import mongoose from "mongoose";
+import { normalizeRoom } from "../scripts/chatRoom.js";
 
 const isValidId = (id) => mongoose.Types.ObjectId.isValid(id);
 const router = express.Router();
@@ -11,65 +12,62 @@ const router = express.Router();
 /**
  * Helper: validate that vendor & user exist and roles are correct
  */
-const validateVendorUser = async (vendorId, userId) => {
-  if (!isValidId(vendorId) || !isValidId(userId)) {
-    throw new Error("Invalid vendor or user ID");
+// keep this in your chat routes file
+const validateParticipants = async (id1, id2) => {
+  if (!isValidId(id1) || !isValidId(id2)) {
+    throw new Error("Invalid participant IDs");
   }
 
-  const [vendor, user] = await Promise.all([
-    User.findById(vendorId),
-    User.findById(userId),
+  const [u1, u2] = await Promise.all([
+    User.findById(id1),
+    User.findById(id2),
   ]);
 
-  if (!vendor || vendor.role !== "vendor") {
-    throw new Error("Invalid vendor");
+  if (!u1 || !u2) {
+    throw new Error("One or both users not found");
   }
 
-  if (!user || user.role !== "user") {
-    throw new Error("Invalid user");
-  }
-
-  return { vendor, user };
+  return { u1, u2 };
 };
+
 
 /**
  * @route   POST /api/chats
- * @desc    Send a message in a vendor-user chat
- * @body    { vendorId, userId, message }
- * @access  Private (user or vendor)
+ * @body    { otherUserId, message }
+ * @access  Private (any user/vendor)
  */
 router.post("/", protect, async (req, res) => {
   try {
-    const { vendorId, userId, message } = req.body;
+    const me = req.user._id;
+    const { otherUserId, message } = req.body;
 
-    if (!vendorId || !userId || !message?.trim()) {
+    if (!otherUserId || !message?.trim()) {
       return res.status(400).json({
         success: false,
-        message: "vendorId, userId and message are required",
+        message: "otherUserId and message are required",
       });
     }
 
-    await validateVendorUser(vendorId, userId);
-
-    if (
-      req.user._id.toString() !== vendorId.toString() &&
-      req.user._id.toString() !== userId.toString()
-    ) {
-      return res.status(403).json({
+    if (!isValidId(otherUserId)) {
+      return res.status(400).json({
         success: false,
-        message: "You are not part of this conversation",
+        message: "Invalid otherUserId",
       });
     }
 
-    const isVendorSender = req.user.role === "vendor";
+    await validateParticipants(me, otherUserId);
+
+    const { participantA, participantB, aIsFirst } = normalizeRoom(me, otherUserId);
+
+    const senderIsA = me.toString() === participantA.toString();
 
     const chatMessage = await Chat.create({
-      vendor: vendorId,
-      user: userId,
-      sender: req.user._id,
+      participantA,
+      participantB,
+      sender: me,
       message: message.trim(),
-      readByVendor: isVendorSender,
-      readByUser: !isVendorSender,
+      readByA: senderIsA,
+      readByB: !senderIsA,
     });
 
     res.status(201).json({
@@ -85,6 +83,7 @@ router.post("/", protect, async (req, res) => {
     });
   }
 });
+
 
 /**
  * @route   GET /api/chats/room/:otherUserId
@@ -104,26 +103,23 @@ router.get("/room/:otherUserId", protect, async (req, res) => {
       });
     }
 
+    const { participantA, participantB } = normalizeRoom(me, other);
+    const meIsA = me.toString() === participantA.toString();
+
     await Chat.updateMany(
       {
-        $or: [
-          { vendor: me, user: other },
-          { vendor: other, user: me },
-        ],
+        participantA,
+        participantB,
         sender: { $ne: me },
       },
       {
-        $set: req.user.role === "vendor"
-          ? { readByVendor: true }
-          : { readByUser: true },
+        $set: meIsA ? { readByA: true } : { readByB: true },
       }
     );
 
     const messages = await Chat.find({
-      $or: [
-        { vendor: me, user: other },
-        { vendor: other, user: me },
-      ],
+      participantA,
+      participantB,
     })
       .sort({ createdAt: 1 })
       .populate("sender", "name avatar role")
@@ -134,10 +130,11 @@ router.get("/room/:otherUserId", protect, async (req, res) => {
       data: { messages },
     });
   } catch (error) {
-    console.error("Chat room fetch error:", error);
+    console.error("Chat room fetch error full:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch chat room",
+      error: error.message,
     });
   }
 });
@@ -151,21 +148,22 @@ router.get("/room/:otherUserId", protect, async (req, res) => {
 router.get("/my/conversations/list", protect, async (req, res) => {
   try {
     const me = req.user._id;
-    const isVendor = req.user.role === "vendor";
 
     const conversations = await Chat.aggregate([
       {
         $match: {
-          $or: [{ vendor: me }, { user: me }],
+          $or: [{ participantA: me }, { participantB: me }],
         },
       },
       { $sort: { createdAt: -1 } },
       {
         $group: {
-          _id: { vendor: "$vendor", user: "$user" },
+          _id: { participantA: "$participantA", participantB: "$participantB" },
           lastMessage: { $first: "$message" },
           lastSender: { $first: "$sender" },
           lastAt: { $first: "$createdAt" },
+          lastReadByA: { $first: "$readByA" },
+          lastReadByB: { $first: "$readByB" },
           unreadCount: {
             $sum: {
               $cond: [
@@ -174,7 +172,13 @@ router.get("/my/conversations/list", protect, async (req, res) => {
                     { $ne: ["$sender", me] },
                     {
                       $eq: [
-                        isVendor ? "$readByVendor" : "$readByUser",
+                        {
+                          $cond: [
+                            { $eq: ["$participantA", me] },
+                            "$readByA",
+                            "$readByB",
+                          ],
+                        },
                         false,
                       ],
                     },
@@ -190,41 +194,61 @@ router.get("/my/conversations/list", protect, async (req, res) => {
       {
         $lookup: {
           from: "users",
-          localField: "_id.vendor",
+          localField: "_id.participantA",
           foreignField: "_id",
-          as: "vendor",
+          as: "participantA",
         },
       },
       {
         $lookup: {
           from: "users",
-          localField: "_id.user",
+          localField: "_id.participantB",
           foreignField: "_id",
-          as: "user",
+          as: "participantB",
         },
       },
-      { $unwind: "$vendor" },
-      { $unwind: "$user" },
+      { $unwind: "$participantA" },
+      { $unwind: "$participantB" },
+      {
+        $addFields: {
+          me: {
+            $cond: [
+              { $eq: ["$participantA._id", me] },
+              "$participantA",
+              "$participantB",
+            ],
+          },
+          other: {
+            $cond: [
+              { $eq: ["$participantA._id", me] },
+              "$participantB",
+              "$participantA",
+            ],
+          },
+        },
+      },
       {
         $project: {
           _id: 0,
           roomId: "$_id",
-          vendor: {
-            _id: "$vendor._id",
-            name: "$vendor.name",
-            avatar: { $ifNull: ["$vendor.avatar", null] },
+          me: {
+            _id: "$me._id",
+            name: "$me.name",
+            avatar: { $ifNull: ["$me.avatar", null] },
+            role: "$me.role",
           },
-          user: {
-            _id: "$user._id",
-            name: "$user.name",
-            avatar: { $ifNull: ["$user.avatar", null] },
+          other: {
+            _id: "$other._id",
+            name: "$other.name",
+            avatar: { $ifNull: ["$other.avatar", null] },
+            role: "$other.role",
           },
           lastMessage: 1,
           lastAt: 1,
           unreadCount: 1,
         },
       },
-      { $sort: { "lastAt": -1 } },
+      { $sort: { lastAt: -1 } },
     ]);
 
     res.json({
@@ -250,8 +274,7 @@ router.get("/my/conversations/list", protect, async (req, res) => {
 router.get("/:vendorId/:userId", protect, async (req, res) => {
   try {
     const { vendorId, userId } = req.params;
-
-    await validateVendorUser(vendorId, userId);
+    await validateParticipants(vendorId, userId);
 
     if (
       req.user._id.toString() !== vendorId.toString() &&
@@ -263,9 +286,11 @@ router.get("/:vendorId/:userId", protect, async (req, res) => {
       });
     }
 
+    const { participantA, participantB } = normalizeRoom(vendorId, userId);
+
     const messages = await Chat.find({
-      vendor: vendorId,
-      user: userId,
+      participantA,
+      participantB,
     })
       .sort({ createdAt: 1 })
       .populate("sender", "name email role avatar")

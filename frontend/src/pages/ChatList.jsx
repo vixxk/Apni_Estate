@@ -38,10 +38,14 @@ const ChatList = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setConversations(data.data.conversations || []);
-        setFilteredConversations(data.data.conversations || []);
+
+        const convs = data?.data?.conversations || [];
+        setConversations(convs);
+        setFilteredConversations(convs);
       } catch (err) {
         console.error("Failed to load conversations:", err);
+        setConversations([]);
+        setFilteredConversations([]);
       } finally {
         setLoading(false);
       }
@@ -55,34 +59,37 @@ const ChatList = () => {
       setFilteredConversations(conversations);
     } else {
       const filtered = conversations.filter((c) => {
-        const otherUser = c.vendor._id === loggedInUserId ? c.user : c.vendor;
-        return otherUser.name.toLowerCase().includes(searchQuery.toLowerCase());
+        const otherUser = c.other || c.vendor || c.user || {};
+        const name = otherUser.name || "";
+        return name.toLowerCase().includes(searchQuery.toLowerCase());
       });
       setFilteredConversations(filtered);
     }
-  }, [searchQuery, conversations, loggedInUserId]);
+  }, [searchQuery, conversations]);
 
   const handleBack = () => navigate(-1);
 
   const openChat = (c) => {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const loggedInUserId = payload.id;
-  
-    const otherUser = c.vendor._id === loggedInUserId ? c.user : c.vendor;
-  
+    if (!token) return;
+
+    const otherUser = c.other || c.vendor || c.user;
+    if (!otherUser || !otherUser._id) {
+      console.warn("Conversation missing otherUser, cannot open chat", c);
+      return;
+    }
+
+    // safety: avoid self-chat
     if (otherUser._id === loggedInUserId) {
       console.warn("Attempted to open self chat from ChatList");
       return;
     }
-  
     navigate(`/chat/${otherUser._id}`, {
       state: {
-        vendorName: otherUser.name,
+        vendorName: otherUser.name || "Chat",
         vendorAvatar: otherUser.avatar || null,
       },
     });
   };
-  
 
   const totalUnread = conversations.reduce(
     (sum, c) => sum + (c.unreadCount || 0),
@@ -92,7 +99,7 @@ const ChatList = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50 pb-24 md:pb-10">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-24">
-        {/* Enhanced Header */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -124,13 +131,10 @@ const ChatList = () => {
                   </motion.span>
                 )}
               </div>
-              {/* <p className="text-sm text-slate-500">
-                View and continue your conversations
-              </p> */}
             </div>
           </div>
 
-          {/* Search Bar */}
+          {/* Search */}
           {conversations.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -199,12 +203,15 @@ const ChatList = () => {
             <div className="divide-y divide-slate-100">
               <AnimatePresence>
                 {filteredConversations.map((c, index) => {
-                  const otherUser =
-                    c.vendor._id === loggedInUserId ? c.user : c.vendor;
+                  const otherUser = c.other || c.vendor || c.user;
+                  if (!otherUser) {
+                    console.warn("Conversation missing otherUser", c);
+                    return null;
+                  }
 
                   return (
                     <motion.button
-                      key={`${c.vendor._id}-${c.user._id}`}
+                      key={c.roomId ? `${c.roomId.participantA}-${c.roomId.participantB}` : index}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
@@ -250,7 +257,7 @@ const ChatList = () => {
                                 : "text-slate-700"
                             }`}
                           >
-                            {otherUser.name}
+                            {otherUser.name || "Unknown"}
                           </p>
 
                           <span className="text-xs text-slate-400 whitespace-nowrap">
@@ -281,7 +288,6 @@ const ChatList = () => {
           )}
         </motion.div>
 
-        {/* Bottom Helper */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
