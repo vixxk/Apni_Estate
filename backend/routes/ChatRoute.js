@@ -18,10 +18,7 @@ const validateParticipants = async (id1, id2) => {
     throw new Error("Invalid participant IDs");
   }
 
-  const [u1, u2] = await Promise.all([
-    User.findById(id1),
-    User.findById(id2),
-  ]);
+  const [u1, u2] = await Promise.all([User.findById(id1), User.findById(id2)]);
 
   if (!u1 || !u2) {
     throw new Error("One or both users not found");
@@ -29,7 +26,6 @@ const validateParticipants = async (id1, id2) => {
 
   return { u1, u2 };
 };
-
 
 /**
  * @route   POST /api/chats
@@ -39,12 +35,12 @@ const validateParticipants = async (id1, id2) => {
 router.post("/", protect, async (req, res) => {
   try {
     const me = req.user._id;
-    const { otherUserId, message } = req.body;
+    const { otherUserId, message, image } = req.body;
 
-    if (!otherUserId || !message?.trim()) {
+    if (!otherUserId || (!message?.trim() && !image?.url)) {
       return res.status(400).json({
         success: false,
-        message: "otherUserId and message are required",
+        message: "Message or image is required",
       });
     }
 
@@ -57,7 +53,10 @@ router.post("/", protect, async (req, res) => {
 
     await validateParticipants(me, otherUserId);
 
-    const { participantA, participantB, aIsFirst } = normalizeRoom(me, otherUserId);
+    const { participantA, participantB, aIsFirst } = normalizeRoom(
+      me,
+      otherUserId
+    );
 
     const senderIsA = me.toString() === participantA.toString();
 
@@ -65,7 +64,9 @@ router.post("/", protect, async (req, res) => {
       participantA,
       participantB,
       sender: me,
-      message: message.trim(),
+      message: message?.trim() || "",
+      type: image ? "image" : "text",
+      image: image || null,
       readByA: senderIsA,
       readByB: !senderIsA,
     });
@@ -83,7 +84,6 @@ router.post("/", protect, async (req, res) => {
     });
   }
 });
-
 
 /**
  * @route   GET /api/chats/room/:otherUserId
@@ -160,6 +160,8 @@ router.get("/my/conversations/list", protect, async (req, res) => {
         $group: {
           _id: { participantA: "$participantA", participantB: "$participantB" },
           lastMessage: { $first: "$message" },
+          lastType: { $first: "$type" },
+          lastImage: { $first: "$image" },
           lastSender: { $first: "$sender" },
           lastAt: { $first: "$createdAt" },
           lastReadByA: { $first: "$readByA" },
@@ -243,7 +245,14 @@ router.get("/my/conversations/list", protect, async (req, res) => {
             avatar: { $ifNull: ["$other.avatar", null] },
             role: "$other.role",
           },
-          lastMessage: 1,
+          lastMessage: {
+            $cond: [
+              { $eq: ["$lastType", "image"] },
+              "Image",
+              "$lastMessage",
+            ],
+          },
+          lastType: 1,
           lastAt: 1,
           unreadCount: 1,
         },
@@ -265,7 +274,7 @@ router.get("/my/conversations/list", protect, async (req, res) => {
 });
 
 /**
- * @route   GET /api/chats/:vendorId/:userId  
+ * @route   GET /api/chats/:vendorId/:userId
  * @desc    Get messages between specific vendor-user pair (legacy/alternative endpoint)
  * @params  :vendorId - Vendor ObjectId
  *          :userId - User ObjectId
