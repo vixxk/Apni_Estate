@@ -12,40 +12,82 @@ import {
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useMobileMenu } from "../context/MobileMenuContext";
+import axios from "axios";
+import { Backendurl } from "../App";
+import { useState } from "react";
 
 const MobileBottomNav = () => {
   const location = useLocation();
-  const { isAuthenticated, user } = useAuth(); 
+  const { isAuthenticated, user } = useAuth();
   const { isMobileMenuOpen } = useMobileMenu();
+  const [unreadTotal, setUnreadTotal] = useState(0);
 
-// Customer navigation (default)
-const customerNavItems = [
-  { path: "/", icon: Home },
-  { path: "/properties", icon: Search },
-  { path: "/chat", icon: MessageCircle },
-  { path: "/saved", icon: Heart },
-  { path: "/profile", icon: User },
-];
+  // Customer navigation (default)
+  const customerNavItems = [
+    { path: "/", icon: Home },
+    { path: "/properties", icon: Search },
+    { path: "/messages", icon: MessageCircle },
+    { path: "/saved", icon: Heart },
+    { path: "/profile", icon: User },
+  ];
 
-// Vendor navigation (No chat)
-const vendorNavItems = [
-  { path: "/", icon: Home },
-  { path: "/properties", icon: Search },
-  {
-    path: "/vendor/add-service",
-    icon: Plus,
-    isVendorAction: true,
-  },
-  { path: "/saved", icon: Heart },
-  { path: "/profile", icon: User },
-];
+  // Vendor navigation (No chat)
+  const vendorNavItems = [
+    { path: "/", icon: Home },
+    { path: "/properties", icon: Search },
+    {
+      path: "/vendor/add-service",
+      icon: Plus,
+      isVendorAction: true,
+    },
+    { path: "/saved", icon: Heart },
+    { path: "/profile", icon: User },
+  ];
 
+  const navItems =
+    isAuthenticated && user?.role === "vendor"
+      ? vendorNavItems
+      : customerNavItems;
 
-const navItems =
-  isAuthenticated && user?.role === "vendor"
-    ? vendorNavItems
-    : customerNavItems;
+  useEffect(() => {
+    if (!isAuthenticated || !user) return;
 
+    let isMounted = true;
+
+    const fetchUnread = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const { data } = await axios.get(
+          `${Backendurl}/api/chats/my/conversations/list`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (!isMounted) return;
+
+        const total = (data.data.conversations || []).reduce(
+          (sum, c) => sum + (c.unreadCount || 0),
+          0
+        );
+
+        setUnreadTotal(total);
+      } catch (err) {
+        console.error("Unread count error (mobile nav)", err);
+      }
+    };
+
+    fetchUnread();
+
+    // poll every 2 seconds
+    const interval = setInterval(fetchUnread, 2000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [isAuthenticated, user]);
 
   if (isMobileMenuOpen) return null;
 
@@ -82,7 +124,15 @@ const navItems =
                 <Icon className="w-5 h-5" strokeWidth={2.2} />
               </motion.div>
 
-              {/* Active dot - not shown for vendor action button */}
+              {item.path === "/messages" &&
+                unreadTotal > 0 &&
+                isAuthenticated && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {unreadTotal}
+                  </span>
+                )}
+
+              {/* Active dot */}
               {isActive && !item.isVendorAction && (
                 <motion.span
                   layoutId="activeDot"

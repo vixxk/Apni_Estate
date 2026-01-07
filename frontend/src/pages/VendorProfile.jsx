@@ -217,8 +217,25 @@ const VendorProfile = () => {
   };
 
   const handleChatClick = () => {
-    navigate("/chat");
-  };
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+  
+    if (!vendor?._id) {
+      alert("Vendor information not available");
+      return;
+    }
+  
+    navigate(`/chat/${vendor._id}`, {
+      state: {
+        vendorName: vendor.name,
+        vendorAvatar: vendor.avatar || null,
+      },
+    });
+  };  
+  
 
   const submitContactRequest = async () => {
     try {

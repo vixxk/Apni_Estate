@@ -36,6 +36,14 @@ router.post("/register", async (req, res) => {
   try {
     const { name, email, password, phone, role } = req.body;
 
+    // Add phone validation
+    if (!phone || !phone.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Phone number is required",
+      });
+    }
+
     // Block admin creation via signup
     if (role === "admin") {
       return res.status(403).json({

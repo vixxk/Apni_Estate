@@ -29,11 +29,13 @@ import rent from "../assets/rent.png";
 import furniture from "../assets/furniture.png";
 import decoratives from "../assets/decoratives.png";
 import others from "../assets/others.png";
+import axios from "axios";
+import { Backendurl } from "../App";
 
 /* ================= DATA ================= */
 const services = [
   { title: "Buy", img: sell },
-  { title: "Sell", img: sell },
+  // { title: "Sell", img: sell },
   { title: "Rent", img: rent },
   { title: "Construction Services", img: constructionServices },
   { title: "Interior Designing", img: interior },
@@ -107,17 +109,20 @@ const Hero = () => {
   const { isAuthenticated, user } = useAuth();
   const [showButton, setShowButton] = useState(true);
   const { isMobileMenuOpen } = useMobileMenu();
+  const [unreadTotal, setUnreadTotal] = useState(0);
 
   // ROLE-BASED VISIBILITY
-  const visibleServices = services.filter((service) => {
-    if (service.title === "Sell") {
-      return isAuthenticated && user?.role === "vendor";
-    }
-    if (service.title === "Buy") {
-      return !isAuthenticated || user?.role !== "vendor";
-    }
-    return true;
-  });
+  // const visibleServices = services.filter((service) => {
+  //   if (service.title === "Sell") {
+  //     return isAuthenticated && user?.role === "vendor";
+  //   }
+  //   if (service.title === "Buy") {
+  //     return !isAuthenticated || user?.role !== "vendor";
+  //   }
+  //   return true;
+  // });
+
+  const visibleServices = services;
 
   // Hide button on scroll
   useEffect(() => {
@@ -133,6 +138,45 @@ const Hero = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!isAuthenticated || !user || user.role !== "vendor") return;
+
+    let isMounted = true;
+
+    const fetchUnread = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const { data } = await axios.get(
+          `${Backendurl}/api/chats/my/conversations/list`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (!isMounted) return;
+
+        const total = (data.data.conversations || []).reduce(
+          (sum, c) => sum + (c.unreadCount || 0),
+          0
+        );
+
+        setUnreadTotal(total);
+      } catch (err) {
+        console.error("Unread count error (hero)", err);
+      }
+    };
+
+    fetchUnread();
+
+    const interval = setInterval(fetchUnread, 2000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [isAuthenticated, user]);
+
   const handleServiceClick = (serviceTitle) => {
     const title = serviceTitle.toLowerCase();
 
@@ -142,8 +186,7 @@ const Hero = () => {
       });
     } else if (title === "sell") {
       navigate("/vendor/add-service");
-    } 
-    else if (title === "rent") {
+    } else if (title === "rent") {
       navigate("/properties", {
         state: { filterType: "rent" },
       });
@@ -378,14 +421,16 @@ const Hero = () => {
             exit={{ scale: 0, opacity: 0 }}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate("/chat")}
+            onClick={() => navigate("/messages")}
             className="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-yellow-400 p-3 md:p-4 rounded-full shadow-xl z-[9999]"
           >
             <MessageCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
 
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] md:text-xs font-bold rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center">
-              3
-            </span>
+            {unreadTotal > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] md:text-xs font-bold rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center">
+                {unreadTotal}
+              </span>
+            )}
           </motion.button>
         )}
     </div>
