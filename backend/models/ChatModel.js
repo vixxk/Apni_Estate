@@ -19,8 +19,22 @@ const chatSchema = new mongoose.Schema(
     },
     message: {
       type: String,
-      required: true,
       trim: true,
+      default: "",
+    },
+
+    type: {
+      type: String,
+      enum: ["text", "image"],
+      default: "text",
+      index: true,
+    },
+
+    image: {
+      url: { type: String },
+      width: { type: Number },
+      height: { type: Number },
+      size: { type: Number }, 
     },
 
     readByA: {
@@ -37,8 +51,14 @@ const chatSchema = new mongoose.Schema(
   }
 );
 
-// index for faster lookups by room
 chatSchema.index({ participantA: 1, participantB: 1, createdAt: 1 });
+
+chatSchema.pre("validate", function (next) {
+  if (!this.message && !this.image?.url) {
+    return next(new Error("Chat message must contain text or image"));
+  }
+  next();
+});
 
 const Chat = mongoose.model("Chat", chatSchema);
 export default Chat;

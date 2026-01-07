@@ -1,14 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle,
-  // ArrowLeft,
   Send,
   User as UserIcon,
   Loader2,
   CheckCheck,
+  Image as ImageIcon,
+  Paperclip,
+  X,
 } from "lucide-react";
 import { Backendurl } from "../App";
 
@@ -37,6 +39,7 @@ const Chat = () => {
   const navigate = useNavigate();
   const messagesEndRef = useRef(null);
   const lastMessageIdRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const { vendorId: otherUserId } = useParams();
   const { vendorName, vendorAvatar } = location.state || {};
@@ -46,11 +49,13 @@ const Chat = () => {
   const [input, setInput] = useState("");
   const [loadingMessages, setLoadingMessages] = useState(true);
   const [sending, setSending] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [selfChatError, setSelfChatError] = useState(false);
   const [chatHeader, setChatHeader] = useState({
     name: "",
     avatar: null,
   });
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const token = localStorage.getItem("token");
 
@@ -147,7 +152,7 @@ const Chat = () => {
   }, [currentUser, otherUserId, token]);
 
   // auto-scroll only the messages container, not whole page
-  useEffect(() => {
+  const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({
         behavior: "smooth",
@@ -155,18 +160,54 @@ const Chat = () => {
         inline: "nearest",
       });
     }
-  }, [messages]);
+  }, []);
 
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || !currentUser || !otherUserId || !token) return;
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
+
+  const handleImageUpload = async (file) => {
+    if (!file || file.size > 5 * 1024 * 1024) {
+      alert("Image must be under 5MB");
+      return null;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      setUploading(true);
+      const { data } = await axios.post(
+        `${Backendurl}/api/upload/chat-image`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setUploading(false);
+      setSelectedImage(null);
+      return data.data.image;
+    } catch (err) {
+      console.error("Image upload failed:", err);
+      setUploading(false);
+      alert("Image upload failed");
+      return null;
+    }
+  };
+
+  const sendImageMessage = async () => {
+    if (!currentUser || !otherUserId || !token || !selectedImage) return;
 
     try {
       setSending(true);
 
       const payload = {
         otherUserId,
-        message: input.trim(),
+        image: selectedImage,
       };
 
       const { data } = await axios.post(`${Backendurl}/api/chats`, payload, {
@@ -174,12 +215,73 @@ const Chat = () => {
       });
 
       setMessages((prev) => [...prev, data.data]);
+      setSelectedImage(null);
+    } catch (err) {
+      console.error("Failed to send image message:", err);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleSend = async (e) => {
+    e.preventDefault();
+
+    if (!currentUser || !otherUserId || !token) return;
+
+    const hasText = input.trim().length > 0;
+    const hasImage = !!selectedImage;
+
+    if (!hasText && !hasImage) return;
+
+    if (hasText && hasImage) {
+      alert("Please send either text or image, not both.");
+      return;
+    }
+
+    try {
+      setSending(true);
+
+      const payload = {
+        otherUserId,
+        type: hasImage ? "image" : "text",
+      };
+
+      if (hasImage) {
+        payload.image = selectedImage;
+      } else {
+        payload.message = input.trim();
+      }
+
       setInput("");
+      setSelectedImage(null);
+
+      const { data } = await axios.post(`${Backendurl}/api/chats`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setMessages((prev) => [...prev, data.data]);
     } catch (err) {
       console.error("Failed to send message:", err);
     } finally {
       setSending(false);
     }
+  };
+
+  const handleFileSelect = async (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      const imageData = await handleImageUpload(file);
+      if (imageData) {
+        setSelectedImage(imageData);
+      }
+    } else {
+      alert("Please select a valid image file");
+    }
+    e.target.value = "";
+  };
+
+  const removeSelectedImage = () => {
+    setSelectedImage(null);
   };
 
   return (
@@ -304,9 +406,31 @@ const Chat = () => {
                                 : "bg-white text-gray-900 rounded-bl-sm border border-gray-100"
                             }`}
                           >
-                            <p className="whitespace-pre-wrap break-words leading-relaxed">
-                              {m.message}
-                            </p>
+                            {m.type === "image" && m.image?.url ? (
+                              <div
+                                className="relative cursor-pointer group"
+                                onClick={() =>
+                                  window.open(m.image.url, "_blank")
+                                }
+                              >
+                                <img
+                                  src={m.image.url}
+                                  alt="Sent image"
+                                  className="w-full max-h-64 md:max-h-72 object-contain rounded-xl"
+                                />
+
+                                {/* SINGLE overlay */}
+                                <div className="pointer-events-none absolute inset-0 bg-black/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center">
+                                  <div className="bg-white/90 px-3 py-1 rounded-full text-xs font-medium text-gray-800 backdrop-blur-sm">
+                                    Tap to view
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <p className="whitespace-pre-wrap break-words leading-relaxed">
+                                {m.message}
+                              </p>
+                            )}
                             <div className="flex items-center justify-end gap-1 mt-1">
                               <p
                                 className={`text-[10px] md:text-[11px] ${
@@ -340,38 +464,107 @@ const Chat = () => {
           </div>
 
           {/* Input area */}
-          <form
-            onSubmit={handleSend}
-            className="border-t border-slate-200 bg-white px-3 md:px-4 py-2.5 md:py-3 flex items-center gap-2 md:gap-3"
-          >
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message..."
-              maxLength={500}
-              className="flex-1 text-xs md:text-sm px-3 py-2 md:px-4 md:py-2.5 rounded-full border-2 border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-50 hover:bg-white transition-all placeholder:text-gray-400"
-            />
-            <motion.button
-              type="submit"
-              whileHover={{
-                scale: sending || !input.trim() ? 1 : 1.05,
-              }}
-              whileTap={{ scale: sending || !input.trim() ? 1 : 0.95 }}
-              disabled={sending || !input.trim()}
-              className={`inline-flex items-center justify-center rounded-full px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-medium text-white shadow-lg transition-all ${
-                sending || !input.trim()
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-blue-500/25"
-              }`}
+          <div className="border-t border-slate-200 bg-white px-3 md:px-4 py-2.5 md:py-3">
+            {selectedImage && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="mb-3 p-3 bg-blue-50 border-2 border-dashed border-blue-200 rounded-2xl flex items-center gap-3"
+              >
+                <img
+                  src={selectedImage.url}
+                  alt="Preview"
+                  className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-xl flex-shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs md:text-sm font-medium text-gray-900 truncate mb-1">
+                    Image ready to send
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {Math.round(selectedImage.size / 1024)} KB
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={removeSelectedImage}
+                  className="p-1.5 rounded-full bg-red-100 hover:bg-red-200 text-red-600 hover:text-red-700 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </motion.div>
+            )}
+
+            <form
+              onSubmit={handleSend}
+              className="flex items-end gap-2 md:gap-3"
             >
-              {sending ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Send className="w-4 h-4" />
-              )}
-            </motion.button>
-          </form>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+              <motion.button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading || sending || input.trim().length > 0}
+                className={`p-2 md:p-2.5 rounded-full transition-all shadow-sm ${
+                  uploading || sending || input.trim().length > 0
+                    ? "opacity-50 cursor-not-allowed bg-gray-100 text-gray-400"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800"
+                }`}
+              >
+                {uploading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Paperclip className="w-4 h-4" />
+                )}
+              </motion.button>
+
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                disabled={uploading || sending || !!selectedImage}
+                placeholder={
+                  selectedImage
+                    ? "Remove image to type a message"
+                    : "Type your message..."
+                }
+                className="flex-1 text-xs md:text-sm px-3 py-2 md:px-4 md:py-2.5 rounded-full border-2 border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-50 hover:bg-white transition-all placeholder:text-gray-400 disabled:opacity-50"
+              />
+              <motion.button
+                type="submit"
+                whileHover={{
+                  scale:
+                    sending || uploading || (!input.trim() && !selectedImage)
+                      ? 1
+                      : 1.05,
+                }}
+                whileTap={{
+                  scale:
+                    sending || uploading || (!input.trim() && !selectedImage)
+                      ? 1
+                      : 0.95,
+                }}
+                disabled={
+                  sending || uploading || (!input.trim() && !selectedImage)
+                }
+                className={`inline-flex items-center justify-center rounded-full px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-medium text-white shadow-lg transition-all ${
+                  sending || uploading || (!input.trim() && !selectedImage)
+                    ? "bg-gray-300 cursor-not-allowed"
+                    : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-blue-500/25"
+                }`}
+              >
+                {sending || uploading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
+              </motion.button>
+            </form>
+          </div>
         </motion.div>
 
         <AnimatePresence>

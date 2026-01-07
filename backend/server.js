@@ -19,7 +19,7 @@ import vendorServiceRoutes from "./routes/vendorServiceRoute.js";
 import serviceUploadRoutes from "./routes/serviceUploadRoute.js";
 import contactRequestRoutes from "./routes/contactRequestRoute.js";
 import chatRoutes from "./routes/ChatRoute.js";
-
+import chatUploadRoute from "./routes/chatUploadRoute.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -75,7 +75,8 @@ app.use("/api/upload/service", serviceUploadRoutes);
 // Contact request routes
 app.use("/api/contact-requests", contactRequestRoutes);
 
-app.use("/api/chats", chatRoutes); // ← add this
+app.use("/api/chats", chatRoutes);
+app.use("/api/upload", chatUploadRoute);
 
 // Status endpoint
 app.get("/status", (req, res) => {
