@@ -269,10 +269,10 @@ const Navbar = () => {
               </motion.div>
 
               {/* Vertical Divider Line */}
-              <div className="h-12 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
+              {/* <div className="h-12 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div> */}
 
               {/* Government Recognition Logo */}
-              <motion.div
+              {/* <motion.div
                 variants={logoVariants}
                 whileHover={{ scale: 1.1 }}
                 transition={{ duration: 0.3 }}
@@ -283,7 +283,7 @@ const Navbar = () => {
                   alt="Government Recognition"
                   className="w-full h-full object-contain rounded-full shadow-md border-2 border-gray-100"
                 />
-              </motion.div>
+              </motion.div> */}
 
               <div className="flex flex-col">
                 <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent group-hover:from-indigo-600 group-hover:via-blue-600 group-hover:to-purple-600 transition-all duration-500">

@@ -627,7 +627,7 @@ const Testimonials = () => {
 
 
         {/* Recognition Section - Two Logos */}
-        <motion.div 
+        {/* <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -635,14 +635,12 @@ const Testimonials = () => {
           className="mt-12 md:mt-20 border-t border-gray-200 pt-8 md:pt-12"
         >
           <div className="space-y-3">
-            {/* Startup Tripura Recognition */}
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
               className="bg-white/60 backdrop-blur-sm border border-gray-100 rounded-xl md:rounded-2xl p-5 md:p-8 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6">
-                {/* Logo Container */}
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   whileInView={{ scale: 1, rotate: 0 }}
@@ -661,7 +659,6 @@ const Testimonials = () => {
                 </motion.div>
 
 
-                {/* Text Content */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -677,7 +674,6 @@ const Testimonials = () => {
                 </motion.div>
 
 
-                {/* Badge */}
                 <motion.div
                   initial={{ scale: 0, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
@@ -694,14 +690,12 @@ const Testimonials = () => {
             </motion.div>
 
 
-            {/* Directorate of Information Technology Recognition */}
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
               className="bg-white/60 backdrop-blur-sm border border-gray-100 rounded-xl md:rounded-2xl p-5 md:p-8 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6">
-                {/* Logo Container */}
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   whileInView={{ scale: 1, rotate: 0 }}
@@ -720,7 +714,6 @@ const Testimonials = () => {
                 </motion.div>
 
 
-                {/* Text Content */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -736,7 +729,6 @@ const Testimonials = () => {
                 </motion.div>
 
 
-                {/* Badge */}
                 <motion.div
                   initial={{ scale: 0, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
@@ -752,7 +744,7 @@ const Testimonials = () => {
               </div>
             </motion.div>
           </div>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );
