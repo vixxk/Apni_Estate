@@ -270,7 +270,7 @@ const Hero = () => {
       </div>
 
       {/* ================= TRIPURA STARTUP BADGE ================= */}
-      <div className="absolute top-2 left-0 right-0 z-20">
+      {/* <div className="absolute top-2 left-0 right-0 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -278,14 +278,10 @@ const Hero = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex justify-center"
           >
-            {/* Modern Badge Card */}
             <div className="relative group">
-              {/* Subtle gradient glow */}
               <div className="absolute -inset-2 bg-gradient-to-r from-blue-200 via-purple-200 to-indigo-200 rounded-2xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500"></div>
 
-              {/* Main Card */}
               <div className="relative flex items-center gap-3 md:gap-4 px-3 py-2 md:px-4 md:py-2.5 rounded-xl overflow-visible bg-white/80 backdrop-blur-xl border border-gray-200/60 shadow-sm hover:shadow-md transition-all duration-300">
-                {/* Logo */}
                 <div className="relative flex-shrink-0 w-10 h-10 md:w-12 md:h-12">
                   <img
                     src={tsLogo}
@@ -300,10 +296,8 @@ const Hero = () => {
                   />
                 </div>
 
-                {/* Divider Line */}
                 <div className="h-10 md:h-12 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
 
-                {/* Text Content */}
                 <div className="pr-1">
                   <p className="text-[9px] md:text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-0.5">
                     Registered Startup Of
@@ -313,17 +307,16 @@ const Hero = () => {
                   </h3>
                 </div>
 
-                {/* Corner Accent */}
                 <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 opacity-60"></div>
               </div>
             </div>
           </motion.div>
         </div>
-      </div>
+      </div> */}
 
       {/* ================= CONTENT ================= */}
-      <div className="relative z-10 min-h-screen flex items-center px-4 py-4 pt-20 md:pt-24 lg:pt-28">
-        <div className="max-w-7xl mx-auto w-full">
+      <div className="relative z-10 min-h-screen flex items-center px-4 pt-4 md:pt-8 lg:pt-10">
+      <div className="max-w-7xl mx-auto w-full">
           <motion.div
             variants={containerVariants}
             initial="hidden"
