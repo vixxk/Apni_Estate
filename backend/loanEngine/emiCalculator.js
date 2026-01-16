@@ -2,7 +2,6 @@ export function annualRateToMonthly(rateAnnualPercent) {
   const r = rateAnnualPercent / 100;
   return r / 12;
 }
-Component
 export function computeEMI(principal, rateAnnualPercent, tenureYears) {
   if (principal <= 0) return 0;
 
