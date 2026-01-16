@@ -478,7 +478,9 @@ const ResultsPanel = ({ result }) => (
           />
         </svg>
       </div>
-      <h2 className="text-lg sm:text-xl font-bold text-slate-900">Analysis Complete!</h2>
+      <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+        Analysis Complete!
+      </h2>
       <p className="hidden sm:block text-sm text-slate-600 mt-1">
         Your comprehensive loan analysis report
       </p>
@@ -503,7 +505,9 @@ const ResultsPanel = ({ result }) => (
               />
             </svg>
           </div>
-          <h3 className="text-base sm:text-lg font-bold text-slate-900">Core Results</h3>
+          <h3 className="text-base sm:text-lg font-bold text-slate-900">
+            Core Results
+          </h3>
         </div>
         <div className="space-y-3 sm:space-y-4">
           <div className="p-3 sm:p-5 rounded-lg sm:rounded-xl bg-white border border-indigo-200">
@@ -573,7 +577,9 @@ const ResultsPanel = ({ result }) => (
               />
             </svg>
           </div>
-          <h3 className="text-base sm:text-lg font-bold text-slate-900">Cost Breakdown</h3>
+          <h3 className="text-base sm:text-lg font-bold text-slate-900">
+            Cost Breakdown
+          </h3>
         </div>
         <div className="space-y-3 sm:space-y-4">
           <div className="p-3 sm:p-5 rounded-lg sm:rounded-xl bg-white border border-amber-200">
@@ -592,7 +598,9 @@ const ResultsPanel = ({ result }) => (
               </span>
             </div>
             <div className="flex justify-between items-center p-2.5 sm:p-3 rounded-lg bg-white border border-slate-200">
-              <span className="text-xs sm:text-sm text-slate-600">Construction</span>
+              <span className="text-xs sm:text-sm text-slate-600">
+                Construction
+              </span>
               <span className="font-semibold text-slate-900 text-xs sm:text-sm">
                 ₹{result.costBreakdown.constructionCost.toLocaleString("en-IN")}
               </span>
@@ -603,7 +611,8 @@ const ResultsPanel = ({ result }) => (
               Down Payment
             </div>
             <div className="text-lg sm:text-2xl font-bold text-emerald-900">
-              ₹{result.costBreakdown.downPaymentRequired.toLocaleString("en-IN")}
+              ₹
+              {result.costBreakdown.downPaymentRequired.toLocaleString("en-IN")}
             </div>
           </div>
         </div>
@@ -627,25 +636,33 @@ const ResultsPanel = ({ result }) => (
               />
             </svg>
           </div>
-          <h3 className="text-base sm:text-lg font-bold text-slate-900">Analysis</h3>
+          <h3 className="text-base sm:text-lg font-bold text-slate-900">
+            Analysis
+          </h3>
         </div>
         <div className="space-y-3 sm:space-y-4">
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
             <div className="p-2.5 sm:p-3 rounded-lg bg-white border border-blue-100">
-              <div className="text-[10px] sm:text-xs text-blue-700 mb-0.5 sm:mb-1">Income Limit</div>
+              <div className="text-[10px] sm:text-xs text-blue-700 mb-0.5 sm:mb-1">
+                Income Limit
+              </div>
               <div className="text-xs sm:text-sm font-bold text-blue-900">
                 ₹{result.constraints.incomeBasedLimit.toLocaleString("en-IN")}
               </div>
             </div>
             <div className="p-2.5 sm:p-3 rounded-lg bg-white border border-violet-100">
-              <div className="text-[10px] sm:text-xs text-violet-700 mb-0.5 sm:mb-1">LTV Limit</div>
+              <div className="text-[10px] sm:text-xs text-violet-700 mb-0.5 sm:mb-1">
+                LTV Limit
+              </div>
               <div className="text-xs sm:text-sm font-bold text-violet-900">
                 ₹{result.constraints.ltvBasedLimit.toLocaleString("en-IN")}
               </div>
             </div>
           </div>
           <div className="p-2.5 sm:p-3 rounded-lg bg-white border border-indigo-100">
-            <div className="text-[10px] sm:text-xs text-indigo-700 mb-0.5 sm:mb-1">Limiting Factor</div>
+            <div className="text-[10px] sm:text-xs text-indigo-700 mb-0.5 sm:mb-1">
+              Limiting Factor
+            </div>
             <div className="text-xs sm:text-sm font-bold text-indigo-900 uppercase">
               {result.constraints.limitingFactor}
             </div>
@@ -665,7 +682,9 @@ const ResultsPanel = ({ result }) => (
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-[10px] sm:text-xs font-bold text-blue-900">Insights</span>
+                <span className="text-[10px] sm:text-xs font-bold text-blue-900">
+                  Insights
+                </span>
               </div>
               <ul className="space-y-1 sm:space-y-1.5 text-[10px] sm:text-xs text-slate-700">
                 {result.advisory.insights.map((text, idx) => (
@@ -740,7 +759,6 @@ const ResultsPanel = ({ result }) => (
     </div>
   </div>
 );
-
 
 // Animated Panel Wrapper
 const AnimatedPanelWrapper = ({ children, currentStep, direction }) => {
@@ -864,24 +882,30 @@ const LoanAnalysisPage = () => {
         body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
+      let data = null;
+      const contentType = res.headers.get("content-type");
 
-      if (!res.ok || !data.success) {
-        scrollToTop();
-
-        if (data?.error?.type === "VALIDATION_ERROR") {
-          setValidationErrors(data.error.details || []);
-        } else {
-          setServerError(
-            data?.error?.message || "Failed to analyze loan request."
-          );
-        }
-      } else {
-        setResult(data.data);
-        // Move to results panel (step 5)
-        setDirection("forward");
-        setTimeout(() => setCurrentStep(5), 100);
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
       }
+
+      if (!res.ok) {
+        scrollToTop();
+        setServerError(
+          data?.error?.message || "Failed to analyze loan request."
+        );
+        return;
+      }
+
+      if (!data?.success) {
+        scrollToTop();
+        setServerError("Loan analysis failed.");
+        return;
+      }
+
+      setResult(data.data);
+      setDirection("forward");
+      setTimeout(() => setCurrentStep(5), 100);
     } catch (err) {
       console.error(err);
       setServerError("Network error while contacting analysis service.");
@@ -1064,7 +1088,10 @@ const LoanAnalysisPage = () => {
         {/* Main Form Card with Animated Panels */}
         <form onSubmit={handleSubmit}>
           <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-4 sm:p-8 mb-6">
-            <AnimatedPanelWrapper currentStep={currentStep} direction={direction}>
+            <AnimatedPanelWrapper
+              currentStep={currentStep}
+              direction={direction}
+            >
               <Step1
                 financialProfile={financialProfile}
                 onChange={handleFinancialChange}
