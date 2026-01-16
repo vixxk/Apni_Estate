@@ -876,7 +876,9 @@ const LoanAnalysisPage = () => {
     try {
       const payload = buildPayload();
 
-      const res = await fetch("/api/loan/analyze", {
+      const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+      const res = await fetch(`${API_BASE}/api/loan/analyze`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
