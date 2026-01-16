@@ -663,7 +663,7 @@ const Navbar = () => {
                   AI Feature
                 </div>
                 <Link
-                  to="/ai-property-hub"
+                  to="/ai-features"
                   onClick={toggleMobileMenu}
                   className={`relative flex items-center gap-3 p-3 rounded-xl transition-all border ${
                     location.pathname.startsWith("/ai-property-hub")
