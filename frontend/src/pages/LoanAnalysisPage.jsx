@@ -69,7 +69,7 @@ const LoanAnalysisPage = () => {
             <Calculator className="w-6 h-6 lg:w-8 lg:h-8 text-white" />
           </div>
           <h1 className="text-2xl lg:text-4xl font-bold text-slate-900 mb-1 lg:mb-2">
-            AI Loan Assistant
+            AI Home Loan Assistant
           </h1>
           <p className="text-base lg:text-lg text-slate-600 hidden lg:block">
             Get an instant AI-powered assessment of your loan eligibility.

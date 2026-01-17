@@ -1,14 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const FeatureCard = ({ 
-  title, 
-  description, 
-  icon, 
-  gradient, 
-  link, 
+const FeatureCard = ({
+  title,
+  description,
+  icon,
+  gradient,
+  link,
   available,
-  index 
+  index
 }) => {
   const navigate = useNavigate();
 
@@ -95,7 +95,7 @@ const FeatureCard = ({
 const AIFeaturesPage = () => {
   const features = [
     {
-      title: "AI Home Loan Calculator",
+      title: "AI Home Loan Assistant",
       description:
         "An intelligent tool that evaluates loan eligibility, EMI options, and repayment scenarios based on user income, property value, and financial profile.",
       icon: (

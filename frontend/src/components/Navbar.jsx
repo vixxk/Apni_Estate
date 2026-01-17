@@ -233,11 +233,10 @@ const Navbar = () => {
         variants={navVariants}
         initial="hidden"
         animate="visible"
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-          scrolled
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled
             ? "bg-white/95 shadow-xl backdrop-blur-xl border-b border-gray-200/50"
             : "bg-white/90 backdrop-blur-lg border-b border-gray-100/80"
-        }`}
+          }`}
       >
         <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
 
@@ -582,9 +581,8 @@ const Navbar = () => {
           >
             {/* Drawer Header */}
             <div
-              className={`relative bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 transition-all ${
-                isAuthenticated ? "p-4 pb-6" : "p-3"
-              }`}
+              className={`relative bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 transition-all ${isAuthenticated ? "p-4 pb-6" : "p-3"
+                }`}
             >
               {/* Close Button */}
               <button
@@ -596,9 +594,8 @@ const Navbar = () => {
 
               {/* Logo & Brand */}
               <div
-                className={`flex items-center space-x-2 ${
-                  isAuthenticated ? "mb-4" : "mb-2"
-                }`}
+                className={`flex items-center space-x-2 ${isAuthenticated ? "mb-4" : "mb-2"
+                  }`}
               >
                 <div className="w-10 h-10 rounded-xl bg-white overflow-hidden shadow-lg">
                   <img
@@ -665,11 +662,10 @@ const Navbar = () => {
                 <Link
                   to="/ai-features"
                   onClick={toggleMobileMenu}
-                  className={`relative flex items-center gap-3 p-3 rounded-xl transition-all border ${
-                    location.pathname.startsWith("/ai-property-hub")
+                  className={`relative flex items-center gap-3 p-3 rounded-xl transition-all border ${location.pathname.startsWith("/ai-property-hub")
                       ? "bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white shadow-xl border-transparent"
                       : "bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-indigo-800 border-indigo-200 hover:shadow-lg"
-                  }`}
+                    }`}
                 >
                   {/* Icon Box */}
                   <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-lg">
@@ -836,6 +832,12 @@ const Navbar = () => {
 const NavLinks = ({ currentPath, isAuthenticated }) => {
   const links = [
     {
+      name: "AI Features",
+      path: "/ai-features",
+      icon: BotMessageSquare,
+      color: "from-indigo-600 to-purple-600",
+    },
+    {
       name: "Home",
       path: "/",
       icon: Home,
@@ -861,13 +863,13 @@ const NavLinks = ({ currentPath, isAuthenticated }) => {
     },
     ...(isAuthenticated
       ? [
-          {
-            name: "Chat",
-            path: "/messages",
-            icon: MessageCircle,
-            color: "from-indigo-500 to-blue-500",
-          },
-        ]
+        {
+          name: "Chat",
+          path: "/messages",
+          icon: MessageCircle,
+          color: "from-indigo-500 to-blue-500",
+        },
+      ]
       : []),
   ];
 
@@ -886,10 +888,9 @@ const NavLinks = ({ currentPath, isAuthenticated }) => {
             <Link
               to={path}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold transition-all
-                ${
-                  isActive
-                    ? `text-white bg-gradient-to-r ${color} shadow-lg`
-                    : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+                ${isActive
+                  ? `text-white bg-gradient-to-r ${color} shadow-lg`
+                  : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
                 }`}
             >
               <Icon className="w-4 h-4" />
@@ -917,11 +918,10 @@ const MobileNavItem = ({
     <Link
       to={path}
       onClick={onClick}
-      className={`flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all mb-1 ${
-        isActive
+      className={`flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all mb-1 ${isActive
           ? "bg-blue-600 text-white shadow-lg"
           : "text-gray-700 hover:bg-gray-50"
-      }`}
+        }`}
     >
       <Icon className="w-4 h-4" />
       <div className="flex-1 min-w-0">
