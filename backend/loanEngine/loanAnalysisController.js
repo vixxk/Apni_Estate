@@ -93,7 +93,7 @@ class AILoanAssistant {
     if (rate === null) {
       return {
         status: "REJECTED",
-        reason: "Credit Score below 650 is too risky.",
+        reason: "Reason: Credit Score below 650 is too risky.",
         details: {}
       };
     }
@@ -103,7 +103,7 @@ class AILoanAssistant {
     if (tenure === 0) {
       return {
         status: "REJECTED",
-        reason: `Based on age ${this.age}, tenure is insufficient (< 5 years).`,
+        reason: `Reason: Based on age ${this.age}, tenure is insufficient.`,
         details: {}
       };
     }
@@ -118,7 +118,7 @@ class AILoanAssistant {
     if (availableSurplus <= 0) {
       return {
         status: "REJECTED",
-        reason: "Existing debts (EMIs) consume all your eligibility.",
+        reason: "Reason: Existing debts (EMIs) consume all your eligibility.",
         details: {}
       };
     }
@@ -145,9 +145,15 @@ class AILoanAssistant {
     };
 
     // 5. FINAL DECISION
-    if (requestedEmi > availableSurplus) {
-      result.status = "MODIFIED APPROVAL";
-      result.reason = `The requested loan is too high for your income. We can offer a maximum of ₹${maxEligibleLoan.toLocaleString('en-IN')}`;
+    // 5. FINAL DECISION
+    if (requestedEmi <= availableSurplus) {
+        // Matched Python Output
+        result.status = "APPROVED";
+        result.reason = "Congratulations! You can comfortably afford this loan."; 
+    } else {
+        // Matched Python Output
+        result.status = "MODIFIED APPROVAL";
+        result.reason = `The requested ₹${this.loanAmountRequested.toLocaleString('en-IN')} is too high for your income. However, we can offer you a maximum of: ₹${maxEligibleLoan.toLocaleString('en-IN')}. Reason: Your monthly surplus (₹${availableSurplus.toLocaleString('en-IN')}) limits your borrowing power.`;
     }
 
     // Add note if preferred tenure was reduced

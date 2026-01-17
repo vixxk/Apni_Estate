@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Backendurl } from "../App";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Loader, CheckCircle, AlertTriangle, XCircle, Calculator, ArrowLeft } from "lucide-react";
+import { Loader, CheckCircle, AlertTriangle, XCircle, Calculator, ArrowLeft, RefreshCw, Sliders } from "lucide-react";
 
 const LoanAnalysisPage = () => {
   const [formData, setFormData] = useState({
@@ -11,12 +11,45 @@ const LoanAnalysisPage = () => {
     creditScore: "",
     age: "",
     loanAmountRequested: "",
-    preferredTenure: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const resultRef = useRef(null);
+
+  // Simulator State
+  const [simulator, setSimulator] = useState({
+    tenure: 20,
+    rate: 8.5,
+  });
+
+  // Calculate Metrics based on Simulator State
+  const calculateMetrics = () => {
+    if (!result) return { emi: 0, maxLoan: 0 };
+
+    const principal = result.details.requestedLoan;
+    const r = simulator.rate / 12 / 100;
+    const n = simulator.tenure * 12;
+
+    // EMI Calculation: P * r * (1+r)^n / ((1+r)^n - 1)
+    let emi = 0;
+    if (principal > 0 && r > 0 && n > 0) {
+      emi = Math.round((principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1));
+    }
+
+    // Max Loan Calculation based on Net Surplus (Capacity)
+    // Assuming NetSurplus is the max EMI capacity the user can afford.
+    // MaxLoan = (NetSurplus * ((1+r)^n - 1)) / (r * (1+r)^n)
+    let maxLoan = 0;
+    const netSurplus = result.details.netSurplus; // This comes from backend based on FOIR
+    if (netSurplus > 0 && r > 0 && n > 0) {
+      maxLoan = Math.round((netSurplus * (Math.pow(1 + r, n) - 1)) / (r * Math.pow(1 + r, n)));
+    }
+
+    return { emi, maxLoan };
+  };
+
+  const metrics = calculateMetrics();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,11 +71,18 @@ const LoanAnalysisPage = () => {
         creditScore: Number(formData.creditScore),
         age: Number(formData.age),
         loanAmountRequested: Number(formData.loanAmountRequested),
-        preferredTenure: formData.preferredTenure ? Number(formData.preferredTenure) : null,
       });
 
       if (response.data.success) {
-        setResult(response.data.data);
+        const data = response.data.data;
+        setResult(data);
+        // Initialize simulator with backend results
+        if (data.details) {
+          setSimulator({
+            tenure: data.details.maxTenure || 20,
+            rate: data.details.assignedRate || 9.0,
+          });
+        }
         toast.success("Analysis Complete!");
       } else {
         toast.error("Analysis failed. Please check your inputs.");
@@ -57,7 +97,6 @@ const LoanAnalysisPage = () => {
 
   useEffect(() => {
     if (result && resultRef.current) {
-      // Small delay to ensure DOM update and layout shift (especially on mobile) is complete
       setTimeout(() => {
         resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 300);
@@ -144,18 +183,6 @@ const LoanAnalysisPage = () => {
                       className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100 transition-all outline-none"
                     />
                   </div>
-                  <div className="col-span-2 lg:col-span-1">
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Preferred Tenure (Years) <span className="text-gray-400 font-normal">(Optional)</span></label>
-                    <input
-                      type="number"
-                      name="preferredTenure"
-                      value={formData.preferredTenure}
-                      onChange={handleChange}
-                      placeholder="e.g. 20"
-                      max="30"
-                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100 transition-all outline-none"
-                    />
-                  </div>
                 </div>
 
                 <div>
@@ -236,48 +263,88 @@ const LoanAnalysisPage = () => {
 
                 {/* Details Body */}
                 <div className="p-5 lg:p-8 space-y-5 lg:space-y-6">
-                  {/* Key Metrics Grid */}
-                  <div className="grid grid-cols-2 gap-3 lg:gap-4">
-                    <div className="p-3 lg:p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                      <p className="text-[10px] lg:text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Credit Score</p>
-                      <p className="text-xl lg:text-2xl font-bold text-slate-800">{result.details.creditScore || "N/A"}</p>
+
+                  {/* Smart Simulator */}
+                  {result.status !== "REJECTED" && (
+                    <div className="bg-slate-50 rounded-2xl p-4 lg:p-5 border border-slate-200">
+                      <div className="flex items-center gap-2 mb-4">
+                        <Sliders className="w-5 h-5 text-indigo-600" />
+                        <h4 className="font-bold text-slate-800">Smart Simulator</h4>
+                      </div>
+
+                      {/* Tenure Slider */}
+                      <div className="mb-4">
+                        <div className="flex justify-between text-sm mb-2">
+                          <span className="text-slate-600 font-medium">Tenure</span>
+                          <span className="text-indigo-600 font-bold">{simulator.tenure} Years</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="5"
+                          max={30} // Could cap at 60 - Age
+                          step="1"
+                          value={simulator.tenure}
+                          onChange={(e) => setSimulator(prev => ({ ...prev, tenure: Number(e.target.value) }))}
+                          className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                        />
+                        <div className="flex justify-between text-xs text-slate-400 mt-1">
+                          <span>5 Yrs</span>
+                          <span>30 Yrs</span>
+                        </div>
+                      </div>
+
+                      {/* Interest Rate Slider */}
+                      <div>
+                        <div className="flex justify-between text-sm mb-2">
+                          <span className="text-slate-600 font-medium">Interest Rate</span>
+                          <span className="text-indigo-600 font-bold">{simulator.rate}%</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="7"
+                          max="15"
+                          step="0.25"
+                          value={simulator.rate}
+                          onChange={(e) => setSimulator(prev => ({ ...prev, rate: Number(e.target.value) }))}
+                          className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                        />
+                        <div className="flex justify-between text-xs text-slate-400 mt-1">
+                          <span>7%</span>
+                          <span>15%</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="p-3 lg:p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                      <p className="text-[10px] lg:text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Assigned Rate</p>
-                      <p className="text-xl lg:text-2xl font-bold text-indigo-600">{result.details.assignedRate ? `${result.details.assignedRate}%` : "N/A"}</p>
+                  )}
+
+                  {/* Dynamic Metrics */}
+                  <div className="grid grid-cols-2 gap-3 lg:gap-4">
+                    <div className="p-3 lg:p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                      <p className="text-[10px] lg:text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Estimated EMI</p>
+                      <p className="text-lg lg:text-xl font-bold text-slate-800">
+                        ₹{result.status === "REJECTED" ? "0" : metrics.emi.toLocaleString('en-IN')}
+                      </p>
+                    </div>
+                    <div className="p-3 lg:p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                      <p className="text-[10px] lg:text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Max Capacity</p>
+                      <p className="text-lg lg:text-xl font-bold text-indigo-600">
+                        ₹{result.status === "REJECTED" ? "0" : metrics.maxLoan.toLocaleString('en-IN')}
+                      </p>
                     </div>
                   </div>
 
                   {result.status !== "REJECTED" && (
-                    <>
-                      <div className="space-y-3 lg:space-y-4 pt-2">
-                        <div className="flex justify-between items-center py-2 lg:py-3 border-b border-slate-100 text-sm lg:text-base">
-                          <span className="text-slate-600 font-medium">Max Tenure</span>
-                          <span className="text-slate-900 font-bold">{result.details.maxTenure} Years</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 lg:py-3 border-b border-slate-100 text-sm lg:text-base">
-                          <span className="text-slate-600 font-medium">Requested Loan</span>
-                          <span className="text-slate-900 font-bold">₹{result.details.requestedLoan?.toLocaleString('en-IN')}</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 lg:py-3 border-b border-slate-100 text-sm lg:text-base">
-                          <span className="text-slate-600 font-medium">Calculated EMI</span>
-                          <span className="text-slate-900 font-bold">₹{result.details.requestedEmi?.toLocaleString('en-IN')}</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 lg:py-3 border-b border-slate-100 text-sm lg:text-base">
-                          <span className="text-slate-600 font-medium">Net Surplus (Capacity)</span>
-                          <span className="text-emerald-600 font-bold">₹{result.details.netSurplus?.toLocaleString('en-IN')}</span>
-                        </div>
+                    <div className="space-y-3 lg:space-y-4 pt-2 border-t border-slate-100">
+                      <div className="flex justify-between items-center py-2 text-sm lg:text-base">
+                        <span className="text-slate-500">Original Max Tenure</span>
+                        <span className="text-slate-700 font-semibold">{result.details.maxTenure} Years</span>
                       </div>
-
-                      {/* Final Eligible Amount Highlight */}
-                      <div className="bg-indigo-50 rounded-2xl p-5 lg:p-6 border border-indigo-100 text-center mt-4 lg:mt-6">
-                        <p className="text-xs lg:text-sm font-semibold text-indigo-600 uppercase tracking-wide mb-1 lg:mb-2">Max Eligible Loan Amount</p>
-                        <p className="text-2xl lg:text-3xl sm:text-4xl font-black text-indigo-900">
-                          ₹{result.details.maxEligibleLoan?.toLocaleString('en-IN')}
-                        </p>
+                      <div className="flex justify-between items-center py-2 text-sm lg:text-base">
+                        <span className="text-slate-500">Net Surplus</span>
+                        <span className="text-emerald-600 font-semibold">₹{result.details.netSurplus?.toLocaleString('en-IN')}</span>
                       </div>
-                    </>
+                    </div>
                   )}
+
                 </div>
               </div>
             ) : (
