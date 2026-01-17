@@ -357,11 +357,11 @@ const Hero = () => {
                       onClick={() => handleServiceClick(service.title)}
                       className="glass-card rounded-xl sm:rounded-2xl cursor-pointer group overflow-hidden bg-white/60"
                     >
-                      <div className="w-12 h-12 sm:w-24 sm:h-24 mx-auto rounded-lg sm:rounded-2xl overflow-hidden p-2">
+                      <div className="w-16 h-16 sm:w-28 sm:h-28 mx-auto rounded-lg sm:rounded-2xl overflow-hidden">
                         <img
                           src={service.img}
                           alt={service.title}
-                          className="w-full h-full object-cover rounded-lg"
+                          className="w-full h-full object-cover"
                         />
                       </div>
 
