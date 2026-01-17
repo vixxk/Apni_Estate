@@ -358,7 +358,7 @@ const VendorAddProperty = () => {
 
       // Scroll to top immediately on success
       window.scrollTo({ top: 0, behavior: "smooth" });
-      
+
       setSuccess("Listing submitted for admin review! You'll be notified once approved. 🎉");
 
       setTimeout(() => {
@@ -435,7 +435,7 @@ const VendorAddProperty = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 pt-20 pb-8 px-3 sm:px-4 lg:px-6">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 pb-8 px-3 sm:px-4 lg:px-6">
       <motion.div
         initial="hidden"
         animate="visible"
@@ -541,26 +541,23 @@ const VendorAddProperty = () => {
                       key={cat.value}
                       type="button"
                       onClick={() => setForm({ ...form, type: cat.value })}
-                      className={`p-2 md:p-4 rounded-lg md:rounded-xl border-2 transition-all duration-300 ${
-                        form.type === cat.value
+                      className={`p-2 md:p-4 rounded-lg md:rounded-xl border-2 transition-all duration-300 ${form.type === cat.value
                           ? "border-indigo-600 bg-indigo-50 shadow-md scale-105"
                           : "border-gray-200 hover:border-indigo-300 hover:shadow-sm"
-                      }`}
+                        }`}
                     >
                       <Icon
-                        className={`mx-auto mb-1 md:mb-2 ${
-                          form.type === cat.value
+                        className={`mx-auto mb-1 md:mb-2 ${form.type === cat.value
                             ? "text-indigo-600"
                             : "text-gray-400"
-                        }`}
+                          }`}
                         size={20}
                       />
                       <p
-                        className={`text-[10px] md:text-xs font-semibold text-center leading-tight ${
-                          form.type === cat.value
+                        className={`text-[10px] md:text-xs font-semibold text-center leading-tight ${form.type === cat.value
                             ? "text-indigo-600"
                             : "text-gray-700"
-                        }`}
+                          }`}
                       >
                         {cat.label}
                       </p>
@@ -593,11 +590,10 @@ const VendorAddProperty = () => {
                     value={form.title}
                     onChange={handleInputChange}
                     maxLength="100"
-                    className={`w-full px-3 py-2.5 md:py-3 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                      fieldErrors.title
+                    className={`w-full px-3 py-2.5 md:py-3 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.title
                         ? "border-red-300 focus:ring-red-500"
                         : "border-gray-200 focus:ring-indigo-500"
-                    }`}
+                      }`}
                   />
                   {fieldErrors.title && (
                     <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -625,11 +621,10 @@ const VendorAddProperty = () => {
                       value={form.price}
                       onChange={handleInputChange}
                       min="0"
-                      className={`w-full pl-10 pr-3 py-2.5 md:py-3 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                        fieldErrors.price
+                      className={`w-full pl-10 pr-3 py-2.5 md:py-3 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.price
                           ? "border-red-300 focus:ring-red-500"
                           : "border-gray-200 focus:ring-indigo-500"
-                      }`}
+                        }`}
                     />
                   </div>
                   {fieldErrors.price && (
@@ -651,11 +646,10 @@ const VendorAddProperty = () => {
                     onChange={handleInputChange}
                     maxLength="2000"
                     rows="4"
-                    className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all resize-none ${
-                      fieldErrors.description
+                    className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all resize-none ${fieldErrors.description
                         ? "border-red-300 focus:ring-red-500"
                         : "border-gray-200 focus:ring-indigo-500"
-                    }`}
+                      }`}
                   />
                   {fieldErrors.description && (
                     <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -693,11 +687,10 @@ const VendorAddProperty = () => {
                       value={form.location.address}
                       onChange={(e) => handleNestedChange(e, "location")}
                       rows="2"
-                      className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all resize-none ${
-                        fieldErrors.address
+                      className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all resize-none ${fieldErrors.address
                           ? "border-red-300 focus:ring-red-500"
                           : "border-gray-200 focus:ring-indigo-500"
-                      }`}
+                        }`}
                     />
                     {fieldErrors.address && (
                       <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -717,11 +710,10 @@ const VendorAddProperty = () => {
                       placeholder="Enter city"
                       value={form.location.city}
                       onChange={(e) => handleNestedChange(e, "location")}
-                      className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                        fieldErrors.city
+                      className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.city
                           ? "border-red-300 focus:ring-red-500"
                           : "border-gray-200 focus:ring-indigo-500"
-                      }`}
+                        }`}
                     />
                     {fieldErrors.city && (
                       <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -741,11 +733,10 @@ const VendorAddProperty = () => {
                       placeholder="Enter state"
                       value={form.location.state}
                       onChange={(e) => handleNestedChange(e, "location")}
-                      className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                        fieldErrors.state
+                      className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.state
                           ? "border-red-300 focus:ring-red-500"
                           : "border-gray-200 focus:ring-indigo-500"
-                      }`}
+                        }`}
                     />
                     {fieldErrors.state && (
                       <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -766,11 +757,10 @@ const VendorAddProperty = () => {
                       value={form.location.pincode}
                       onChange={(e) => handleNestedChange(e, "location")}
                       maxLength="6"
-                      className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                        fieldErrors.pincode
+                      className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.pincode
                           ? "border-red-300 focus:ring-red-500"
                           : "border-gray-200 focus:ring-indigo-500"
-                      }`}
+                        }`}
                     />
                     {fieldErrors.pincode && (
                       <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -919,11 +909,10 @@ const VendorAddProperty = () => {
                         key={amenity}
                         type="button"
                         onClick={() => toggleAmenity(amenity)}
-                        className={`py-2 px-3 rounded-lg text-xs font-medium border-2 transition-all ${
-                          form.features.amenities.includes(amenity)
+                        className={`py-2 px-3 rounded-lg text-xs font-medium border-2 transition-all ${form.features.amenities.includes(amenity)
                             ? "border-indigo-600 bg-indigo-50 text-indigo-600 shadow-sm"
                             : "border-gray-200 text-gray-700 hover:border-indigo-300"
-                        }`}
+                          }`}
                       >
                         {amenity}
                       </button>
@@ -956,11 +945,10 @@ const VendorAddProperty = () => {
                     value={form.contactInfo.phone}
                     onChange={(e) => handleNestedChange(e, "contactInfo")}
                     maxLength="10"
-                    className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                      fieldErrors.phone
+                    className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.phone
                         ? "border-red-300 focus:ring-red-500"
                         : "border-gray-200 focus:ring-indigo-500"
-                    }`}
+                      }`}
                   />
                   {fieldErrors.phone && (
                     <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -980,11 +968,10 @@ const VendorAddProperty = () => {
                     placeholder="your@email.com"
                     value={form.contactInfo.email}
                     onChange={(e) => handleNestedChange(e, "contactInfo")}
-                    className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                      fieldErrors.email
+                    className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.email
                         ? "border-red-300 focus:ring-red-500"
                         : "border-gray-200 focus:ring-indigo-500"
-                    }`}
+                      }`}
                   />
                   {fieldErrors.email && (
                     <p className="text-red-500 text-xs mt-1 flex items-center gap-1">

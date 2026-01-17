@@ -237,7 +237,7 @@ const AIFeaturesPage = () => {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-8 sm:mt-12 md:mt-20 text-center px-2">
+        <div className="mt-8 text-center px-2">
           <div className="inline-block p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl bg-white border-2 border-slate-200 shadow-lg max-w-md">
             <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
               <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center flex-shrink-0">

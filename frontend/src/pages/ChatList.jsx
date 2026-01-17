@@ -98,7 +98,7 @@ const ChatList = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50 pb-24 md:pb-10">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-24">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -251,11 +251,10 @@ const ChatList = () => {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2 mb-1">
                           <p
-                            className={`text-base font-semibold truncate ${
-                              c.unreadCount > 0
+                            className={`text-base font-semibold truncate ${c.unreadCount > 0
                                 ? "text-slate-900"
                                 : "text-slate-700"
-                            }`}
+                              }`}
                           >
                             {otherUser.name || "Unknown"}
                           </p>
@@ -263,19 +262,18 @@ const ChatList = () => {
                           <span className="text-xs text-slate-400 whitespace-nowrap">
                             {c.lastAt
                               ? new Date(c.lastAt).toLocaleTimeString([], {
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                })
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })
                               : ""}
                           </span>
                         </div>
 
                         <p
-                          className={`text-sm truncate ${
-                            c.unreadCount > 0
+                          className={`text-sm truncate ${c.unreadCount > 0
                               ? "text-slate-600 font-medium"
                               : "text-slate-500"
-                          }`}
+                            }`}
                         >
                           {c.lastMessage || "No message"}
                         </p>
