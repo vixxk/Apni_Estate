@@ -335,6 +335,14 @@ const LoanAnalysisPage = () => {
                   {result.status !== "REJECTED" && (
                     <div className="space-y-3 lg:space-y-4 pt-2 border-t border-slate-100">
                       <div className="flex justify-between items-center py-2 text-sm lg:text-base">
+                        <span className="text-slate-500">Credit Score</span>
+                        <span className="text-slate-700 font-bold">{result.details.creditScore}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 text-sm lg:text-base">
+                        <span className="text-slate-500">Requested Loan</span>
+                        <span className="text-slate-700 font-bold">₹{result.details.requestedLoan?.toLocaleString('en-IN')}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 text-sm lg:text-base">
                         <span className="text-slate-500">Original Max Tenure</span>
                         <span className="text-slate-700 font-semibold">{result.details.maxTenure} Years</span>
                       </div>
