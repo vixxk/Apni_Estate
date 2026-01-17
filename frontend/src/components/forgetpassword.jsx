@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Mail, ArrowLeft, Shield, Lock, Key, AlertCircle } from "lucide-react";
-
+import { Mail, ArrowLeft, Shield, Lock, Key, CheckCircle, Loader } from "lucide-react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { Backendurl } from "../App";
 
 // Animation variants
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: {
       duration: 0.6,
@@ -19,11 +21,10 @@ const containerVariants = {
   exit: { opacity: 0, y: -20 }
 };
 
-
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     scale: 1,
     transition: {
       type: "spring",
@@ -32,7 +33,6 @@ const cardVariants = {
     }
   }
 };
-
 
 const floatingAnimation = {
   y: [-3, 3, -3],
@@ -44,17 +44,35 @@ const floatingAnimation = {
   }
 };
 
-
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [emailFocused, setEmailFocused] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Disabled - Coming Soon
-  };
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
 
+    setLoading(true);
+    try {
+      const response = await axios.post(`${Backendurl}/api/users/forgot`, { email });
+      if (response.data.success) {
+        setIsSuccess(true);
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Forgot password error:", error);
+      toast.error(error.response?.data?.message || "Failed to send reset email");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center px-4 py-12 relative overflow-hidden">
@@ -74,7 +92,6 @@ const ForgotPassword = () => {
         />
       </div>
 
-
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -89,11 +106,70 @@ const ForgotPassword = () => {
           {/* Animated gradient border */}
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 rounded-3xl opacity-75 blur-sm animate-pulse"></div>
           <div className="relative bg-white/95 backdrop-blur-xl rounded-3xl m-[2px] p-8">
-            
+
+            {/* Success State Overlay */}
+            {/* Success State Overlay */}
+            {isSuccess && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/95 backdrop-blur-md p-8 text-center rounded-3xl"
+              >
+                <div className="w-full max-w-sm mx-auto flex flex-col items-center">
+                  <motion.div
+                    initial={{ scale: 0, rotate: -45 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 12, delay: 0.1 }}
+                    className="w-20 h-20 bg-gradient-to-tr from-green-100 to-emerald-100 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-green-100/50"
+                  >
+                    <CheckCircle className="w-10 h-10 text-emerald-600" />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <h3 className="text-2xl font-bold text-gray-800 mb-3">Check your inbox</h3>
+                    <p className="text-gray-600 mb-6 leading-relaxed">
+                      We've sent a password reset link to<br />
+                      <span className="inline-block mt-2 px-4 py-1.5 bg-blue-50 text-blue-700 font-medium rounded-full text-sm border border-blue-100">
+                        {email}
+                      </span>
+                    </p>
+                  </motion.div>
+
+                  <motion.div
+                    className="space-y-3 w-full"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <Link
+                      to="/login"
+                      className="block w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5 transition-all duration-300"
+                    >
+                      Back to Login
+                    </Link>
+
+                    <button
+                      onClick={() => {
+                        setIsSuccess(false);
+                        setEmail("");
+                      }}
+                      className="block w-full py-3.5 px-6 rounded-xl text-gray-500 font-medium hover:text-gray-800 hover:bg-gray-50 transition-colors duration-300"
+                    >
+                      Resend Email
+                    </button>
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+
             {/* Logo & Title */}
             <div className="text-center mb-8">
               <Link to="/" className="inline-block mb-6 group">
-                <motion.div 
+                <motion.div
                   className="flex items-center justify-center gap-2"
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -109,7 +185,7 @@ const ForgotPassword = () => {
                   </h1>
                 </motion.div>
               </Link>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -119,28 +195,11 @@ const ForgotPassword = () => {
                   <Key className="w-5 h-5 text-blue-500" />
                   <h2 className="text-2xl font-bold text-gray-800">Forgot Password?</h2>
                 </div>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  No worries, we&apos;ll send you reset instructions to get you back on track.
+                <p className="text-gray-600 text-sm leading-relaxed max-w-[280px] mx-auto">
+                  Enter your email address and we'll send you a link to reset your password.
                 </p>
               </motion.div>
             </div>
-
-            {/* Coming Soon Notice */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 }}
-              className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3"
-            >
-              <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-semibold text-amber-800 mb-1">Coming Soon</p>
-                <p className="text-xs text-amber-700 leading-relaxed">
-                  Password reset functionality is currently under development. Please contact support for assistance.
-                </p>
-              </div>
-            </motion.div>
-
 
             {/* Form */}
             <motion.form
@@ -162,28 +221,42 @@ const ForgotPassword = () => {
                       type="email"
                       name="email"
                       id="email"
-                      disabled
+                      required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       onFocus={() => setEmailFocused(true)}
                       onBlur={() => setEmailFocused(false)}
-                      className="w-full pl-12 pr-4 py-4 rounded-xl bg-gray-50/80 backdrop-blur-sm border-2 border-gray-200 transition-all duration-300 text-gray-700 placeholder-gray-400 disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="w-full pl-12 pr-4 py-4 rounded-xl bg-gray-50/80 backdrop-blur-sm border-2 border-gray-200 focus:border-transparent focus:ring-0 transition-all duration-300 text-gray-700 placeholder-gray-400"
                       placeholder="Enter your email address"
                     />
                   </div>
                 </div>
               </div>
 
-
               <motion.button
                 type="submit"
-                disabled
-                className="w-full bg-gray-400 text-white py-4 rounded-xl cursor-not-allowed flex items-center justify-center space-x-2 font-semibold shadow-lg opacity-60 relative overflow-hidden"
+                disabled={loading}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className={`w-full py-4 rounded-xl flex items-center justify-center space-x-2 font-semibold shadow-lg relative overflow-hidden transition-all duration-300 ${loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-blue-500/30"
+                  }`}
               >
-                <Mail className="w-5 h-5" />
-                <span>Coming Soon</span>
+                {loading ? (
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  >
+                    <Loader className="w-5 h-5" />
+                  </motion.div>
+                ) : (
+                  <>
+                    <Mail className="w-5 h-5" />
+                    <span>Send Reset Link</span>
+                  </>
+                )}
               </motion.button>
-
 
               <motion.div
                 initial={{ opacity: 0 }}
@@ -201,7 +274,6 @@ const ForgotPassword = () => {
               </motion.div>
             </motion.form>
 
-
             {/* Security Badge */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -218,6 +290,5 @@ const ForgotPassword = () => {
     </div>
   );
 };
-
 
 export default ForgotPassword;

@@ -2,15 +2,15 @@ import { useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { 
-  Lock, 
-  Eye, 
-  EyeOff, 
-  Loader, 
-  ArrowLeft, 
-  Shield, 
-  CheckCircle, 
-  Sparkles, 
+import {
+  Lock,
+  Eye,
+  EyeOff,
+  Loader,
+  ArrowLeft,
+  Shield,
+  CheckCircle,
+  Sparkles,
   Key,
   AlertCircle
 } from "lucide-react";
@@ -20,8 +20,8 @@ import { Backendurl } from "../App";
 // Animation Variants
 const containerVariants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: {
       duration: 0.6,
@@ -35,8 +35,8 @@ const containerVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     scale: 1,
     y: 0,
     transition: {
@@ -50,8 +50,8 @@ const cardVariants = {
 
 const inputVariants = {
   hidden: { opacity: 0, x: -20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     x: 0,
     transition: {
       duration: 0.5,
@@ -81,7 +81,7 @@ const sparkleAnimation = {
 
 const pulseAnimation = {
   scale: [1, 1.05, 1],
-  transition: { 
+  transition: {
     duration: 2,
     repeat: Infinity,
     ease: "easeInOut"
@@ -157,7 +157,7 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!isFormValid) {
       toast.error("Please ensure passwords match and meet strength requirements.");
       return;
@@ -187,16 +187,16 @@ const ResetPassword = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center px-4 py-12 relative overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <motion.div 
+        <motion.div
           animate={floatingAnimation}
           className="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-20"
         />
-        <motion.div 
-          animate={{...floatingAnimation, transition: {...floatingAnimation.transition, delay: 1}}}
+        <motion.div
+          animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 1 } }}
           className="absolute top-40 right-20 w-16 h-16 bg-indigo-200 rounded-full opacity-30"
         />
-        <motion.div 
-          animate={{...floatingAnimation, transition: {...floatingAnimation.transition, delay: 2}}}
+        <motion.div
+          animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 2 } }}
           className="absolute bottom-20 left-20 w-24 h-24 bg-purple-200 rounded-full opacity-25"
         />
       </div>
@@ -215,7 +215,7 @@ const ResetPassword = () => {
           {/* Decorative Elements */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-indigo-400/10 rounded-full -translate-y-16 translate-x-16" />
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-purple-400/10 to-pink-400/10 rounded-full translate-y-12 -translate-x-12" />
-          
+
           {/* Success State */}
           {isSuccess && (
             <motion.div
@@ -256,21 +256,21 @@ const ResetPassword = () => {
                 </h2>
               </motion.div>
             </Link>
-            
+
             <motion.div
               animate={pulseAnimation}
               className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/25"
             >
               <Key className="w-8 h-8 text-white" />
             </motion.div>
-            
+
             <h2 className="text-2xl font-bold text-gray-800 mb-2">Reset Password</h2>
             <p className="text-gray-600">Create a new secure password for your account</p>
           </motion.div>
 
-          <motion.form 
+          <motion.form
             variants={inputVariants}
-            onSubmit={handleSubmit} 
+            onSubmit={handleSubmit}
             className="space-y-6"
           >
             {/* New Password Field */}
@@ -394,12 +394,11 @@ const ResetPassword = () => {
               whileHover={{ scale: 1.02, boxShadow: "0 20px 40px rgba(59, 130, 246, 0.3)" }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              disabled={loading || !isFormValid}
-              className={`w-full py-4 rounded-xl text-white font-semibold text-lg transition-all duration-300 flex items-center justify-center space-x-2 shadow-xl ${
-                isFormValid && !loading
+              disabled={loading}
+              className={`w-full py-4 rounded-xl text-white font-semibold text-lg transition-all duration-300 flex items-center justify-center space-x-2 shadow-xl ${isFormValid && !loading
                   ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-blue-500/25"
-                  : "bg-gray-400 cursor-not-allowed"
-              }`}
+                  : "bg-gray-400 cursor-not-allowed opacity-70"
+                }`}
             >
               {loading ? (
                 <motion.div

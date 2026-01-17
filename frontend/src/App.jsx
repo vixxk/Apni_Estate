@@ -64,9 +64,8 @@ const AppLayout = ({ children }) => {
         {!isAdminRoute && <Navbar />}
 
         <main
-          className={`flex-grow ${
-            !isAdminRoute || isLoanPage || isAIPage ? "pt-16 pb-24 md:pt-16 md:pb-0" : ""
-          }`}
+          className={`flex-grow ${!isAdminRoute || isLoanPage || isAIPage ? "pt-16 pb-24 md:pt-16 md:pb-0" : ""
+            }`}
         >
           {children}
         </main>
@@ -97,7 +96,7 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<VendorRegister />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset/:token" element={<ResetPassword />} />
+                <Route path="/reset-password/:token" element={<ResetPassword />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/services" element={<ServicesPage />} />
                 <Route path="/sales-items" element={<SalesItemsPage />} />
@@ -124,7 +123,7 @@ const App = () => {
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
-                <Route path="/vendor/contact-requests"element={<VendorContactRequests />} />
+                <Route path="/vendor/contact-requests" element={<VendorContactRequests />} />
 
                 <Route path="/loan-analyzer" element={<LoanAnalysisPage />} />
 
