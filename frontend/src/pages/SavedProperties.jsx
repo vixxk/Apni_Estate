@@ -65,9 +65,9 @@ const SavedProperties = () => {
               typeof p.location === "string"
                 ? p.location
                 : p.location?.city ||
-                  p.location?.address ||
-                  p.location?.state ||
-                  "",
+                p.location?.address ||
+                p.location?.state ||
+                "",
             beds: p.beds ?? p.features?.bedrooms ?? 0,
             baths: p.baths ?? p.features?.bathrooms ?? 0,
             sqft: p.sqft ?? p.features?.area ?? 0,
@@ -123,7 +123,7 @@ const SavedProperties = () => {
             >
               <Heart className="w-12 h-12 text-white" fill="white" />
             </motion.div>
-  
+
             <motion.div
               className="absolute w-3 h-3 bg-red-300 rounded-full right-4 bottom-10"
               animate={{
@@ -132,7 +132,7 @@ const SavedProperties = () => {
               }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
             />
-  
+
             <motion.div
               className="absolute w-2 h-2 bg-pink-400 rounded-full"
               animate={{
@@ -141,21 +141,21 @@ const SavedProperties = () => {
               }}
               transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
             />
-  
+
             <div
               className="absolute inset-0 bg-red-500/10 rounded-full animate-ping"
               style={{ animationDuration: "3s" }}
             ></div>
           </div>
-  
+
           <h3 className="text-2xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent">
             Loading Favorites
           </h3>
-  
+
           <p className="text-gray-600 mb-5 max-w-xs text-center">
             Fetching your saved properties...
           </p>
-  
+
           <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
             <motion.div
               className="h-full bg-gradient-to-r from-red-600 via-pink-500 to-red-600 bg-size-200 absolute top-0 left-0 right-0"
@@ -170,7 +170,7 @@ const SavedProperties = () => {
               }}
             />
           </div>
-  
+
           <div className="flex items-center mt-4 text-xs text-red-600">
             <motion.div
               animate={{ opacity: [0.5, 1, 0.5] }}
@@ -183,7 +183,7 @@ const SavedProperties = () => {
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 pt-16 flex items-center justify-center px-4">
@@ -352,7 +352,7 @@ const SavedProperties = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
-            className="mt-8 sm:mt-12 p-4 sm:p-6 bg-white/60 backdrop-blur-lg rounded-2xl shadow-lg border border-white/40 max-w-md mx-auto"
+            className="mt-8 sm:mt-12 p-4 sm:p-6 glass-panel rounded-2xl max-w-md mx-auto"
           >
             <h3 className="text-xs sm:text-sm font-bold text-gray-700 mb-2 sm:mb-3 flex items-center justify-center gap-2">
               <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-500" />
@@ -388,7 +388,7 @@ const SavedProperties = () => {
         }
       `}</style>
 
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 pt-16 pb-24 sm:pb-8">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 pb-24 sm:pb-8">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-6 lg:py-8">
           <motion.div
             initial={{ opacity: 0, y: -20 }}

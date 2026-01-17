@@ -343,9 +343,9 @@ const Hero = () => {
               variants={itemVariants}
               className="max-w-6xl mx-auto mb-8"
             >
-              <div className="bg-white/95 rounded-3xl p-4 sm:p-8 shadow-2xl">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-10">
-                  All Your <span className="text-purple-600">Real Estate</span>{" "}
+              <div className="glass-panel rounded-3xl p-4 sm:p-8">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-10 text-gray-900">
+                  All Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Real Estate</span>{" "}
                   Needs In One Place
                 </h2>
 
@@ -355,17 +355,17 @@ const Hero = () => {
                       key={index}
                       whileHover={{ y: -6, scale: 1.05 }}
                       onClick={() => handleServiceClick(service.title)}
-                      className="bg-white rounded-xl sm:rounded-2xl shadow-md hover:shadow-xl cursor-pointer group overflow-hidden"
+                      className="glass-card rounded-xl sm:rounded-2xl cursor-pointer group overflow-hidden bg-white/60"
                     >
-                      <div className="w-12 h-12 sm:w-24 sm:h-24 mx-auto rounded-lg sm:rounded-2xl overflow-hidden">
+                      <div className="w-12 h-12 sm:w-24 sm:h-24 mx-auto rounded-lg sm:rounded-2xl overflow-hidden p-2">
                         <img
                           src={service.img}
                           alt={service.title}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover rounded-lg"
                         />
                       </div>
 
-                      <p className="font-semibold text-gray-800 text-center text-[10px] sm:text-base leading-tight p-2">
+                      <p className="font-semibold text-gray-800 text-center text-[10px] sm:text-base leading-tight p-2 pb-3">
                         {service.title}
                       </p>
                     </motion.div>
@@ -383,10 +383,10 @@ const Hero = () => {
                 <motion.div
                   key={i}
                   variants={itemVariants}
-                  className="bg-white/90 rounded-lg sm:rounded-xl p-2 sm:p-4 shadow text-center hover:shadow-xl transition-all"
+                  className="glass-card rounded-lg sm:rounded-xl p-2 sm:p-4 text-center bg-white/60"
                 >
                   <div
-                    className={`w-8 h-8 sm:w-12 sm:h-11 mx-auto mb-1 sm:mb-3 bg-gradient-to-br ${stat.color} rounded-lg sm:rounded-xl flex items-center justify-center`}
+                    className={`w-8 h-8 sm:w-12 sm:h-11 mx-auto mb-1 sm:mb-3 bg-gradient-to-br ${stat.color} rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg`}
                   >
                     <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>

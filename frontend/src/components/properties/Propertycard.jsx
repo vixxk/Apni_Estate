@@ -90,12 +90,12 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
       alert("Please sign in to save properties.");
       return;
     }
-  
+
     // Determine action before API call
     const action = isFavourite ? "remove" : "add";
-    
+
     onFavouritesChange?.(property._id, action);
-  
+
     try {
       const { data } = await axios.post(
         `${Backendurl}/api/users/saved/toggle`,
@@ -107,23 +107,23 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
           },
         }
       );
-  
+
       const serverAction = data?.message?.includes("removed") ? "remove" : "add";
-      
+
       // If server response differs from optimistic update, revert
       if (serverAction !== action) {
         onFavouritesChange?.(property._id, serverAction);
       }
     } catch (err) {
       console.error("Toggle favourite error:", err);
-      
+
       const revertAction = action === "remove" ? "add" : "remove";
       onFavouritesChange?.(property._id, revertAction);
-      
+
       alert("Failed to update favourites");
     }
   };
-  
+
   return (
     <motion.div
       layout
@@ -132,7 +132,7 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
       exit={{ opacity: 0, y: 20 }}
       whileHover={{ y: -5 }}
       transition={{ duration: 0.3 }}
-      className={`group bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300
+      className={`group glass-card rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300
         ${isGrid ? "flex flex-col" : "flex flex-col sm:flex-row gap-4 sm:gap-6"}`}
       onClick={handleNavigateToDetails}
       onMouseEnter={() => setShowControls(true)}
@@ -199,9 +199,8 @@ const PropertyCard = ({ property, viewType, favourites, onFavouritesChange }) =>
               transition-colors shadow-lg"
           >
             <Heart
-              className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${
-                isFavourite ? "text-pink-500 fill-pink-500" : "text-gray-700"
-              }`}
+              className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isFavourite ? "text-pink-500 fill-pink-500" : "text-gray-700"
+                }`}
             />
           </motion.button>
 

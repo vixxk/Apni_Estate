@@ -156,9 +156,9 @@ const PropertyDetails = () => {
               typeof p.location === "string"
                 ? p.location
                 : p.location?.city ||
-                  p.location?.address ||
-                  p.location?.state ||
-                  "",
+                p.location?.address ||
+                p.location?.state ||
+                "",
             beds: p.features?.bedrooms ?? p.beds ?? 0,
             baths: p.features?.bathrooms ?? p.baths ?? 0,
             sqft: p.features?.area ?? p.sqft ?? 0,
@@ -218,8 +218,8 @@ const PropertyDetails = () => {
         Array.isArray(property?.images) && property.images.length > 0
           ? property.images
           : property?.image
-          ? [property.image]
-          : [];
+            ? [property.image]
+            : [];
       if (!images.length) return;
 
       if (e.key === "ArrowLeft") {
@@ -268,19 +268,19 @@ const PropertyDetails = () => {
       navigate("/login");
       return;
     }
-  
+
     if (!property?.owner?._id) {
       alert("Vendor information not available");
       return;
     }
-  
+
     navigate(`/chat/${property.owner._id}`, {
       state: {
         vendorName: property.owner.name,
         vendorAvatar: property.owner.avatar || null,
       },
     });
-    
+
   };
 
   const handleContactVendor = () => {
@@ -412,7 +412,7 @@ const PropertyDetails = () => {
   if (error || !property) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-16 px-4">
-        <div className="text-center p-6 md:p-8 bg-white rounded-xl md:rounded-2xl shadow-lg max-w-md w-full">
+        <div className="text-center p-6 md:p-8 glass-panel rounded-xl md:rounded-2xl max-w-md w-full">
           <div className="w-16 h-16 md:w-20 md:h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 md:w-10 md:h-10 text-red-600" />
           </div>
@@ -438,8 +438,8 @@ const PropertyDetails = () => {
     Array.isArray(property.images) && property.images.length > 0
       ? property.images
       : property.image
-      ? [property.image]
-      : [];
+        ? [property.image]
+        : [];
   const hasImages = Array.isArray(images) && images.length > 0;
 
   const propertyFeatures = [
@@ -502,7 +502,7 @@ const PropertyDetails = () => {
         </AnimatePresence>
 
         {/* Main Content Card */}
-        <div className="bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden">
+        <div className="glass-panel rounded-xl md:rounded-2xl overflow-hidden p-0 border-0">
           {/* Image Gallery */}
           <div className="relative h-[200px] sm:h-[280px] md:h-[400px] lg:h-[500px] bg-gray-900">
             <AnimatePresence mode="wait">
@@ -703,7 +703,7 @@ const PropertyDetails = () => {
 
                 {/* Contact Card */}
                 {hasContactInfo && (
-                  <div className="bg-gray-50 rounded-lg md:rounded-xl p-3 md:p-4 border border-gray-200">
+                  <div className="glass-card rounded-lg md:rounded-xl p-3 md:p-4">
                     <h2 className="text-sm md:text-base font-bold mb-2 flex items-center gap-2">
                       <div className="p-1.5 bg-blue-600 rounded-md">
                         <Phone className="w-3 h-3 md:w-4 md:h-4 text-white" />
@@ -754,7 +754,7 @@ const PropertyDetails = () => {
               {/* Right Column - Details */}
               <div className="lg:col-span-2 space-y-3 md:space-y-4">
                 {/* Description */}
-                <div className="bg-white rounded-lg md:rounded-xl p-3 md:p-5 border border-gray-200">
+                <div className="glass-card rounded-lg md:rounded-xl p-3 md:p-5">
                   <h2 className="text-sm md:text-lg font-bold mb-2 md:mb-3 flex items-center gap-2">
                     <div className="w-1 h-4 md:h-6 bg-blue-600 rounded-full"></div>
                     Description
@@ -765,7 +765,7 @@ const PropertyDetails = () => {
                 </div>
 
                 {/* Amenities */}
-                <div className="bg-white rounded-lg md:rounded-xl p-3 md:p-5 border border-gray-200">
+                <div className="glass-card rounded-lg md:rounded-xl p-3 md:p-5">
                   <h2 className="text-sm md:text-lg font-bold mb-2 md:mb-3 flex items-center gap-2">
                     <div className="w-1 h-4 md:h-6 bg-emerald-600 rounded-full"></div>
                     Amenities & Features

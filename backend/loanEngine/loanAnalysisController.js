@@ -1,10 +1,11 @@
 class AILoanAssistant {
-  constructor(income, existingEmis, creditScore, age, loanAmountRequested) {
+  constructor(income, existingEmis, creditScore, age, loanAmountRequested, preferredTenure = null) {
     this.income = income;
     this.existingEmis = existingEmis;
     this.creditScore = creditScore;
     this.age = age;
     this.loanAmountRequested = loanAmountRequested;
+    this.preferredTenure = preferredTenure;
 
     // Standard Market Base Rate (e.g., Repo Rate + Spread)
     this.baseRate = 8.50;
@@ -33,12 +34,22 @@ class AILoanAssistant {
       Logic: Loan must be repaid by retirement (Age 60).
     */
     const retirementAge = 60;
-    const maxTenure = retirementAge - this.age;
-
+    const maxTenureByAge = retirementAge - this.age;
+    
     // Cap tenure between 5 and 30 years
-    if (maxTenure > 30) return 30;
-    if (maxTenure < 5) return 0;
-    return maxTenure;
+    let allowedTenure = maxTenureByAge;
+    if (allowedTenure > 30) allowedTenure = 30;
+    if (allowedTenure < 5) return 0; // Too old for new loan
+
+    // If user prefers a specific tenure
+    if (this.preferredTenure) {
+      if (this.preferredTenure <= allowedTenure) {
+        return this.preferredTenure;
+      }
+      // If preferred is higher than allowed, we stick to allowed (and maybe warn in reason)
+    }
+
+    return allowedTenure;
   }
 
   calculateFoirLimit() {
@@ -139,6 +150,11 @@ class AILoanAssistant {
       result.reason = `The requested loan is too high for your income. We can offer a maximum of ₹${maxEligibleLoan.toLocaleString('en-IN')}`;
     }
 
+    // Add note if preferred tenure was reduced
+    if (this.preferredTenure && this.preferredTenure > tenure) {
+        result.reason += ` Note: Your preferred tenure of ${this.preferredTenure} years was capped to ${tenure} years due to age eligibility.`;
+    }
+
     return result;
   }
 }
@@ -169,7 +185,8 @@ export async function analyzeLoan(req, res) {
       Number(existingEmis || 0),
       Number(creditScore),
       Number(age),
-      Number(loanAmountRequested)
+      Number(loanAmountRequested),
+      req.body.preferredTenure ? Number(req.body.preferredTenure) : null
     );
 
     const analysisResult = app.runAnalysis();

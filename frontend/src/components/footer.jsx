@@ -81,7 +81,7 @@ const MobileFooterSection = ({ title, children, icon: Icon }) => {
 
   return (
     <motion.div
-      className="border border-gray-200/50 bg-white/50 backdrop-blur-sm rounded-xl p-4 hover:shadow-lg transition-all duration-300"
+      className="glass-panel rounded-xl p-4 hover:shadow-lg transition-all duration-300"
       whileHover={{ scale: 1.02 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -400,7 +400,7 @@ const Footer = () => {
 
 
       {/* Bottom Bar - COMPLETELY REDESIGNED */}
-      <div className="relative border-t border-gray-200 bg-white/80 backdrop-blur-sm">
+      <div className="relative border-t border-white/20 bg-white/60 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             {/* Copyright Section */}

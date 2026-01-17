@@ -135,8 +135,8 @@ const PropertiesPage = () => {
             images: Array.isArray(p.images)
               ? p.images.map((img) => toFullUrl(img.url || img))
               : firstImage
-              ? [firstImage]
-              : [],
+                ? [firstImage]
+                : [],
             image: firstImage,
             owner: p.owner,
             status: p.status,
@@ -195,7 +195,7 @@ const PropertiesPage = () => {
   const filteredProperties = useMemo(() => {
     // Define allowed property types
     const allowedTypes = ['buy', 'sell', 'rent'];
-    
+
     return propertyState.properties
       .filter((property) => {
         // Only show properties with allowed types (buy, sell, rent)
@@ -203,14 +203,14 @@ const PropertiesPage = () => {
           property.type?.toLowerCase()
         );
         if (!typeAllowed) return false;
-        
+
         const searchMatch =
           !filters.searchQuery ||
           [property.title, property.description, property.location].some(
             (field) =>
               field?.toLowerCase().includes(filters.searchQuery.toLowerCase())
           );
-  
+
         let typeMatch = true;
         if (filters.propertyType) {
           if (filters.propertyType === 'buy-sell') {
@@ -220,26 +220,26 @@ const PropertiesPage = () => {
             typeMatch = property.type?.toLowerCase() === filters.propertyType.toLowerCase();
           }
         }
-  
+
         const priceMatch =
           property.price >= filters.priceRange[0] &&
           property.price <= filters.priceRange[1];
-  
+
         const bedroomsMatch =
           !filters.bedrooms ||
           filters.bedrooms === "0" ||
           property.beds >= parseInt(filters.bedrooms);
-  
+
         const bathroomsMatch =
           !filters.bathrooms ||
           filters.bathrooms === "0" ||
           property.baths >= parseInt(filters.bathrooms);
-  
+
         const availabilityMatch =
           !filters.availability ||
           property.availability?.toLowerCase() ===
-            filters.availability.toLowerCase();
-  
+          filters.availability.toLowerCase();
+
         return (
           searchMatch &&
           typeMatch &&
@@ -270,7 +270,7 @@ const PropertiesPage = () => {
         }
       });
   }, [propertyState.properties, filters]);
-  
+
 
   const handleFilterChange = (newFilters) => {
     setFilters((prev) => ({
@@ -397,7 +397,7 @@ const PropertiesPage = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gray-50 pt-16"
+      className="min-h-screen bg-gray-50"
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
         <motion.header
@@ -439,12 +439,11 @@ const PropertiesPage = () => {
 
           {/* Properties Grid/List */}
           <div
-            className={`${
-              viewState.showFilters ? "lg:col-span-3" : "lg:col-span-4"
-            }`}
+            className={`${viewState.showFilters ? "lg:col-span-3" : "lg:col-span-4"
+              }`}
           >
             {/* Search and View Controls */}
-            <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm mb-4 sm:mb-6">
+            <div className="glass-panel p-3 sm:p-4 rounded-lg mb-4 sm:mb-6">
               <div className="flex flex-col gap-3">
                 {/* Search Bar */}
                 <div className="w-full">
@@ -489,11 +488,10 @@ const PropertiesPage = () => {
                           showFilters: !prev.showFilters,
                         }))
                       }
-                      className={`p-2 rounded-lg transition ${
-                        viewState.showFilters
-                          ? "bg-blue-100 text-blue-600"
-                          : "hover:bg-gray-100 text-gray-600"
-                      }`}
+                      className={`p-2 rounded-lg transition ${viewState.showFilters
+                        ? "bg-blue-100 text-blue-600"
+                        : "hover:bg-gray-100 text-gray-600"
+                        }`}
                       title="Toggle Filters"
                     >
                       <SlidersHorizontal className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -507,11 +505,10 @@ const PropertiesPage = () => {
                           isGridView: true,
                         }))
                       }
-                      className={`p-2 rounded-lg transition ${
-                        viewState.isGridView
-                          ? "bg-blue-100 text-blue-600"
-                          : "hover:bg-gray-100 text-gray-600"
-                      }`}
+                      className={`p-2 rounded-lg transition ${viewState.isGridView
+                        ? "bg-blue-100 text-blue-600"
+                        : "hover:bg-gray-100 text-gray-600"
+                        }`}
                       title="Grid View"
                     >
                       <Grid className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -525,11 +522,10 @@ const PropertiesPage = () => {
                           isGridView: false,
                         }))
                       }
-                      className={`p-2 rounded-lg transition ${
-                        !viewState.isGridView
-                          ? "bg-blue-100 text-blue-600"
-                          : "hover:bg-gray-100 text-gray-600"
-                      }`}
+                      className={`p-2 rounded-lg transition ${!viewState.isGridView
+                        ? "bg-blue-100 text-blue-600"
+                        : "hover:bg-gray-100 text-gray-600"
+                        }`}
                       title="List View"
                     >
                       <List className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -542,11 +538,10 @@ const PropertiesPage = () => {
             {/* Properties Display */}
             <motion.div
               layout
-              className={`grid gap-1.5 sm:gap-4 md:gap-6 ${
-                viewState.isGridView
-                  ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
-                  : "grid-cols-1"
-              }`}
+              className={`grid gap-1.5 sm:gap-4 md:gap-6 ${viewState.isGridView
+                ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
+                : "grid-cols-1"
+                }`}
             >
               <AnimatePresence>
                 {filteredProperties.length > 0 ? (
@@ -564,7 +559,7 @@ const PropertiesPage = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="col-span-full text-center py-12 sm:py-16 bg-white rounded-lg shadow-sm"
+                    className="col-span-full text-center py-12 sm:py-16 glass-panel rounded-lg"
                   >
                     <MapPin className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
                     <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">

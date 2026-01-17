@@ -234,8 +234,8 @@ const Navbar = () => {
         initial="hidden"
         animate="visible"
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled
-            ? "bg-white/95 shadow-xl backdrop-blur-xl border-b border-gray-200/50"
-            : "bg-white/90 backdrop-blur-lg border-b border-gray-100/80"
+          ? "bg-white/95 shadow-xl backdrop-blur-xl border-b border-gray-200/50"
+          : "bg-white/90 backdrop-blur-lg border-b border-gray-100/80"
           }`}
       >
         <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
@@ -577,7 +577,7 @@ const Navbar = () => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="md:hidden fixed right-0 top-0 h-full w-72 bg-white z-50 shadow-2xl overflow-y-auto"
+            className="md:hidden fixed right-0 top-0 h-full w-72 glass-panel z-50 overflow-y-auto border-l border-white/20"
           >
             {/* Drawer Header */}
             <div
@@ -663,8 +663,8 @@ const Navbar = () => {
                   to="/ai-features"
                   onClick={toggleMobileMenu}
                   className={`relative flex items-center gap-3 p-3 rounded-xl transition-all border ${location.pathname.startsWith("/ai-property-hub")
-                      ? "bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white shadow-xl border-transparent"
-                      : "bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-indigo-800 border-indigo-200 hover:shadow-lg"
+                    ? "bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white shadow-xl border-transparent"
+                    : "bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-indigo-800 border-indigo-200 hover:shadow-lg"
                     }`}
                 >
                   {/* Icon Box */}
@@ -919,8 +919,8 @@ const MobileNavItem = ({
       to={path}
       onClick={onClick}
       className={`flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all mb-1 ${isActive
-          ? "bg-blue-600 text-white shadow-lg"
-          : "text-gray-700 hover:bg-gray-50"
+        ? "bg-blue-600 text-white shadow-lg"
+        : "text-gray-700 hover:bg-gray-50"
         }`}
     >
       <Icon className="w-4 h-4" />

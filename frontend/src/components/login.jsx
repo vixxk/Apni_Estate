@@ -181,7 +181,7 @@ const Login = () => {
         >
           <motion.div
             variants={cardVariants}
-            className="relative bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden"
+            className="relative glass-card rounded-3xl overflow-hidden"
           >
             {/* Decorative Elements */}
             <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-full blur-xl"></div>

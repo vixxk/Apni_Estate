@@ -216,8 +216,8 @@ const SearchBar = ({ onSearch, className }) => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg 
-                shadow-lg border border-gray-100 overflow-hidden z-50"
+              className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-md rounded-lg 
+                shadow-xl border border-white/20 overflow-hidden z-50"
             >
               <div className="p-2">
                 <h3 className="text-xs font-medium text-gray-500 px-3 mb-2">
@@ -289,8 +289,8 @@ const SearchBar = ({ onSearch, className }) => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="absolute top-full right-0 mt-2 bg-white rounded-lg 
-        shadow-lg border border-gray-100 overflow-hidden z-50 w-40"
+              className="absolute top-full right-0 mt-2 bg-white/95 backdrop-blur-md rounded-lg 
+        shadow-xl border border-white/20 overflow-hidden z-50 w-40"
             >
               {/* Recent Locations */}
               {recentLocations.length > 0 && (

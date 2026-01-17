@@ -140,7 +140,7 @@ const Companies = () => {
               key={index}
               variants={itemVariants}
               whileHover={{ scale: 1.05, y: -5 }}
-              className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-6 text-center border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="glass-card rounded-xl md:rounded-2xl p-4 md:p-6 text-center transition-all duration-300"
             >
               <motion.div
                 animate={floatingAnimation}
@@ -165,7 +165,7 @@ const Companies = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="bg-white/60 backdrop-blur-md rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 border border-gray-200 shadow-2xl"
+          className="glass-panel rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-12 mb-10"
         >
           <motion.div variants={itemVariants} className="text-center mb-8 md:mb-12">
             <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-2">
@@ -193,7 +193,7 @@ const Companies = () => {
                 }}
                 className="group relative"
               >
-                <div className="relative overflow-hidden rounded-lg md:rounded-xl bg-white/80 backdrop-blur-sm p-4 md:p-6 border border-gray-100 shadow-lg group-hover:shadow-xl transition-all duration-300">
+                <div className="relative overflow-hidden rounded-lg md:rounded-xl glass-card p-4 md:p-6 shadow-lg group-hover:shadow-xl transition-all duration-300">
                   <img
                     className="h-8 md:h-12 w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
                     src={logo.src}

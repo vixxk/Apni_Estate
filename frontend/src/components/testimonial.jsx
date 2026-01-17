@@ -5,7 +5,7 @@ import { testimonials } from '../assets/testimonialdata';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import tsLogo from "../assets/tsLogo.jpg";
-import recognitionLogo from '../assets/gov.png'; 
+import recognitionLogo from '../assets/gov.png';
 
 
 // Animation Variants
@@ -23,8 +23,8 @@ const containerVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 50, scale: 0.9 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     scale: 1,
     transition: {
@@ -39,8 +39,8 @@ const cardVariants = {
 
 const headerVariants = {
   hidden: { opacity: 0, y: -30 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: {
       duration: 0.8,
@@ -74,7 +74,7 @@ const sparkleAnimation = {
 
 const pulseAnimation = {
   scale: [1, 1.05, 1],
-  transition: { 
+  transition: {
     duration: 2,
     repeat: Infinity,
     ease: "easeInOut"
@@ -95,18 +95,18 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
       transition={{ duration: 0.6, ease: "easeInOut" }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      className="group relative bg-gradient-to-br from-white to-blue-50/50 backdrop-blur-sm border border-white/20 p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden"
+      className="group relative glass-card p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden"
       style={{
-        boxShadow: isHovered 
+        boxShadow: isHovered
           ? "0 25px 50px -12px rgba(59, 130, 246, 0.25), 0 0 0 1px rgba(59, 130, 246, 0.1)"
           : "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
       }}
     >
       {/* Background Decorative Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
+
       {/* Floating Sparkles */}
-      <motion.div 
+      <motion.div
         animate={sparkleAnimation}
         className="absolute top-4 md:top-6 right-4 md:right-6 text-blue-400 opacity-30 group-hover:opacity-60 transition-opacity duration-300"
       >
@@ -121,7 +121,7 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
 
 
       {/* Premium Badge */}
-      <motion.div 
+      <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
@@ -134,7 +134,7 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
 
       {/* Testimonial Content */}
       <div className="relative z-10 mt-10 md:mt-12">
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
@@ -148,7 +148,7 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
 
 
       {/* Client Information Section */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
@@ -169,9 +169,9 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
               />
               <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-400/20 to-purple-400/20 opacity-0 group-hover/avatar:opacity-100 transition-opacity duration-300" />
             </motion.div>
-            
+
             {/* Status Indicator */}
-            <motion.div 
+            <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
@@ -191,7 +191,7 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
               <span className="inline-block w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mr-1.5 md:mr-2 animate-pulse" />
               {testimonial.location}
             </p>
-            
+
             {/* Star Rating */}
             <div className="flex items-center space-x-0.5 md:space-x-1">
               {[...Array(5)].map((_, i) => (
@@ -203,11 +203,10 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
                   whileHover={{ scale: 1.2 }}
                 >
                   <Star
-                    className={`w-3 h-3 md:w-4 md:h-4 transition-all duration-200 ${
-                      i < testimonial.rating 
-                        ? 'text-yellow-400 fill-current drop-shadow-sm' 
-                        : 'text-gray-300'
-                    }`}
+                    className={`w-3 h-3 md:w-4 md:h-4 transition-all duration-200 ${i < testimonial.rating
+                      ? 'text-yellow-400 fill-current drop-shadow-sm'
+                      : 'text-gray-300'
+                      }`}
                   />
                 </motion.div>
               ))}
@@ -228,11 +227,10 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.8 + i * 0.05 }}
-            className={`rounded-full transition-all duration-300 ${
-              i === index 
-                ? 'w-6 h-2 bg-blue-600 shadow-md' 
-                : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
-            }`}
+            className={`rounded-full transition-all duration-300 ${i === index
+              ? 'w-6 h-2 bg-blue-600 shadow-md'
+              : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
+              }`}
           />
         ))}
       </div>
@@ -250,7 +248,7 @@ const TestimonialCard = ({ testimonial, index, direction }) => {
 
 
 const Testimonials = () => {
-  const navigate = useNavigate();   
+  const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState('right');
   const [autoplay, setAutoplay] = useState(true);
@@ -269,12 +267,12 @@ const Testimonials = () => {
   // Auto-rotate testimonials
   useEffect(() => {
     if (!autoplay || isHovered) return;
-    
+
     const interval = setInterval(() => {
       setDirection('right');
       setActiveIndex((prev) => (prev + 1) % testimonials.length);
     }, 5000);
-    
+
     return () => clearInterval(interval);
   }, [autoplay, isHovered]);
 
@@ -314,20 +312,20 @@ const Testimonials = () => {
 
 
       {/* Floating Decorative Elements */}
-      <motion.div 
+      <motion.div
         animate={floatingAnimation}
         className="absolute top-12 md:top-20 left-6 md:left-10 text-blue-400/30"
       >
         <Sparkles className="w-6 h-6 md:w-8 md:h-8" />
       </motion.div>
-      <motion.div 
-        animate={{...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 1 }}}
+      <motion.div
+        animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 1 } }}
         className="absolute top-24 md:top-40 right-12 md:right-20 text-purple-400/30"
       >
         <Heart className="w-5 h-5 md:w-6 md:h-6" />
       </motion.div>
-      <motion.div 
-        animate={{...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 2 }}}
+      <motion.div
+        animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 2 } }}
         className="absolute bottom-20 md:bottom-32 left-12 md:left-20 text-indigo-400/30"
       >
         <Zap className="w-5 h-5 md:w-7 md:h-7" />
@@ -336,7 +334,7 @@ const Testimonials = () => {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
-        <motion.div 
+        <motion.div
           variants={headerVariants}
           initial="hidden"
           whileInView="visible"
@@ -356,7 +354,7 @@ const Testimonials = () => {
           </motion.div>
 
 
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -368,7 +366,7 @@ const Testimonials = () => {
           </motion.h2>
 
 
-          <motion.div 
+          <motion.div
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
@@ -377,21 +375,21 @@ const Testimonials = () => {
           />
 
 
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.5 }}
             className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
           >
-            Discover why thousands of homeowners trust ApniEstate to find their perfect property. 
+            Discover why thousands of homeowners trust ApniEstate to find their perfect property.
             Our commitment to excellence speaks through their experiences.
           </motion.p>
         </motion.div>
 
 
         {/* Statistics Section */}
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -402,11 +400,11 @@ const Testimonials = () => {
             <motion.div
               key={index}
               variants={cardVariants}
-              whileHover={{ 
+              whileHover={{
                 scale: 1.05,
                 transition: { type: "spring", stiffness: 300 }
               }}
-              className="text-center p-4 md:p-6 bg-white/70 backdrop-blur-sm rounded-xl md:rounded-2xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="text-center p-4 md:p-6 glass-panel rounded-xl md:rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <motion.div
                 animate={pulseAnimation}
@@ -427,7 +425,7 @@ const Testimonials = () => {
 
         {/* Desktop Testimonials Grid */}
         <div className="hidden lg:block">
-          <motion.div 
+          <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -440,18 +438,18 @@ const Testimonials = () => {
               <motion.div
                 key={testimonial.id}
                 variants={cardVariants}
-                whileHover={{ 
+                whileHover={{
                   y: -10,
                   scale: 1.02,
                   transition: { type: "spring", stiffness: 300, damping: 20 }
                 }}
-                className="group relative bg-gradient-to-br from-white to-blue-50/50 backdrop-blur-sm border border-white/20 p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden"
+                className="group relative glass-card p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden"
               >
                 {/* background effects */}
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
+
                 {/* Premium Badge */}
-                <motion.div 
+                <motion.div
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: index * 0.1 + 0.3, type: "spring", stiffness: 200 }}
@@ -501,16 +499,15 @@ const Testimonials = () => {
                       <span className="inline-block w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mr-2 animate-pulse" />
                       {testimonial.location}
                     </p>
-                    
+
                     <div className="flex items-center space-x-1">
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-4 h-4 transition-all duration-200 ${
-                            i < testimonial.rating 
-                              ? 'text-yellow-400 fill-current drop-shadow-sm' 
-                              : 'text-gray-300'
-                          }`}
+                          className={`w-4 h-4 transition-all duration-200 ${i < testimonial.rating
+                            ? 'text-yellow-400 fill-current drop-shadow-sm'
+                            : 'text-gray-300'
+                            }`}
                         />
                       ))}
                       <span className="ml-2 text-xs text-gray-500 font-medium">
@@ -527,14 +524,14 @@ const Testimonials = () => {
 
         {/* Mobile/Tablet Testimonial Carousel */}
         <div className="lg:hidden relative">
-          <div 
+          <div
             className="overflow-hidden px-2 md:px-4"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
             <AnimatePresence mode="wait" initial={false}>
-              <TestimonialCard 
-                testimonial={testimonials[activeIndex]} 
+              <TestimonialCard
+                testimonial={testimonials[activeIndex]}
                 index={activeIndex}
                 direction={direction}
                 key={activeIndex}
@@ -564,11 +561,10 @@ const Testimonials = () => {
                   whileHover={{ scale: 1.2 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => handleDotClick(index)}
-                  className={`rounded-full transition-all duration-300 ${
-                    index === activeIndex 
-                      ? 'w-6 md:w-8 h-2.5 md:h-3 bg-blue-600 shadow-lg' 
-                      : 'w-2.5 md:w-3 h-2.5 md:h-3 bg-gray-300 hover:bg-gray-400'
-                  }`}
+                  className={`rounded-full transition-all duration-300 ${index === activeIndex
+                    ? 'w-6 md:w-8 h-2.5 md:h-3 bg-blue-600 shadow-lg'
+                    : 'w-2.5 md:w-3 h-2.5 md:h-3 bg-gray-300 hover:bg-gray-400'
+                    }`}
                   aria-label={`Go to testimonial ${index + 1}`}
                 />
               ))}
@@ -589,7 +585,7 @@ const Testimonials = () => {
 
 
         {/* Call to Action */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -600,7 +596,7 @@ const Testimonials = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <a 
+            <a
               onClick={() => {
                 navigate("/contact");
                 window.scrollTo(0, 0);
@@ -613,8 +609,8 @@ const Testimonials = () => {
               <ArrowRight className="ml-2 md:ml-3 w-4 h-4 md:w-5 md:h-5 transform group-hover:translate-x-1 transition-transform duration-200" />
             </a>
           </motion.div>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}

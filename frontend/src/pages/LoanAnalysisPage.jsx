@@ -11,6 +11,7 @@ const LoanAnalysisPage = () => {
     creditScore: "",
     age: "",
     loanAmountRequested: "",
+    preferredTenure: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -37,6 +38,7 @@ const LoanAnalysisPage = () => {
         creditScore: Number(formData.creditScore),
         age: Number(formData.age),
         loanAmountRequested: Number(formData.loanAmountRequested),
+        preferredTenure: formData.preferredTenure ? Number(formData.preferredTenure) : null,
       });
 
       if (response.data.success) {
@@ -55,15 +57,16 @@ const LoanAnalysisPage = () => {
 
   useEffect(() => {
     if (result && resultRef.current) {
+      // Small delay to ensure DOM update and layout shift (especially on mobile) is complete
       setTimeout(() => {
-        resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
+        resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
     }
   }, [result]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 py-6 lg:py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="w-full px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-indigo-50 min-h-[calc(100vh-5rem)]">
+      <div className="max-w-4xl mx-auto py-6 lg:py-10">
         <div className="text-center mb-6 lg:mb-10">
           <div className="inline-flex items-center justify-center p-2 lg:p-3 bg-indigo-600 rounded-2xl shadow-lg mb-3 lg:mb-4">
             <Calculator className="w-6 h-6 lg:w-8 lg:h-8 text-white" />
@@ -76,12 +79,11 @@ const LoanAnalysisPage = () => {
           </p>
         </div>
 
-        <div className="relative lg:grid lg:grid-cols-2 lg:gap-8">
-          {/* Input Form */}
+        <div className="lg:grid lg:grid-cols-2 lg:gap-8">
+          {/* Input Form - Hidden on mobile if result is shown */}
           <div className={`
-              bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden
-              transition-all duration-500 ease-in-out w-full
-              ${result ? "absolute top-0 opacity-0 -translate-x-full lg:opacity-100 lg:static lg:transform-none" : "relative opacity-100 translate-x-0"}
+              bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden w-full
+              ${result ? "hidden lg:block" : "block"}
           `}>
             <div className="p-5 lg:p-8">
               <h2 className="text-lg lg:text-xl font-bold text-slate-800 mb-5 lg:mb-6 flex items-center gap-2">
@@ -142,6 +144,18 @@ const LoanAnalysisPage = () => {
                       className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100 transition-all outline-none"
                     />
                   </div>
+                  <div className="col-span-2 lg:col-span-1">
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Preferred Tenure (Years) <span className="text-gray-400 font-normal">(Optional)</span></label>
+                    <input
+                      type="number"
+                      name="preferredTenure"
+                      value={formData.preferredTenure}
+                      onChange={handleChange}
+                      placeholder="e.g. 20"
+                      max="30"
+                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100 transition-all outline-none"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -180,13 +194,7 @@ const LoanAnalysisPage = () => {
           </div>
 
           {/* Results Display */}
-          <div
-            ref={resultRef}
-            className={`
-              flex flex-col h-full w-full
-              transition-all duration-500 ease-in-out
-              ${result ? "relative opacity-100 translate-x-0" : "absolute top-0 opacity-0 translate-x-full lg:static lg:opacity-100 lg:transform-none"}
-          `}>
+          <div ref={resultRef} className={`flex flex-col h-full w-full ${!result ? "hidden lg:flex" : "flex"}`}>
             {/* Back Button for Mobile */}
             {result && (
               <button
@@ -196,7 +204,7 @@ const LoanAnalysisPage = () => {
                 className="lg:hidden mb-4 flex items-center text-slate-600 font-bold hover:text-indigo-600 transition-colors bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm w-fit"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
+                Back to Form
               </button>
             )}
 

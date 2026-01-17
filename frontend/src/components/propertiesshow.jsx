@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { 
-  MapPin, 
-  IndianRupee, 
-  BedDouble, 
-  Bath, 
-  Maximize, 
+import {
+  MapPin,
+  IndianRupee,
+  BedDouble,
+  Bath,
+  Maximize,
   Heart,
   Eye,
   ArrowRight,
@@ -40,14 +40,14 @@ const PropertyCard = ({ property, index, isMobile }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        duration: 0.5, 
+      transition={{
+        duration: 0.5,
         delay: index * 0.1,
         type: "spring",
         stiffness: 100,
         damping: 20
       }}
-      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer flex-shrink-0 w-full h-full"
+      className="glass-card rounded-xl overflow-hidden cursor-pointer flex-shrink-0 w-full h-full"
       onClick={handleNavigate}
     >
       {/* Property Image */}
@@ -55,10 +55,10 @@ const PropertyCard = ({ property, index, isMobile }) => {
         <img
           src={property.images[0]?.url}
           alt={property.images[0]?.alt || property.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
         />
       </div>
-      
+
       {/* Property Content */}
       <div className="p-4 md:p-5">
         {/* Property badges */}
@@ -77,12 +77,12 @@ const PropertyCard = ({ property, index, isMobile }) => {
         <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2 line-clamp-1">
           {property.title}
         </h3>
-        
+
         <div className="flex items-center text-gray-600 mb-3">
           <MapPin className="h-3.5 w-3.5 md:h-4 md:w-4 mr-2 flex-shrink-0 text-blue-500" />
           <span className="line-clamp-1 text-xs md:text-sm">{property.location?.city}, {property.location?.state}</span>
         </div>
-        
+
         {/* Property Features */}
         <div className="flex justify-between items-center py-2 md:py-2.5 border-y border-gray-100 mb-3">
           <div className="flex items-center gap-1">
@@ -98,13 +98,13 @@ const PropertyCard = ({ property, index, isMobile }) => {
             <span className="text-xs md:text-sm text-gray-600">{property.features?.area || 0} sqft</span>
           </div>
         </div>
-        
+
         <div className="flex items-center justify-between">
           <div className="flex items-center text-blue-600 font-bold">
             <IndianRupee className="h-4 w-4 md:h-5 md:w-5 mr-1" />
             <span className="text-base md:text-lg">{Number(property.price).toLocaleString('en-IN')}</span>
           </div>
-          
+
           <div className="text-xs md:text-sm bg-blue-50 text-blue-700 px-2 py-1 rounded-md flex items-center capitalize">
             <Building className="w-3 h-3 md:w-3.5 md:h-3.5 mr-1" />
             {property.category}
@@ -130,10 +130,10 @@ const PropertiesShow = () => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -143,7 +143,7 @@ const PropertiesShow = () => {
       try {
         setLoading(true);
         const response = await axios.get(`${Backendurl}/api/properties?limit=6`);
-        
+
         if (response.data.success) {
           setProperties(response.data.data);
         } else {
@@ -195,7 +195,7 @@ const PropertiesShow = () => {
           <div className="animate-pulse">
             <div className="h-8 md:h-10 bg-gray-200 rounded w-1/2 md:w-1/3 mx-auto mb-3 md:mb-4"></div>
             <div className="h-4 md:h-5 bg-gray-200 rounded w-1/3 md:w-1/4 mx-auto mb-10 md:mb-16"></div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8">
               {[1, 2, 3, 4, 5, 6].map((n) => (
                 <div key={n} className="bg-white rounded-xl shadow h-80 md:h-96">
@@ -221,13 +221,13 @@ const PropertiesShow = () => {
   return (
     <section className="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="text-center mb-10 md:mb-16"
         >
-          <motion.span 
+          <motion.span
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
@@ -243,7 +243,7 @@ const PropertiesShow = () => {
           >
             Featured Properties
           </motion.h2>
-          <motion.div 
+          <motion.div
             initial={{ width: 0 }}
             animate={{ width: isMobile ? 80 : 96 }}
             transition={{ delay: 0.4, duration: 0.6 }}
@@ -261,7 +261,7 @@ const PropertiesShow = () => {
 
 
         {error && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="text-red-700 bg-red-50 p-3 md:p-4 rounded-lg border border-red-200 mb-6 md:mb-8 max-w-md mx-auto text-center text-sm md:text-base"
@@ -283,8 +283,8 @@ const PropertiesShow = () => {
                 >
                   {properties.map((property, index) => (
                     <div key={property._id} className="w-full flex-shrink-0 px-4">
-                      <PropertyCard 
-                        property={property} 
+                      <PropertyCard
+                        property={property}
                         index={index}
                         isMobile={true}
                       />
@@ -315,11 +315,10 @@ const PropertiesShow = () => {
                   <button
                     key={index}
                     onClick={() => setCurrentSlide(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      index === currentSlide 
-                        ? 'bg-blue-600 w-6' 
-                        : 'bg-gray-300'
-                    }`}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentSlide
+                      ? 'bg-blue-600 w-6'
+                      : 'bg-gray-300'
+                      }`}
                     aria-label={`Go to slide ${index + 1}`}
                   />
                 ))}
@@ -329,9 +328,9 @@ const PropertiesShow = () => {
             {/* Desktop: Simple Grid Layout */}
             <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {properties.map((property, index) => (
-                <PropertyCard 
+                <PropertyCard
                   key={property._id}
-                  property={property} 
+                  property={property}
                   index={index}
                   isMobile={false}
                 />
@@ -339,19 +338,19 @@ const PropertiesShow = () => {
             </div>
           </>
         ) : (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-8 md:py-10 bg-white rounded-xl shadow-sm"
+            className="glass-panel text-center py-8 md:py-10 rounded-xl"
           >
-            <Search className="w-10 h-10 md:w-12 md:h-12 text-gray-300 mx-auto mb-3 md:mb-4" />
+            <Search className="w-10 h-10 md:w-12 md:h-12 text-gray-400 mx-auto mb-3 md:mb-4" />
             <h3 className="text-lg md:text-xl font-medium text-gray-800 mb-2">No properties available</h3>
             <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">No properties found.</p>
           </motion.div>
         )}
 
 
-        <motion.div 
+        <motion.div
           className="mt-12 md:mt-16 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

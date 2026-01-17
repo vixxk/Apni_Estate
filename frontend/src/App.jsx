@@ -64,8 +64,7 @@ const AppLayout = ({ children }) => {
         {!isAdminRoute && <Navbar />}
 
         <main
-          className={`flex-grow ${!isAdminRoute || isLoanPage || isAIPage ? "pt-16 pb-24 md:pt-16 md:pb-0" : ""
-            }`}
+          className={`flex-grow ${!isAdminRoute ? "pt-20 pb-24 md:pb-0" : ""}`}
         >
           {children}
         </main>

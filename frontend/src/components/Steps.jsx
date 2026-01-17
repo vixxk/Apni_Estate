@@ -128,8 +128,8 @@ function Step({ icon: Icon, title, description, stepNumber }) {
 
       {/* Icon container with glassmorphism effect */}
       <motion.div
-        className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-white/80 to-blue-50/80 backdrop-blur-sm 
-          rounded-2xl md:rounded-3xl flex items-center justify-center mb-4 md:mb-6 shadow-xl border border-white/20 
+        className="glass-panel w-20 h-20 md:w-24 md:h-24 
+          rounded-2xl md:rounded-3xl flex items-center justify-center mb-4 md:mb-6 
           relative overflow-hidden group-hover:shadow-2xl transition-all duration-500"
         animate={isHovered ? glowAnimation : {}}
       >
@@ -333,8 +333,8 @@ export default function HowItWorks() {
             ].map((stat, index) => (
               <motion.div
                 key={index}
-                className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 
-                  rounded-full shadow-lg border border-gray-100"
+                className="glass-card flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 
+                    rounded-full border border-white/20"
                 whileHover={{ scale: 1.05 }}
               >
                 <stat.icon className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-600" />
@@ -398,9 +398,8 @@ export default function HowItWorks() {
                       x: { duration: 2, ease: "easeInOut", repeat: Infinity },
                       scale: { duration: 0.3 },
                     }}
-                    className={`transition-colors duration-300 ${
-                      activeStep === index ? "text-indigo-600" : "text-blue-500"
-                    }`}
+                    className={`transition-colors duration-300 ${activeStep === index ? "text-indigo-600" : "text-blue-500"
+                      }`}
                   >
                     <ArrowRight className="h-8 w-8" />
                   </motion.div>

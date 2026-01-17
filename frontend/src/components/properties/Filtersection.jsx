@@ -43,7 +43,7 @@ const FilterSection = ({ filters, setFilters, onApplyFilters }) => {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
-      className="bg-white p-6 rounded-xl shadow-lg"
+      className="glass-panel p-6 rounded-xl"
     >
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
@@ -76,7 +76,7 @@ const FilterSection = ({ filters, setFilters, onApplyFilters }) => {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
                   ${filters.propertyType === type.toLowerCase()
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
+                    : "bg-white/50 text-gray-700 hover:bg-white/80"}`}
               >
                 {type}
               </button>
@@ -98,7 +98,7 @@ const FilterSection = ({ filters, setFilters, onApplyFilters }) => {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
                   ${filters.priceRange[0] === min && filters.priceRange[1] === max
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
+                    : "bg-white/50 text-gray-700 hover:bg-white/80"}`}
               >
                 {label}
               </button>
