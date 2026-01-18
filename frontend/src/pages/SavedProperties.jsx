@@ -79,7 +79,7 @@ const SavedProperties = () => {
               ? p.features.amenities
               : [],
             image: displayImage,
-            image: displayImage,
+
             images: firstImage ? [firstImage] : [],
             createdAt: p.createdAt,
             owner: p.owner,

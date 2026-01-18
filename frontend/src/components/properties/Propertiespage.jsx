@@ -441,8 +441,29 @@ const PropertiesPage = () => {
           </p>
         </motion.header>
 
-        <div className="flex flex-col gap-6">
-          <div className="w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-8">
+          <AnimatePresence mode="wait">
+            {viewState.showFilters && (
+              <motion.aside
+                ref={filterRef}
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -20, opacity: 0 }}
+                className="lg:col-span-1"
+              >
+                <FilterSection
+                  filters={filters}
+                  setFilters={setFilters}
+                  onApplyFilters={handleFilterChange}
+                />
+              </motion.aside>
+            )}
+          </AnimatePresence>
+
+          <div
+            className={`${viewState.showFilters ? "lg:col-span-3" : "lg:col-span-4"
+              }`}
+          >
             <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm mb-4 sm:mb-6">
               <div className="flex flex-col gap-3">
                 <div className="w-full">
@@ -536,7 +557,7 @@ const PropertiesPage = () => {
         </div>
 
         {/* Properties Display */}
-        < motion.div
+        <motion.div
           layout
           className={`grid gap-1.5 sm:gap-4 md:gap-6 ${viewState.isGridView
             ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
@@ -588,9 +609,9 @@ const PropertiesPage = () => {
               </motion.div>
             )}
           </AnimatePresence>
-        </motion.div >
-      </div >
-    </motion.div >
+        </motion.div>
+      </div>
+    </motion.div>
   );
 };
 
