@@ -43,18 +43,24 @@ const PropertiesPage = () => {
 
   const token = localStorage.getItem("token");
 
-  // Update filter when navigating from Hero page
+  // Update filter when navigating from Hero page or Navbar (query param)
+  const queryParams = new URLSearchParams(location.search);
+  const typeParam = queryParams.get('type');
+
   useEffect(() => {
-    if (location.state?.filterType) {
+    // Priority: Location State > Query Param
+    const filterToApply = location.state?.filterType || typeParam;
+
+    if (filterToApply) {
       setFilters(prev => ({
         ...prev,
-        propertyType: location.state.filterType,
+        propertyType: filterToApply,
         searchQuery: "" // Keep search bar empty
       }));
-      // Clear the navigation state to prevent reapplying on refresh
+      // Clear the navigation state to prevent reapplying on refresh, but keep URL param valid for deep linking
       window.history.replaceState({}, document.title);
     }
-  }, [location.state]);
+  }, [location.state, typeParam]);
 
   // Close filters when clicking outside
   useEffect(() => {
@@ -194,15 +200,19 @@ const PropertiesPage = () => {
 
   const filteredProperties = useMemo(() => {
     // Define allowed property types
-    const allowedTypes = ['buy', 'sell', 'rent'];
-
     return propertyState.properties
       .filter((property) => {
-        // Only show properties with allowed types (buy, sell, rent)
-        const typeAllowed = allowedTypes.includes(
-          property.type?.toLowerCase()
-        );
-        if (!typeAllowed) return false;
+        // Broad filter: We generally want to show properties that are either
+        // categorized as sell/rent OR have specific types we support.
+        // Let's rely on the specific filters below instead of a hard 'allowedTypes' check that might miss new types.
+        // But if we must filter out 'services', we can check that.
+
+        // For now, let's consider everything valid unless filtered out by user filters.
+        // If we want to exclude Services from 'Properties' page, we can check category/type.
+
+        // Example: Exclude 'construction services' etc if we only want 'Real Estate'
+        // const isRealEstate = ['apartment','house','villa','plot','commercial','flat','shop'].includes(property.type) || ['sell','rent'].includes(property.category);
+        // if (!isRealEstate) return false;
 
         const searchMatch =
           !filters.searchQuery ||
@@ -211,14 +221,32 @@ const PropertiesPage = () => {
               field?.toLowerCase().includes(filters.searchQuery.toLowerCase())
           );
 
+        // Type Check
+        // If filters.propertyType is set (e.g. from navbar dropdown 'apartment', 'house'),
+        // we check if property.type matches that.
+        // OR if filter is 'buy-sell'/'rent', we check category.
+
         let typeMatch = true;
         if (filters.propertyType) {
-          if (filters.propertyType === 'buy-sell') {
-            typeMatch = ['buy', 'sell'].includes(property.type?.toLowerCase());
+          const fType = filters.propertyType.toLowerCase();
+
+          if (fType === 'buy' || fType === 'sell') {
+            // Check category for buy/sell
+            typeMatch = (property.category === 'sell' || property.category === 'buy');
+            typeMatch = (property.category === 'rent');
           } else {
-            // Show only the specific type
-            typeMatch = property.type?.toLowerCase() === filters.propertyType.toLowerCase();
+            // It's a specific property type like 'apartment', 'house', 'villa'
+            // Ensure robust comparison (handle plural/singular mismatch if any)
+            const pType = property.type?.toLowerCase() || "";
+            const targetType = fType; // already lowercased above
+
+            // Simple exact match or "contains" if we want to be lenient with "apartments" vs "apartment"
+            typeMatch = pType === targetType || pType.includes(targetType) || targetType.includes(pType);
           }
+        } else {
+          // Default view: Show everything relevant?
+          // Or maybe restrict to Buy/Rent/Sell categories by default if no type selected?
+          // For now, let's allow all.
         }
 
         const priceMatch =
@@ -277,6 +305,8 @@ const PropertiesPage = () => {
       ...prev,
       ...newFilters,
     }));
+    // Close sidebar on mobile/tablet when filters are applied
+    setViewState((prev) => ({ ...prev, showFilters: false }));
   };
 
   const handleFavouritesChange = (propertyId, action) => {
@@ -294,80 +324,23 @@ const PropertiesPage = () => {
 
   if (propertyState.loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex flex-col items-center justify-center pb-32 md:pb-0 bg-gray-50">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           className="text-center flex flex-col items-center"
         >
           <div className="relative mb-6">
-            <motion.div
-              className="w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center relative shadow-lg shadow-blue-500/30"
-              animate={{
-                rotate: [0, 0, 360, 360, 0],
-                scale: [1, 0.9, 0.9, 1, 1],
-                borderRadius: ["16%", "50%", "50%", "16%", "16%"],
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <Home className="w-12 h-12 text-white" />
-            </motion.div>
-
-            <motion.div
-              className="absolute w-3 h-3 bg-blue-300 rounded-full right-4 bottom-10"
-              animate={{
-                x: [0, 30, 0, -30, 0],
-                y: [-30, 0, 30, 0, -30],
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            />
-
-            <motion.div
-              className="absolute w-2 h-2 bg-indigo-400 rounded-full"
-              animate={{
-                x: [0, -30, 0, 30, 0],
-                y: [30, 0, -30, 0, 30],
-              }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
-            />
-
-            <div
-              className="absolute inset-0 bg-blue-500/10 rounded-full animate-ping"
-              style={{ animationDuration: "3s" }}
-            ></div>
+            <div className="w-16 h-16 md:w-20 md:h-20 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
           </div>
 
-          <h3 className="text-2xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
             Loading Properties
           </h3>
 
-          <p className="text-gray-600 mb-5 max-w-xs text-center">
-            We're finding the perfect homes that match your preferences...
+          <p className="text-gray-600 max-w-xs text-center text-sm md:text-base">
+            Finding the perfect homes for you...
           </p>
-
-          <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
-            <motion.div
-              className="h-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600 bg-size-200 absolute top-0 left-0 right-0"
-              animate={{
-                backgroundPosition: ["0% center", "100% center", "0% center"],
-              }}
-              style={{ backgroundSize: "200% 100%" }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            />
-          </div>
-
-          <div className="flex items-center mt-4 text-xs text-blue-600">
-            <motion.div
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"
-            />
-            <span>Please wait while we curate properties for you</span>
-          </div>
         </motion.div>
       </div>
     );
@@ -405,7 +378,7 @@ const PropertiesPage = () => {
           animate={{ y: 0, opacity: 1 }}
           className="text-center mb-6 sm:mb-12"
         >
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-blue-700 mb-2 sm:mb-4">
             Find Your Perfect Property
           </h1>
           <p className="text-sm sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">

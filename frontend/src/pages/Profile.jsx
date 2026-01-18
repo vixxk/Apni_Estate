@@ -474,6 +474,7 @@ function Profile() {
         <div className="glass-panel rounded-2xl overflow-hidden shadow-2xl">
           {/* Compact Avatar Section */}
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 sm:p-6 border-b">
+            <h1 className="text-2xl font-bold text-blue-700 text-center mb-6">My Profile</h1>
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
               {/* Avatar */}
               <div className="relative group flex-shrink-0">
@@ -506,10 +507,9 @@ function Profile() {
               {/* User Info & Actions */}
               <div className="flex-1 text-center sm:text-left space-y-3">
                 <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                  <h2 className="text-lg sm:text-xl font-bold text-blue-700">
                     {name || "User"}
                   </h2>
-                  <p className="text-xs sm:text-sm text-gray-600">{user.email}</p>
                 </div>
 
                 {/* Avatar Actions - Compact */}

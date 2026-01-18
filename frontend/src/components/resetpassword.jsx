@@ -251,7 +251,7 @@ const ResetPassword = () => {
                 >
                   <Sparkles className="w-full h-full" />
                 </motion.div>
-                <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                <h2 className="text-4xl font-bold text-blue-700">
                   ApniEstate
                 </h2>
               </motion.div>
@@ -396,8 +396,8 @@ const ResetPassword = () => {
               type="submit"
               disabled={loading}
               className={`w-full py-4 rounded-xl text-white font-semibold text-lg transition-all duration-300 flex items-center justify-center space-x-2 shadow-xl ${isFormValid && !loading
-                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-blue-500/25"
-                  : "bg-gray-400 cursor-not-allowed opacity-70"
+                ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-blue-500/25"
+                : "bg-gray-400 cursor-not-allowed opacity-70"
                 }`}
             >
               {loading ? (

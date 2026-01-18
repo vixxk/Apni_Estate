@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <div className="mt-16">
+    <div>
       <div className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         {/* Animated gradient background */}
         <div className="absolute inset-0 z-0">

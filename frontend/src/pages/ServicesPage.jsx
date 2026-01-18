@@ -334,7 +334,7 @@ const ServicesPage = () => {
             ></div>
           </div>
 
-          <h3 className="text-2xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+          <h3 className="text-2xl font-bold text-slate-800 mb-3">
             Loading Services
           </h3>
 
@@ -344,13 +344,12 @@ const ServicesPage = () => {
 
           <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
             <motion.div
-              className="h-full bg-gradient-to-r from-green-600 via-teal-500 to-green-600 bg-size-200 absolute top-0 left-0 right-0"
+              className="h-full bg-green-500 absolute top-0 left-0 right-0"
               animate={{
-                backgroundPosition: ["0% center", "100% center", "0% center"],
+                x: ["-100%", "100%"],
               }}
-              style={{ backgroundSize: "200% 100%" }}
               transition={{
-                duration: 2,
+                duration: 1.5,
                 repeat: Infinity,
                 ease: "linear",
               }}
@@ -402,7 +401,7 @@ const ServicesPage = () => {
           animate={{ y: 0, opacity: 1 }}
           className="text-center mb-6 sm:mb-12"
         >
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-blue-700 mb-2 sm:mb-4">
             Professional Services
           </h1>
           <p className="text-sm sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">
@@ -479,8 +478,8 @@ const ServicesPage = () => {
                         }))
                       }
                       className={`p-2 rounded-lg transition ${viewState.showFilters
-                          ? "bg-green-100 text-green-600"
-                          : "hover:bg-gray-100 text-gray-600"
+                        ? "bg-green-100 text-green-600"
+                        : "hover:bg-gray-100 text-gray-600"
                         }`}
                       title="Toggle Filters"
                     >
@@ -495,8 +494,8 @@ const ServicesPage = () => {
                         }))
                       }
                       className={`p-2 rounded-lg transition ${viewState.isGridView
-                          ? "bg-green-100 text-green-600"
-                          : "hover:bg-gray-100 text-gray-600"
+                        ? "bg-green-100 text-green-600"
+                        : "hover:bg-gray-100 text-gray-600"
                         }`}
                       title="Grid View"
                     >
@@ -511,8 +510,8 @@ const ServicesPage = () => {
                         }))
                       }
                       className={`p-2 rounded-lg transition ${!viewState.isGridView
-                          ? "bg-green-100 text-green-600"
-                          : "hover:bg-gray-100 text-gray-600"
+                        ? "bg-green-100 text-green-600"
+                        : "hover:bg-gray-100 text-gray-600"
                         }`}
                       title="List View"
                     >
@@ -526,8 +525,8 @@ const ServicesPage = () => {
             <motion.div
               layout
               className={`grid gap-1.5 sm:gap-4 md:gap-6 ${viewState.isGridView
-                  ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
-                  : "grid-cols-1"
+                ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
+                : "grid-cols-1"
                 }`}
             >
               <AnimatePresence>

@@ -237,7 +237,7 @@ const VendorContactRequests = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6 pt-6"
         >
-          <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent mb-2 leading-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-blue-700 mb-2 leading-tight">
             Contact Requests
           </h1>
           <p className="text-sm sm:text-base text-gray-600 font-medium">

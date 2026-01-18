@@ -3,13 +3,13 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Loader, 
-  Building2, 
-  Mail, 
-  CheckCircle, 
-  AlertCircle, 
-  Shield, 
+import {
+  Loader,
+  Building2,
+  Mail,
+  CheckCircle,
+  AlertCircle,
+  Shield,
   Star,
   ArrowRight,
   User,
@@ -26,8 +26,8 @@ import { toast } from 'react-toastify';
 // Animation Variants
 const containerVariants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: {
       duration: 0.6,
@@ -42,8 +42,8 @@ const containerVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     scale: 1,
     y: 0,
     transition: {
@@ -58,8 +58,8 @@ const cardVariants = {
 
 const inputVariants = {
   hidden: { opacity: 0, x: -20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     x: 0,
     transition: {
       duration: 0.5,
@@ -81,7 +81,7 @@ const floatingAnimation = {
 
 const pulseAnimation = {
   scale: [1, 1.05, 1],
-  transition: { 
+  transition: {
     duration: 2,
     repeat: Infinity,
     ease: "easeInOut"
@@ -125,7 +125,7 @@ const VendorRegister = () => {
   // Real-time validation
   const validateField = (name, value) => {
     const errors = {};
-    
+
     switch (name) {
       case 'name':
         if (!value.trim()) errors.name = 'Business/Vendor name is required';
@@ -148,7 +148,7 @@ const VendorRegister = () => {
         break;
       }
     }
-    
+
     setValidationErrors(prev => ({ ...prev, ...errors }));
     return Object.keys(errors).length === 0;
   };
@@ -194,11 +194,11 @@ const VendorRegister = () => {
     // Start countdown and redirect after 5 seconds regardless of response
     let seconds = 5;
     setCountdown(seconds);
-    
+
     const countdownInterval = setInterval(() => {
       seconds--;
       setCountdown(seconds);
-      
+
       if (seconds === 0) {
         clearInterval(countdownInterval);
         navigate('/login');
@@ -207,7 +207,7 @@ const VendorRegister = () => {
 
     // Make the API call but don't wait for it or handle its response
     axios.post(
-      `${Backendurl}/api/users/register`, 
+      `${Backendurl}/api/users/register`,
       { ...formData, role: 'vendor' }
     ).catch((error) => {
       // Silent error handling - don't show error to user
@@ -258,11 +258,9 @@ const VendorRegister = () => {
               ease: "easeInOut",
               delay: i * 0.5
             }}
-            className={`absolute w-2 h-2 bg-indigo-400 rounded-full ${
-              i % 2 === 0 ? 'top-1/4' : 'top-3/4'
-            } ${
-              i % 3 === 0 ? 'left-1/4' : i % 3 === 1 ? 'left-1/2' : 'left-3/4'
-            }`}
+            className={`absolute w-2 h-2 bg-indigo-400 rounded-full ${i % 2 === 0 ? 'top-1/4' : 'top-3/4'
+              } ${i % 3 === 0 ? 'left-1/4' : i % 3 === 1 ? 'left-1/2' : 'left-3/4'
+              }`}
           />
         ))}
       </div>
@@ -297,19 +295,19 @@ const VendorRegister = () => {
                   >
                     <Home className="w-6 h-6 text-white" />
                   </motion.div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  <h1 className="text-3xl font-bold text-blue-700">
                     ApniEstate
                   </h1>
                 </motion.div>
               </Link>
-              
+
               <div className="space-y-2">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <Building2 className="w-6 h-6 text-indigo-600" />
                   <h2 className="text-2xl font-bold text-gray-800">Vendor Registration</h2>
                 </div>
                 <p className="text-gray-600">Join our network of trusted property vendors</p>
-                
+
                 {/* Vendor Benefits */}
                 <div className="flex items-center justify-center space-x-6 mt-4 text-sm text-gray-500">
                   <div className="flex items-center space-x-1">
@@ -372,9 +370,8 @@ const VendorRegister = () => {
                   Business/Vendor Name
                 </label>
                 <div className="relative group">
-                  <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${
-                    fieldFocus.name ? 'text-indigo-500' : 'text-gray-400'
-                  }`}>
+                  <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${fieldFocus.name ? 'text-indigo-500' : 'text-gray-400'
+                    }`}>
                     <Building2 className="h-5 w-5" />
                   </div>
                   <input
@@ -387,13 +384,12 @@ const VendorRegister = () => {
                     onFocus={() => handleFocus('name')}
                     onBlur={() => handleBlur('name')}
                     disabled={loading}
-                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${
-                      validationErrors.name
+                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${validationErrors.name
                         ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                         : fieldFocus.name
-                        ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
-                        : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
-                    } focus:ring-4 focus:outline-none`}
+                          ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
+                          : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      } focus:ring-4 focus:outline-none`}
                     placeholder="Enter your business name"
                   />
                   {validationErrors.name && (
@@ -436,9 +432,8 @@ const VendorRegister = () => {
                   Business Email
                 </label>
                 <div className="relative group">
-                  <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${
-                    fieldFocus.email ? 'text-indigo-500' : 'text-gray-400'
-                  }`}>
+                  <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${fieldFocus.email ? 'text-indigo-500' : 'text-gray-400'
+                    }`}>
                     <Mail className="h-5 w-5" />
                   </div>
                   <input
@@ -451,13 +446,12 @@ const VendorRegister = () => {
                     onFocus={() => handleFocus('email')}
                     onBlur={() => handleBlur('email')}
                     disabled={loading}
-                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${
-                      validationErrors.email
+                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${validationErrors.email
                         ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                         : fieldFocus.email
-                        ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
-                        : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
-                    } focus:ring-4 focus:outline-none`}
+                          ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
+                          : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      } focus:ring-4 focus:outline-none`}
                     placeholder="vendor@company.com"
                   />
                   {validationErrors.email && (
@@ -500,9 +494,8 @@ const VendorRegister = () => {
                   Contact Phone
                 </label>
                 <div className="relative group">
-                  <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${
-                    fieldFocus.phone ? 'text-indigo-500' : 'text-gray-400'
-                  }`}>
+                  <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${fieldFocus.phone ? 'text-indigo-500' : 'text-gray-400'
+                    }`}>
                     <Phone className="h-5 w-5" />
                   </div>
                   <input
@@ -515,13 +508,12 @@ const VendorRegister = () => {
                     onFocus={() => handleFocus('phone')}
                     onBlur={() => handleBlur('phone')}
                     disabled={loading}
-                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${
-                      validationErrors.phone
+                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${validationErrors.phone
                         ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                         : fieldFocus.phone
-                        ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
-                        : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
-                    } focus:ring-4 focus:outline-none`}
+                          ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
+                          : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      } focus:ring-4 focus:outline-none`}
                     placeholder="10-digit phone number"
                   />
                   {validationErrors.phone && (
@@ -564,9 +556,8 @@ const VendorRegister = () => {
                   Password
                 </label>
                 <div className="relative group">
-                  <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${
-                    fieldFocus.password ? 'text-indigo-500' : 'text-gray-400'
-                  }`}>
+                  <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${fieldFocus.password ? 'text-indigo-500' : 'text-gray-400'
+                    }`}>
                     <Key className="h-5 w-5" />
                   </div>
                   <input
@@ -579,13 +570,12 @@ const VendorRegister = () => {
                     onFocus={() => handleFocus('password')}
                     onBlur={() => handleBlur('password')}
                     disabled={loading}
-                    className={`w-full pl-10 pr-12 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${
-                      validationErrors.password
+                    className={`w-full pl-10 pr-12 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${validationErrors.password
                         ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                         : fieldFocus.password
-                        ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
-                        : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
-                    } focus:ring-4 focus:outline-none`}
+                          ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
+                          : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      } focus:ring-4 focus:outline-none`}
                     placeholder="Create a strong password"
                   />
                   <motion.button
@@ -599,7 +589,7 @@ const VendorRegister = () => {
                     {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
                   </motion.button>
                 </div>
-                
+
                 {/* Password Strength Indicator */}
                 <AnimatePresence>
                   {formData.password && (
@@ -611,12 +601,11 @@ const VendorRegister = () => {
                     >
                       <div className="flex items-center space-x-2 mb-1">
                         <span className="text-sm text-gray-600">Password strength:</span>
-                        <span className={`text-sm font-medium ${
-                          passwordStrength < 50 ? 'text-red-500' : 
-                          passwordStrength < 75 ? 'text-yellow-500' : 'text-green-500'
-                        }`}>
-                          {passwordStrength < 50 ? 'Weak' : 
-                           passwordStrength < 75 ? 'Medium' : 'Strong'}
+                        <span className={`text-sm font-medium ${passwordStrength < 50 ? 'text-red-500' :
+                            passwordStrength < 75 ? 'text-yellow-500' : 'text-green-500'
+                          }`}>
+                          {passwordStrength < 50 ? 'Weak' :
+                            passwordStrength < 75 ? 'Medium' : 'Strong'}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
@@ -624,10 +613,9 @@ const VendorRegister = () => {
                           initial={{ width: 0 }}
                           animate={{ width: `${passwordStrength}%` }}
                           transition={{ duration: 0.3 }}
-                          className={`h-2 rounded-full transition-colors duration-300 ${
-                            passwordStrength < 50 ? 'bg-red-500' : 
-                            passwordStrength < 75 ? 'bg-yellow-500' : 'bg-green-500'
-                          }`}
+                          className={`h-2 rounded-full transition-colors duration-300 ${passwordStrength < 50 ? 'bg-red-500' :
+                              passwordStrength < 75 ? 'bg-yellow-500' : 'bg-green-500'
+                            }`}
                         />
                       </div>
                     </motion.div>
@@ -657,11 +645,10 @@ const VendorRegister = () => {
                   whileTap={{ scale: loading ? 1 : 0.98 }}
                   type="submit"
                   disabled={loading || Object.keys(validationErrors).some(key => validationErrors[key])}
-                  className={`w-full py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg ${
-                    loading || Object.keys(validationErrors).some(key => validationErrors[key])
+                  className={`w-full py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg ${loading || Object.keys(validationErrors).some(key => validationErrors[key])
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-indigo-500/25 hover:shadow-indigo-500/40'
-                  }`}
+                    }`}
                 >
                   {loading ? (
                     <>

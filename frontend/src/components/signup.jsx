@@ -305,7 +305,7 @@ const Signup = () => {
                   >
                     <Home className="w-6 h-6 text-white" />
                   </motion.div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  <h1 className="text-3xl font-bold text-blue-700">
                     ApniEstate
                   </h1>
                 </motion.div>
@@ -374,10 +374,10 @@ const Signup = () => {
                     onFocus={() => handleFocus("name")}
                     onBlur={() => handleBlur("name")}
                     className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${validationErrors.name
-                        ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
-                        : fieldFocus.name
-                          ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
-                          : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                      : fieldFocus.name
+                        ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
+                        : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
                       } focus:ring-4 focus:outline-none`}
                     placeholder="Enter your full name"
                   />
@@ -439,10 +439,10 @@ const Signup = () => {
                     onFocus={() => handleFocus("email")}
                     onBlur={() => handleBlur("email")}
                     className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${validationErrors.email
-                        ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
-                        : fieldFocus.email
-                          ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
-                          : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                      : fieldFocus.email
+                        ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
+                        : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
                       } focus:ring-4 focus:outline-none`}
                     placeholder="name@company.com"
                   />
@@ -504,10 +504,10 @@ const Signup = () => {
                     onFocus={() => handleFocus("phone")}
                     onBlur={() => handleBlur("phone")}
                     className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${validationErrors.phone
-                        ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
-                        : fieldFocus.phone
-                          ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
-                          : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                      : fieldFocus.phone
+                        ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
+                        : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
                       } focus:ring-4 focus:outline-none`}
                     placeholder="+91 98765 43210"
                   />
@@ -570,10 +570,10 @@ const Signup = () => {
                     onFocus={() => handleFocus("password")}
                     onBlur={() => handleBlur("password")}
                     className={`w-full pl-10 pr-12 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${validationErrors.password
-                        ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
-                        : fieldFocus.password
-                          ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
-                          : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                      : fieldFocus.password
+                        ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
+                        : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
                       } focus:ring-4 focus:outline-none`}
                     placeholder="Create a strong password"
                   />
@@ -607,10 +607,10 @@ const Signup = () => {
                         </span>
                         <span
                           className={`text-sm font-medium ${passwordStrength < 50
-                              ? "text-red-500"
-                              : passwordStrength < 75
-                                ? "text-yellow-500"
-                                : "text-green-500"
+                            ? "text-red-500"
+                            : passwordStrength < 75
+                              ? "text-yellow-500"
+                              : "text-green-500"
                             }`}
                         >
                           {passwordStrength < 50
@@ -626,10 +626,10 @@ const Signup = () => {
                           animate={{ width: `${passwordStrength}%` }}
                           transition={{ duration: 0.3 }}
                           className={`h-2 rounded-full transition-colors duration-300 ${passwordStrength < 50
-                              ? "bg-red-500"
-                              : passwordStrength < 75
-                                ? "bg-yellow-500"
-                                : "bg-green-500"
+                            ? "bg-red-500"
+                            : passwordStrength < 75
+                              ? "bg-yellow-500"
+                              : "bg-green-500"
                             }`}
                         />
                       </div>
@@ -664,11 +664,11 @@ const Signup = () => {
                     )
                   }
                   className={`w-full py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg ${loading ||
-                      Object.keys(validationErrors).some(
-                        (key) => validationErrors[key]
-                      )
-                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-blue-500/25 hover:shadow-blue-500/40"
+                    Object.keys(validationErrors).some(
+                      (key) => validationErrors[key]
+                    )
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-blue-500/25 hover:shadow-blue-500/40"
                     }`}
                 >
                   {loading ? (

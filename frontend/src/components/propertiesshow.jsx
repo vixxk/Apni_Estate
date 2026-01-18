@@ -7,7 +7,6 @@ import {
   BedDouble,
   Bath,
   Maximize,
-  Heart,
   Eye,
   ArrowRight,
   Building,
@@ -296,14 +295,14 @@ const PropertiesShow = () => {
               {/* Mobile Navigation Buttons */}
               <button
                 onClick={prevSlide}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-blue-600 text-gray-700 hover:text-white p-2 rounded-full shadow-lg transition-all duration-300 z-10"
+                className="absolute left-2 top-24 -translate-y-1/2 bg-white/90 hover:bg-blue-600 text-gray-700 hover:text-white p-2 rounded-full shadow-lg transition-all duration-300 z-10"
                 aria-label="Previous property"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={nextSlide}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-blue-600 text-gray-700 hover:text-white p-2 rounded-full shadow-lg transition-all duration-300 z-10"
+                className="absolute right-2 top-24 -translate-y-1/2 bg-white/90 hover:bg-blue-600 text-gray-700 hover:text-white p-2 rounded-full shadow-lg transition-all duration-300 z-10"
                 aria-label="Next property"
               >
                 <ChevronRight className="w-5 h-5" />

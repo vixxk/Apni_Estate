@@ -5,20 +5,27 @@ import {
   Menu,
   X,
   ChevronDown,
+  User,
   LogOut,
+  Settings,
+  Bookmark,
+  Building,
+  Phone,
+  MessageSquare,
   Home,
-  Search,
-  Users,
-  MessageCircle,
-  Sparkles,
-  BotMessageSquare,
-  UserCircle,
-  Heart,
+  LayoutDashboard,
+  ShieldCheck,
+  Briefcase,
+  Bell,
+  Store,
   Crown,
   PlusCircle,
-  Store,
+  UserCircle,
+  BotMessageSquare,
   LogIn,
-  Bell,
+  Search,
+  Users,
+  MessageCircle
 } from "lucide-react";
 import logo from "../assets/images/apniestate-logo.png";
 import govLogo from "../assets/gov.png";
@@ -234,11 +241,12 @@ const Navbar = () => {
         initial="hidden"
         animate="visible"
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled
-          ? "bg-white/95 shadow-xl backdrop-blur-xl border-b border-gray-200/50"
-          : "bg-white/90 backdrop-blur-lg border-b border-gray-100/80"
+          ? "bg-white/95 shadow-md backdrop-blur-xl border-b border-gray-200"
+          : "bg-white/90 backdrop-blur-lg border-b border-gray-100"
           }`}
       >
-        <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
+        <div className="absolute inset-x-0 top-0 h-0.5 bg-blue-600" />
+
 
         <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -246,53 +254,27 @@ const Navbar = () => {
             <Link to="/" className="flex items-center space-x-3 group">
               <motion.div
                 variants={logoVariants}
-                whileHover={{
-                  rotate: [0, -10, 10, -10, 0],
-                  scale: 1.1,
-                }}
-                transition={{ duration: 0.5 }}
-                className="relative w-8 h-8 flex items-center justify-center"
+                initial="visible"
+                className="relative w-10 h-10 flex items-center justify-center"
               >
                 <img
                   src={logo}
                   alt="ApniEstate logo"
-                  className="w-full h-full object-cover rounded-xl shadow-lg"
+                  className="w-full h-full object-cover rounded-xl shadow-sm"
                 />
-
-                <motion.div
-                  animate={floatingAnimation}
-                  className="absolute -top-1 -right-1"
-                >
-                  <Sparkles className="w-3 h-3 text-yellow-300" />
-                </motion.div>
               </motion.div>
 
-              {/* Vertical Divider Line */}
-              {/* <div className="h-12 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div> */}
-
-              {/* Government Recognition Logo */}
-              {/* <motion.div
-                variants={logoVariants}
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.3 }}
-                className="relative w-8 h-8 flex items-center justify-center"
-              >
-                <img
-                  src={govLogo}
-                  alt="Government Recognition"
-                  className="w-full h-full object-contain rounded-full shadow-md border-2 border-gray-100"
-                />
-              </motion.div> */}
 
               <div className="flex flex-col">
-                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent group-hover:from-indigo-600 group-hover:via-blue-600 group-hover:to-purple-600 transition-all duration-500">
+                <span className="text-2xl font-bold text-blue-700 transition-colors duration-300">
                   ApniEstate
                 </span>
-                <span className="text-xs text-gray-500 font-medium -mt-1">
+                <span className="text-xs text-slate-500 font-medium -mt-1 tracking-wide">
                   Premium Properties
                 </span>
               </div>
             </Link>
+
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
@@ -301,17 +283,19 @@ const Navbar = () => {
                 isAuthenticated={isAuthenticated}
               />
 
+
               <div className="flex items-center space-x-4">
                 {/* Bell icon - only visible if authenticated AND vendor */}
                 {isAuthenticated && isVendor && (
                   <motion.button
                     onClick={handleNotificationClick}
-                    whileHover={{ scale: 1.1 }}
+                    whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="relative p-2 rounded-xl hover:bg-blue-50 transition-colors"
                     aria-label="Notifications"
                   >
                     <Bell className="w-5 h-5 text-gray-700" />
+
 
                     {/* Notification badge */}
                     {pendingRequestsCount > 0 && (
@@ -328,6 +312,7 @@ const Navbar = () => {
                   </motion.button>
                 )}
 
+
                 {isAuthenticated ? (
                   <div className="flex items-center space-x-3">
                     <div className="relative" ref={dropdownRef}>
@@ -341,12 +326,12 @@ const Navbar = () => {
                         <div className="relative">
                           <motion.div
                             whileHover={{ scale: 1.05 }}
-                            className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-blue-500/30"
+                            className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-md"
                           >
                             {getInitials(user?.name)}
                           </motion.div>
-                          <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 border-2 border-white rounded-full flex items-center justify-center">
-                            <div className="w-1.5 h-1.5 bg-green-600 rounded-full" />
+                          <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-500 border-2 border-white rounded-full flex items-center justify-center">
+                            <div className="w-1.5 h-1.5 bg-white rounded-full" />
                           </div>
                         </div>
                         <div className="hidden lg:flex flex-col items-start">
@@ -365,6 +350,7 @@ const Navbar = () => {
                         </motion.div>
                       </motion.button>
 
+
                       <AnimatePresence>
                         {isDropdownOpen && (
                           <motion.div
@@ -372,11 +358,11 @@ const Navbar = () => {
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: -10, scale: 0.95 }}
                             transition={{ duration: 0.2 }}
-                            className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
+                            className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
                           >
-                            <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100">
+                            <div className="px-6 py-4 bg-gray-50 border-b border-gray-100">
                               <div className="flex items-center space-x-3">
-                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shadow-lg">
+                                <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold shadow-md">
                                   {getInitials(user?.name)}
                                 </div>
                                 <div className="flex-1">
@@ -389,15 +375,15 @@ const Navbar = () => {
                                   <div className="flex items-center gap-1 mt-1">
                                     {isVendor ? (
                                       <>
-                                        <Store className="w-3 h-3 text-blue-500" />
-                                        <span className="text-xs text-blue-600 font-medium">
+                                        <Store className="w-3 h-3 text-blue-600" />
+                                        <span className="text-xs text-blue-700 font-medium">
                                           Vendor
                                         </span>
                                       </>
                                     ) : (
                                       <>
-                                        <Crown className="w-3 h-3 text-yellow-500" />
-                                        <span className="text-xs text-yellow-600 font-medium">
+                                        <Crown className="w-3 h-3 text-orange-500" />
+                                        <span className="text-xs text-orange-600 font-medium">
                                           Premium
                                         </span>
                                       </>
@@ -406,6 +392,7 @@ const Navbar = () => {
                                 </div>
                               </div>
                             </div>
+
 
                             <div className="py-2">
                               <motion.button
@@ -419,6 +406,7 @@ const Navbar = () => {
                                 <UserCircle className="w-4 h-4" />
                                 <span>My Profile</span>
                               </motion.button>
+
 
                               {isVendor && (
                                 <motion.button
@@ -437,6 +425,7 @@ const Navbar = () => {
                                 </motion.button>
                               )}
 
+
                               <motion.button
                                 whileHover={{
                                   x: 4,
@@ -448,9 +437,10 @@ const Navbar = () => {
                                 }}
                                 className="w-full px-6 py-3 text-left text-sm text-gray-700 hover:text-blue-600 flex items-center space-x-3 transition-colors"
                               >
-                                <Heart className="w-4 h-4" />
+                                <Bookmark className="w-4 h-4" />
                                 <span>Favourite Properties</span>
                               </motion.button>
+
 
                               <div className="border-t border-gray-100 my-2" />
                               <motion.button
@@ -484,26 +474,21 @@ const Navbar = () => {
                       </Link>
                     </motion.div>
                     <motion.div
-                      whileHover={{ scale: 1.05, ...glowAnimation }}
+                      whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       <Link
                         to="/signup"
-                        className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white px-6 py-2.5 rounded-xl hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl shadow-blue-500/30 font-semibold overflow-hidden"
+                        className="relative bg-blue-600 text-white px-6 py-2.5 rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg font-semibold overflow-hidden"
                       >
                         <span className="relative z-10">Get Started</span>
-                        <motion.div
-                          animate={sparkleVariants.animate}
-                          className="absolute top-1 right-1"
-                        >
-                          <Sparkles className="w-3 h-3 text-yellow-300" />
-                        </motion.div>
                       </Link>
                     </motion.div>
                   </div>
                 )}
               </div>
             </div>
+
 
             {/* Mobile: Bell icon (only for authenticated vendors) + Hamburger */}
             <div className="md:hidden flex items-center space-x-2">
@@ -518,6 +503,7 @@ const Navbar = () => {
                 >
                   <Bell className="w-5 h-5 text-gray-700" />
 
+
                   {/* Notification badge */}
                   {pendingRequestsCount > 0 && (
                     <motion.span
@@ -530,6 +516,7 @@ const Navbar = () => {
                   )}
                 </motion.button>
               )}
+
 
               {/* Hamburger Menu Button */}
               <motion.button
@@ -555,6 +542,7 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
+
       {/* Mobile Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -569,6 +557,7 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
+
       {/* Mobile Drawer Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -577,11 +566,11 @@ const Navbar = () => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="md:hidden fixed right-0 top-0 h-full w-72 glass-panel z-50 overflow-y-auto border-l border-white/20"
+            className="md:hidden fixed right-0 top-0 h-full w-72 bg-white z-50 overflow-y-auto shadow-2xl"
           >
             {/* Drawer Header */}
             <div
-              className={`relative bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 transition-all ${isAuthenticated ? "p-4 pb-6" : "p-3"
+              className={`relative bg-blue-600 transition-all ${isAuthenticated ? "p-4 pb-6" : "p-3"
                 }`}
             >
               {/* Close Button */}
@@ -592,18 +581,20 @@ const Navbar = () => {
                 <X className="w-4 h-4 text-white" />
               </button>
 
+
               {/* Logo & Brand */}
               <div
                 className={`flex items-center space-x-2 ${isAuthenticated ? "mb-4" : "mb-2"
                   }`}
               >
-                <div className="w-10 h-10 rounded-xl bg-white overflow-hidden shadow-lg">
+                <div className="w-10 h-10 rounded-xl bg-white overflow-hidden shadow-sm">
                   <img
                     src={logo}
                     alt="ApniEstate logo"
                     className="w-full h-full object-cover"
                   />
                 </div>
+
 
                 <div className="flex flex-col">
                   <span className="text-xl font-bold text-white">
@@ -615,11 +606,12 @@ const Navbar = () => {
                 </div>
               </div>
 
+
               {/* User Info */}
               {isAuthenticated ? (
-                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 border border-white/30">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20">
                   <div className="flex items-center space-x-2">
-                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-blue-600 font-bold text-sm shadow-lg">
+                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-blue-600 font-bold text-sm shadow-sm">
                       {getInitials(user?.name)}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -652,6 +644,7 @@ const Navbar = () => {
               ) : null}
             </div>
 
+
             {/* Navigation Links */}
             <div className="px-3 py-4">
               {/* Special Feature */}
@@ -663,14 +656,15 @@ const Navbar = () => {
                   to="/ai-features"
                   onClick={toggleMobileMenu}
                   className={`relative flex items-center gap-3 p-3 rounded-xl transition-all border ${location.pathname.startsWith("/ai-property-hub")
-                    ? "bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white shadow-xl border-transparent"
-                    : "bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 text-indigo-800 border-indigo-200 hover:shadow-lg"
+                    ? "bg-blue-600 text-white shadow-lg border-transparent"
+                    : "bg-blue-50 text-blue-800 border-blue-200 hover:shadow-md"
                     }`}
                 >
                   {/* Icon Box */}
-                  <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-lg">
-                    <BotMessageSquare className="w-6 h-6 text-indigo-600" />
+                  <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                    <BotMessageSquare className="w-6 h-6 text-blue-600" />
                   </div>
+
 
                   {/* Text */}
                   <div className="flex flex-col flex-1 min-w-0">
@@ -682,8 +676,9 @@ const Navbar = () => {
                     </span>
                   </div>
 
+
                   {/* NEW badge */}
-                  <span className="text-xs bg-yellow-400 text-yellow-900 px-2 py-0.5 rounded-full font-bold shadow">
+                  <span className="text-xs bg-yellow-400 text-yellow-900 px-2 py-0.5 rounded-full font-bold shadow-sm">
                     NEW
                   </span>
                 </Link>
@@ -765,7 +760,7 @@ const Navbar = () => {
                     />
                   )}
                   <MobileNavItem
-                    icon={Heart}
+                    icon={Bookmark}
                     label="Favourite Properties"
                     path="/saved"
                     currentPath={location.pathname}
@@ -803,7 +798,7 @@ const Navbar = () => {
                     className="flex items-center gap-2 px-3 py-3 rounded-xl bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all relative overflow-hidden"
                   >
                     <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
-                      <Sparkles className="w-4 h-4 text-white" />
+                      <Bookmark className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-sm">Create account</span>
                     <motion.div
@@ -830,13 +825,9 @@ const Navbar = () => {
 };
 
 const NavLinks = ({ currentPath, isAuthenticated }) => {
+  const [hoveredLink, setHoveredLink] = useState(null);
+
   const links = [
-    {
-      name: "AI Features",
-      path: "/ai-features",
-      icon: BotMessageSquare,
-      color: "from-indigo-600 to-purple-600",
-    },
     {
       name: "Home",
       path: "/",
@@ -844,16 +835,30 @@ const NavLinks = ({ currentPath, isAuthenticated }) => {
       color: "from-blue-500 to-cyan-500",
     },
     {
-      name: "Properties",
-      path: "/properties",
-      icon: Search,
-      color: "from-green-500 to-emerald-500",
-    },
-    {
       name: "About Us",
       path: "/about",
       icon: Users,
       color: "from-purple-500 to-pink-500",
+    },
+    {
+      name: "AI Features",
+      path: "/ai-features",
+      icon: BotMessageSquare,
+      color: "from-indigo-600 to-purple-600",
+    },
+    {
+      name: "Properties",
+      path: "/properties",
+      icon: Search,
+      color: "from-green-500 to-emerald-500",
+      hasDropdown: true,
+      dropdownItems: [
+        { label: "Apartments", value: "apartment" },
+        { label: "Houses", value: "house" },
+        { label: "Villas", value: "villa" },
+        { label: "Plots", value: "plot" },
+        { label: "Commercial", value: "commercial" },
+      ]
     },
     {
       name: "Contact",
@@ -875,28 +880,59 @@ const NavLinks = ({ currentPath, isAuthenticated }) => {
 
   return (
     <div className="flex items-center space-x-2">
-      {links.map(({ name, path, icon: Icon, color }) => {
+      {links.map(({ name, path, icon: Icon, color, hasDropdown, dropdownItems }) => {
         const isActive =
           path === "/" ? currentPath === path : currentPath.startsWith(path);
 
         return (
-          <motion.div
+          <div
             key={name}
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.95 }}
+            className="relative"
+            onMouseEnter={() => hasDropdown && setHoveredLink(name)}
+            onMouseLeave={() => hasDropdown && setHoveredLink(null)}
           >
-            <Link
-              to={path}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold transition-all
-                ${isActive
-                  ? `text-white bg-gradient-to-r ${color} shadow-lg`
-                  : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
-                }`}
+            <motion.div
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <Icon className="w-4 h-4" />
-              <span>{name}</span>
-            </Link>
-          </motion.div>
+              <Link
+                to={path}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold transition-all z-10 relative
+                  ${isActive
+                    ? `text-white bg-gradient-to-r ${color} shadow-lg`
+                    : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+                  }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span>{name}</span>
+                {hasDropdown && <ChevronDown className="w-3 h-3 ml-0.5 opacity-70" />}
+              </Link>
+            </motion.div>
+
+            {/* Dropdown Menu */}
+            <AnimatePresence>
+              {hasDropdown && hoveredLink === name && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50 p-1"
+                >
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-indigo-500"></div>
+                  {dropdownItems.map((item) => (
+                    <Link
+                      key={item.value}
+                      to={`${path}?type=${item.value}`}
+                      className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-center"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         );
       })}
     </div>

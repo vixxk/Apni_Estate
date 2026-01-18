@@ -52,6 +52,7 @@ const VendorAddProperty = () => {
     description: "",
     price: "",
     type: "sell",
+    propertySubType: "apartment", // Default sub-type
     category: "none",
     location: {
       address: "",
@@ -285,12 +286,21 @@ const VendorAddProperty = () => {
       const uploadedImages = uploadData.data.images;
       setUploadingImages(false);
 
+      let finalType = form.type.toLowerCase();
+      let finalCategory = "none";
+
+      if (["sell", "rent"].includes(finalType)) {
+        finalCategory = finalType; 
+        finalType = form.propertySubType || "others"; 
+      } else if (finalType.includes("construction") || finalType === "contractor") {
+      }
+
       const propertyData = {
         title: form.title.trim(),
         description: form.description.trim(),
         price: Number(form.price),
-        type: form.type.toLowerCase(),
-        category: "none",
+        type: finalType,
+        category: finalCategory,
         location: {
           address: form.location.address.trim() || "",
           city: form.location.city.trim() || "",
@@ -318,6 +328,7 @@ const VendorAddProperty = () => {
           amenities: form.features.amenities,
         },
         contactInfo: {
+          // ... existings
           phone: form.contactInfo.phone || "",
           email: form.contactInfo.email || "",
           alternatePhone: form.contactInfo.alternatePhone || "",
@@ -339,7 +350,7 @@ const VendorAddProperty = () => {
         },
         images: uploadedImages,
         tags: form.tags,
-        status: "available",
+        status: "pending", 
       };
 
       const propertyRes = await fetch(`${API}/api/properties/vendor-add`, {
@@ -446,7 +457,7 @@ const VendorAddProperty = () => {
         <motion.div variants={itemVariants} className="text-center mb-6">
           <div className="flex items-center justify-center gap-2 mb-3">
             <Sparkles className="text-indigo-600" size={24} />
-            <h1 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-2xl md:text-4xl font-bold text-blue-700">
               Create New Listing
             </h1>
           </div>
@@ -542,21 +553,21 @@ const VendorAddProperty = () => {
                       type="button"
                       onClick={() => setForm({ ...form, type: cat.value })}
                       className={`p-2 md:p-4 rounded-lg md:rounded-xl border-2 transition-all duration-300 ${form.type === cat.value
-                          ? "border-indigo-600 bg-indigo-50 shadow-md scale-105"
-                          : "border-gray-200 hover:border-indigo-300 hover:shadow-sm"
+                        ? "border-indigo-600 bg-indigo-50 shadow-md scale-105"
+                        : "border-gray-200 hover:border-indigo-300 hover:shadow-sm"
                         }`}
                     >
                       <Icon
                         className={`mx-auto mb-1 md:mb-2 ${form.type === cat.value
-                            ? "text-indigo-600"
-                            : "text-gray-400"
+                          ? "text-indigo-600"
+                          : "text-gray-400"
                           }`}
                         size={20}
                       />
                       <p
                         className={`text-[10px] md:text-xs font-semibold text-center leading-tight ${form.type === cat.value
-                            ? "text-indigo-600"
-                            : "text-gray-700"
+                          ? "text-indigo-600"
+                          : "text-gray-700"
                           }`}
                       >
                         {cat.label}
@@ -566,6 +577,48 @@ const VendorAddProperty = () => {
                 })}
               </div>
             </div>
+
+            {/* Property Type Selection (Only for Sell/Rent) */}
+            {["sell", "rent"].includes(form.type) && (
+              <div className="mt-6 animate-in fade-in slide-in-from-top-4 duration-500">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
+                    <span className="text-indigo-600 font-bold text-sm">1.5</span>
+                  </div>
+                  <h2 className="text-lg md:text-xl font-bold text-gray-800">
+                    Select Property Type
+                  </h2>
+                </div>
+                <div className="grid grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
+                  {[
+                    { value: "apartment", label: "Apartment", icon: Building2 },
+                    { value: "house", label: "House", icon: Home },
+                    { value: "villa", label: "Villa", icon: Sparkles },
+                    { value: "plot", label: "Plot", icon: MapPin },
+                    { value: "commercial", label: "Commercial", icon: Store },
+                  ].map((type) => {
+                    const Icon = type.icon;
+                    return (
+                      <button
+                        key={type.value}
+                        type="button"
+                        onClick={() => setForm({ ...form, propertySubType: type.value })}
+                        className={`p-3 md:p-4 rounded-xl border-2 transition-all duration-300 flex flex-col items-center justify-center gap-2 ${form.propertySubType === type.value
+                          ? "border-indigo-600 bg-indigo-50 shadow-md scale-105"
+                          : "border-gray-200 hover:border-indigo-300 hover:shadow-sm"
+                          }`}
+                      >
+                        <Icon size={24} className={form.propertySubType === type.value ? "text-indigo-600" : "text-gray-400"} />
+                        <span className={`text-xs md:text-sm font-semibold ${form.propertySubType === type.value ? "text-indigo-600" : "text-gray-700"}`}>
+                          {type.label}
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
 
             {/* Basic Information */}
             <div>
@@ -591,8 +644,8 @@ const VendorAddProperty = () => {
                     onChange={handleInputChange}
                     maxLength="100"
                     className={`w-full px-3 py-2.5 md:py-3 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.title
-                        ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-200 focus:ring-indigo-500"
+                      ? "border-red-300 focus:ring-red-500"
+                      : "border-gray-200 focus:ring-indigo-500"
                       }`}
                   />
                   {fieldErrors.title && (
@@ -622,8 +675,8 @@ const VendorAddProperty = () => {
                       onChange={handleInputChange}
                       min="0"
                       className={`w-full pl-10 pr-3 py-2.5 md:py-3 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.price
-                          ? "border-red-300 focus:ring-red-500"
-                          : "border-gray-200 focus:ring-indigo-500"
+                        ? "border-red-300 focus:ring-red-500"
+                        : "border-gray-200 focus:ring-indigo-500"
                         }`}
                     />
                   </div>
@@ -647,8 +700,8 @@ const VendorAddProperty = () => {
                     maxLength="2000"
                     rows="4"
                     className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all resize-none ${fieldErrors.description
-                        ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-200 focus:ring-indigo-500"
+                      ? "border-red-300 focus:ring-red-500"
+                      : "border-gray-200 focus:ring-indigo-500"
                       }`}
                   />
                   {fieldErrors.description && (
@@ -688,8 +741,8 @@ const VendorAddProperty = () => {
                       onChange={(e) => handleNestedChange(e, "location")}
                       rows="2"
                       className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all resize-none ${fieldErrors.address
-                          ? "border-red-300 focus:ring-red-500"
-                          : "border-gray-200 focus:ring-indigo-500"
+                        ? "border-red-300 focus:ring-red-500"
+                        : "border-gray-200 focus:ring-indigo-500"
                         }`}
                     />
                     {fieldErrors.address && (
@@ -711,8 +764,8 @@ const VendorAddProperty = () => {
                       value={form.location.city}
                       onChange={(e) => handleNestedChange(e, "location")}
                       className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.city
-                          ? "border-red-300 focus:ring-red-500"
-                          : "border-gray-200 focus:ring-indigo-500"
+                        ? "border-red-300 focus:ring-red-500"
+                        : "border-gray-200 focus:ring-indigo-500"
                         }`}
                     />
                     {fieldErrors.city && (
@@ -734,8 +787,8 @@ const VendorAddProperty = () => {
                       value={form.location.state}
                       onChange={(e) => handleNestedChange(e, "location")}
                       className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.state
-                          ? "border-red-300 focus:ring-red-500"
-                          : "border-gray-200 focus:ring-indigo-500"
+                        ? "border-red-300 focus:ring-red-500"
+                        : "border-gray-200 focus:ring-indigo-500"
                         }`}
                     />
                     {fieldErrors.state && (
@@ -758,8 +811,8 @@ const VendorAddProperty = () => {
                       onChange={(e) => handleNestedChange(e, "location")}
                       maxLength="6"
                       className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.pincode
-                          ? "border-red-300 focus:ring-red-500"
-                          : "border-gray-200 focus:ring-indigo-500"
+                        ? "border-red-300 focus:ring-red-500"
+                        : "border-gray-200 focus:ring-indigo-500"
                         }`}
                     />
                     {fieldErrors.pincode && (
@@ -910,8 +963,8 @@ const VendorAddProperty = () => {
                         type="button"
                         onClick={() => toggleAmenity(amenity)}
                         className={`py-2 px-3 rounded-lg text-xs font-medium border-2 transition-all ${form.features.amenities.includes(amenity)
-                            ? "border-indigo-600 bg-indigo-50 text-indigo-600 shadow-sm"
-                            : "border-gray-200 text-gray-700 hover:border-indigo-300"
+                          ? "border-indigo-600 bg-indigo-50 text-indigo-600 shadow-sm"
+                          : "border-gray-200 text-gray-700 hover:border-indigo-300"
                           }`}
                       >
                         {amenity}
@@ -946,8 +999,8 @@ const VendorAddProperty = () => {
                     onChange={(e) => handleNestedChange(e, "contactInfo")}
                     maxLength="10"
                     className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.phone
-                        ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-200 focus:ring-indigo-500"
+                      ? "border-red-300 focus:ring-red-500"
+                      : "border-gray-200 focus:ring-indigo-500"
                       }`}
                   />
                   {fieldErrors.phone && (
@@ -969,8 +1022,8 @@ const VendorAddProperty = () => {
                     value={form.contactInfo.email}
                     onChange={(e) => handleNestedChange(e, "contactInfo")}
                     className={`w-full px-3 py-2.5 text-sm border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 transition-all ${fieldErrors.email
-                        ? "border-red-300 focus:ring-red-500"
-                        : "border-gray-200 focus:ring-indigo-500"
+                      ? "border-red-300 focus:ring-red-500"
+                      : "border-gray-200 focus:ring-indigo-500"
                       }`}
                   />
                   {fieldErrors.email && (
@@ -1148,7 +1201,7 @@ const VendorAddProperty = () => {
           </p>
         </motion.div>
       </motion.div>
-    </div>
+    </div >
   );
 };
 

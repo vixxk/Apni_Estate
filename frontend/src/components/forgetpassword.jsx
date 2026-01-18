@@ -180,7 +180,7 @@ const ForgotPassword = () => {
                   >
                     <Lock className="w-6 h-6 text-white" />
                   </motion.div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  <h1 className="text-3xl font-bold text-blue-700">
                     ApniEstate
                   </h1>
                 </motion.div>

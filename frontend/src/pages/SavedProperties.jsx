@@ -79,8 +79,10 @@ const SavedProperties = () => {
               ? p.features.amenities
               : [],
             image: displayImage,
+            image: displayImage,
             images: firstImage ? [firstImage] : [],
             createdAt: p.createdAt,
+            owner: p.owner,
           };
         });
 
@@ -195,7 +197,7 @@ const SavedProperties = () => {
           <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 bg-red-100 rounded-full flex items-center justify-center">
             <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-red-500" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">
+          <h2 className="text-xl sm:text-2xl font-bold text-blue-700 mb-2 sm:mb-3">
             Oops! Something went wrong
           </h2>
           <p className="text-red-600 mb-4 sm:mb-6 text-sm sm:text-base">
@@ -407,7 +409,7 @@ const SavedProperties = () => {
                 />
               </motion.div>
               <div className="min-w-0 flex-1">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent truncate">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-blue-700 truncate">
                   Favorite Properties
                 </h1>
                 <p className="text-gray-600 mt-0.5 sm:mt-1 text-xs sm:text-sm">

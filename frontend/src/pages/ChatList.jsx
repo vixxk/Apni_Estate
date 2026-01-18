@@ -117,7 +117,7 @@ const ChatList = () => {
             </motion.button> */}
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-1">
-                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-2">
+                <h1 className="text-2xl md:text-3xl font-bold text-blue-700 flex items-center gap-2">
                   <MessageCircle className="w-7 h-7 text-blue-600" />
                   Messages
                 </h1>
@@ -252,8 +252,8 @@ const ChatList = () => {
                         <div className="flex items-center justify-between gap-2 mb-1">
                           <p
                             className={`text-base font-semibold truncate ${c.unreadCount > 0
-                                ? "text-slate-900"
-                                : "text-slate-700"
+                              ? "text-slate-900"
+                              : "text-slate-700"
                               }`}
                           >
                             {otherUser.name || "Unknown"}
@@ -271,8 +271,8 @@ const ChatList = () => {
 
                         <p
                           className={`text-sm truncate ${c.unreadCount > 0
-                              ? "text-slate-600 font-medium"
-                              : "text-slate-500"
+                            ? "text-slate-600 font-medium"
+                            : "text-slate-500"
                             }`}
                         >
                           {c.lastMessage || "No message"}

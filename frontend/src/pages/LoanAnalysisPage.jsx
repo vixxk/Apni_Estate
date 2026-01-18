@@ -110,7 +110,7 @@ const LoanAnalysisPage = () => {
           <div className="inline-flex items-center justify-center p-2 lg:p-3 bg-indigo-600 rounded-2xl shadow-lg mb-3 lg:mb-4">
             <Calculator className="w-6 h-6 lg:w-8 lg:h-8 text-white" />
           </div>
-          <h1 className="text-2xl lg:text-4xl font-bold text-slate-900 mb-1 lg:mb-2">
+          <h1 className="text-2xl lg:text-4xl font-bold text-blue-700 mb-1 lg:mb-2">
             AI Home Loan Assistant
           </h1>
           <p className="text-base lg:text-lg text-slate-600 hidden lg:block">

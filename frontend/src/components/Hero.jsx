@@ -1,16 +1,12 @@
 import { motion } from "framer-motion";
 import {
   Shield,
-  Sparkles,
   Users,
   Home,
-  Star,
   MessageCircle,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import heroimage from "../assets/images/heroimage.png";
-import tsLogo from "../assets/tsLogo.jpg";
-import { RadialGradient } from "react-text-gradients";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useMobileMenu } from "../context/MobileMenuContext";
@@ -23,7 +19,6 @@ import vastu from "../assets/vastu.png";
 import consulting from "../assets/consulting.png";
 import loan from "../assets/loan.png";
 import constructionMaterials from "../assets/construction materials.jpeg";
-import houses from "../assets/houses.png";
 import sell from "../assets/sell.png";
 import rent from "../assets/rent.png";
 import furniture from "../assets/furniture.png";
@@ -54,53 +49,35 @@ const stats = [
     icon: Users,
     value: "100+",
     label: "Happy Customers",
-    color: "from-blue-500 to-cyan-500",
+    color: "bg-blue-600",
   },
   {
     icon: Home,
     value: "5K+",
     label: "Properties Listed",
-    color: "from-green-500 to-emerald-500",
-  },
-  {
-    icon: Star,
-    value: "4.9",
-    label: "Average Rating",
-    color: "from-yellow-500 to-orange-500",
+    color: "bg-blue-700",
   },
   {
     icon: Shield,
     value: "100%",
     label: "Verified Properties",
-    color: "from-purple-500 to-pink-500",
+    color: "bg-blue-800",
   },
 ];
 
 /* ================= ANIMATIONS ================= */
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 90, damping: 18 },
+    transition: { duration: 0.6, ease: "easeOut" },
   },
-};
-
-const floatingAnimation = {
-  y: [-10, 10, -10],
-  transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-};
-
-const sparkleAnimation = {
-  scale: [1, 1.2, 1],
-  rotate: [0, 180, 360],
-  transition: { duration: 3, repeat: Infinity, ease: "easeInOut" },
 };
 
 /* ================= COMPONENT ================= */
@@ -110,17 +87,6 @@ const Hero = () => {
   const [showButton, setShowButton] = useState(true);
   const { isMobileMenuOpen } = useMobileMenu();
   const [unreadTotal, setUnreadTotal] = useState(0);
-
-  // ROLE-BASED VISIBILITY
-  // const visibleServices = services.filter((service) => {
-  //   if (service.title === "Sell") {
-  //     return isAuthenticated && user?.role === "vendor";
-  //   }
-  //   if (service.title === "Buy") {
-  //     return !isAuthenticated || user?.role !== "vendor";
-  //   }
-  //   return true;
-  // });
 
   const visibleServices = services;
 
@@ -220,102 +186,16 @@ const Hero = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden bg-white">
       {/* ================= BACKGROUND ================= */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50" />
-
-        <motion.div
-          initial={{ opacity: 0, scale: 1.1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 2 }}
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url(${heroimage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/10" />
-        </motion.div>
-
-        {/* Floating blobs */}
-        <div className="absolute inset-0 pointer-events-none">
-          <motion.div
-            animate={floatingAnimation}
-            className="absolute top-20 left-10 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl"
-          />
-          <motion.div
-            animate={{
-              y: [10, -10, 10],
-              transition: { duration: 8, repeat: Infinity },
-            }}
-            className="absolute top-40 right-20 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"
-          />
-        </div>
-
-        {/* Sparkles */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              animate={sparkleAnimation}
-              className="absolute text-yellow-400/60"
-              style={{ top: `${20 + i * 10}%`, left: `${15 + i * 12}%` }}
-            >
-              <Sparkles />
-            </motion.div>
-          ))}
-        </div>
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50 opacity-70" />
+        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-100/20 blur-3xl rounded-full transform translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-indigo-100/20 blur-3xl rounded-full transform -translate-x-1/2 translate-y-1/2" />
       </div>
 
-      {/* ================= TRIPURA STARTUP BADGE ================= */}
-      {/* <div className="absolute top-2 left-0 right-0 z-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex justify-center"
-          >
-            <div className="relative group">
-              <div className="absolute -inset-2 bg-gradient-to-r from-blue-200 via-purple-200 to-indigo-200 rounded-2xl opacity-0 group-hover:opacity-30 blur-xl transition-all duration-500"></div>
-
-              <div className="relative flex items-center gap-3 md:gap-4 px-3 py-2 md:px-4 md:py-2.5 rounded-xl overflow-visible bg-white/80 backdrop-blur-xl border border-gray-200/60 shadow-sm hover:shadow-md transition-all duration-300">
-                <div className="relative flex-shrink-0 w-10 h-10 md:w-12 md:h-12">
-                  <img
-                    src={tsLogo}
-                    alt="Tripura Startup"
-                    className="
-      absolute inset-0
-      w-full h-full object-contain
-      scale-[1.6] md:scale-[1.8]
-      group-hover:scale-[1.9]
-      transition-transform duration-300
-    "
-                  />
-                </div>
-
-                <div className="h-10 md:h-12 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
-
-                <div className="pr-1">
-                  <p className="text-[9px] md:text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-0.5">
-                    Registered Startup Of
-                  </p>
-                  <h3 className="text-xs md:text-sm lg:text-base font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                    Startup Tripura
-                  </h3>
-                </div>
-
-                <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 opacity-60"></div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div> */}
-
       {/* ================= CONTENT ================= */}
-      <div className="relative z-10 min-h-screen flex flex-col justify-start px-4 pt-8 md:pt-12 lg:pt-16">
+      <div className="relative z-10 min-h-screen flex flex-col justify-start px-4 pt-20 md:pt-28 lg:pt-32">
         <div className="max-w-7xl mx-auto w-full">
           <motion.div
             variants={containerVariants}
@@ -324,16 +204,18 @@ const Hero = () => {
             className="text-center"
           >
             {/* Heading */}
-            <motion.div variants={itemVariants} className="mb-8">
-              <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-4">
-                <RadialGradient gradient={["circle, #3f5efb 0%, #fc466b 100%"]}>
-                  Find Your Perfect
-                </RadialGradient>
-                <br />
-                <span className="text-gray-900">Dream Home</span>
+            <motion.div variants={itemVariants} className="mb-10 md:mb-16">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 tracking-tight text-black-700">
+                Find Your Perfect <br className="hidden sm:block" />
+                <span className="text-blue-700 relative inline-block">
+                  Dream Home
+                  <svg className="absolute w-full h-3 -bottom-1 left-0 text-blue-200 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
+                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+                  </svg>
+                </span>
               </h1>
 
-              <p className="hidden sm:block text-xl sm:text-2xl text-gray-700 max-w-3xl mx-auto">
+              <p className="hidden sm:block text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto font-medium leading-relaxed">
                 All property services you need — buying, construction & more
               </p>
             </motion.div>
@@ -341,31 +223,30 @@ const Hero = () => {
             {/* ================= SERVICES GRID ================= */}
             <motion.div
               variants={itemVariants}
-              className="max-w-6xl mx-auto mb-8"
+              className="max-w-6xl mx-auto mb-12"
             >
-              <div className="glass-panel rounded-3xl p-4 sm:p-8">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-10 text-gray-900">
-                  All Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Real Estate</span>{" "}
-                  Needs In One Place
+              <div className="bg-white rounded-3xl shadow-xl shadow-blue-900/5 p-8 sm:p-10 border border-slate-100">
+                <h2 className="text-xl sm:text-2xl font-bold mb-8 sm:mb-10 text-slate-800">
+                  All Your Real Estate Needs
                 </h2>
 
-                <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6">
+                <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8">
                   {visibleServices.map((service, index) => (
                     <motion.div
                       key={index}
-                      whileHover={{ y: -6, scale: 1.05 }}
+                      whileHover={{ y: -5 }}
                       onClick={() => handleServiceClick(service.title)}
-                      className="glass-card rounded-xl sm:rounded-2xl cursor-pointer group overflow-hidden bg-white/60"
+                      className="cursor-pointer group flex flex-col items-center gap-3"
                     >
-                      <div className="w-16 h-16 sm:w-28 sm:h-28 mx-auto rounded-lg sm:rounded-2xl overflow-hidden">
+                      <div className="w-14 h-14 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden border-2 border-transparent group-hover:border-blue-600 transition-all duration-300 shadow-sm group-hover:shadow-md">
                         <img
                           src={service.img}
                           alt={service.title}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                         />
                       </div>
 
-                      <p className="font-semibold text-gray-800 text-center text-[10px] sm:text-base leading-tight p-2 pb-3">
+                      <p className="font-semibold text-slate-600 text-center text-xs sm:text-sm leading-tight group-hover:text-blue-700 transition-colors">
                         {service.title}
                       </p>
                     </motion.div>
@@ -377,23 +258,23 @@ const Hero = () => {
             {/* ================= STATS ================= */}
             <motion.div
               variants={containerVariants}
-              className="grid grid-cols-4 gap-3 sm:gap-6 lg:gap-10 max-w-3xl mx-auto"
+              className="grid grid-cols-3 gap-3 sm:gap-8 max-w-4xl mx-auto"
             >
               {stats.map((stat, i) => (
                 <motion.div
                   key={i}
                   variants={itemVariants}
-                  className="glass-card rounded-lg sm:rounded-xl p-2 sm:p-4 text-center bg-white/60"
+                  className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-6 text-center shadow-lg shadow-blue-900/5 border border-slate-100"
                 >
                   <div
-                    className={`w-8 h-8 sm:w-12 sm:h-11 mx-auto mb-1 sm:mb-3 bg-gradient-to-br ${stat.color} rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg`}
+                    className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-3 bg-blue-50 text-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center"
                   >
-                    <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    <stat.icon className="w-4 h-4 sm:w-6 sm:h-6" />
                   </div>
-                  <div className="text-base sm:text-2xl font-bold text-gray-900">
+                  <div className="text-lg sm:text-3xl font-bold text-slate-900 mb-0.5 sm:mb-1">
                     {stat.value}
                   </div>
-                  <div className="text-[9px] sm:text-xs text-gray-600 leading-tight">
+                  <div className="text-[10px] sm:text-sm text-slate-500 font-medium uppercase tracking-wide leading-tight">
                     {stat.label}
                   </div>
                 </motion.div>
@@ -412,15 +293,15 @@ const Hero = () => {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            whileHover={{ scale: 1.08 }}
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate("/messages")}
-            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-yellow-400 p-3 md:p-4 rounded-full shadow-xl z-[9999]"
+            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-blue-600 hover:bg-blue-700 text-white p-3 md:p-4 rounded-full shadow-lg shadow-blue-600/30 z-[9999] transition-colors"
           >
-            <MessageCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
+            <MessageCircle className="w-5 h-5 md:w-6 md:h-6" />
 
             {unreadTotal > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] md:text-xs font-bold rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] md:text-xs font-bold rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center border-2 border-white">
                 {unreadTotal}
               </span>
             )}

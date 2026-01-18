@@ -414,10 +414,14 @@ router.get("/profile", protect, async (req, res) => {
 // @access  Private
 router.get("/saved", protect, async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate(
-      "savedProperties",
-      "title price location type status images createdAt"
-    );
+    const user = await User.findById(req.user._id).populate({
+      path: "savedProperties",
+      select: "title price location type status images createdAt owner",
+      populate: {
+        path: "owner",
+        select: "name avatar role"
+      }
+    });
 
     const properties = user?.savedProperties || [];
 

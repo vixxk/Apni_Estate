@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import {
   Home,
   Search,
-  Heart,
+  Bookmark,
   User,
   LogIn,
   MessageCircle,
@@ -27,7 +27,7 @@ const MobileBottomNav = () => {
     { path: "/", icon: Home },
     { path: "/properties", icon: Search },
     { path: "/messages", icon: MessageCircle },
-    { path: "/saved", icon: Heart },
+    { path: "/saved", icon: Bookmark },
     { path: "/profile", icon: User },
   ];
 
@@ -40,7 +40,7 @@ const MobileBottomNav = () => {
       icon: Plus,
       isVendorAction: true,
     },
-    { path: "/saved", icon: Heart },
+    { path: "/saved", icon: Bookmark },
     { path: "/profile", icon: User },
   ];
 
@@ -114,10 +114,10 @@ const MobileBottomNav = () => {
               <motion.div
                 whileTap={{ scale: 0.85 }}
                 className={`p-2.5 rounded-full transition ${item.isVendorAction
-                    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md"
-                    : isActive
-                      ? "bg-violet-100 text-violet-600"
-                      : "text-gray-600 hover:bg-gray-100"
+                  ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md"
+                  : isActive
+                    ? "bg-violet-100 text-violet-600"
+                    : "text-gray-600 hover:bg-gray-100"
                   }`}
               >
                 <Icon className="w-5 h-5" strokeWidth={2.2} />

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { steps } from "../assets/stepsdata";
-import { ArrowRight, Sparkles, Star, CheckCircle2, Zap } from "lucide-react";
+import { ArrowRight, Sparkles, Star, CheckCircle2, Zap, Quote } from "lucide-react";
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
@@ -463,64 +463,50 @@ export default function HowItWorks() {
         </motion.div>
 
 
-        {/* Testimonial with modern design */}
+        {/* Founder's Message */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.8, duration: 0.6 }}
-          className="mt-16 md:mt-24 max-w-4xl mx-auto"
+          className="mt-16 md:mt-24 max-w-4xl mx-auto px-4"
         >
           <div
-            className="relative bg-gradient-to-br from-white/80 to-blue-50/80 backdrop-blur-sm 
-            p-6 md:p-10 rounded-2xl md:rounded-3xl shadow-2xl border border-white/20 text-center overflow-hidden"
+            className="relative bg-gradient-to-br from-white to-blue-50/50 backdrop-blur-xl 
+            p-8 md:p-12 rounded-3xl md:rounded-[2rem] shadow-2xl shadow-blue-900/10 border border-white/60 text-center overflow-hidden"
           >
-            {/* Background decorative elements */}
-            <div className="absolute top-0 left-0 w-full h-full">
-              <div className="absolute top-4 left-4 w-8 h-8 bg-blue-200/30 rounded-full"></div>
-              <div className="absolute bottom-4 right-4 w-12 h-12 bg-indigo-200/30 rounded-full"></div>
-              <div className="absolute top-1/2 right-8 w-6 h-6 bg-purple-200/30 rounded-full"></div>
+            {/* Elegant Background - Refined */}
+            <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
+              <div className="absolute -top-24 -left-24 w-64 h-64 bg-blue-100/50 rounded-full blur-3xl"></div>
+              <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-indigo-100/50 rounded-full blur-3xl"></div>
             </div>
 
-
-            {/* Quote */}
-            <motion.div className="relative z-10" animate={floatingAnimation}>
-              <div className="text-4xl md:text-6xl text-blue-600/20 font-serif leading-none">
-                &ldquo;
+            {/* Content */}
+            <motion.div className="relative z-10 flex flex-col items-center">
+              <div className="mb-6 md:mb-8">
+                <Quote className="w-10 h-10 md:w-14 md:h-14 text-blue-200 fill-current opacity-50" />
               </div>
-              <p className="text-gray-700 italic text-base md:text-xl lg:text-2xl mb-4 md:mb-6 leading-relaxed -mt-2 md:-mt-4">
-                The 3-step process was incredibly smooth. Within a week, I found
-                and secured my dream apartment!
+
+              <p className="text-slate-700 italic text-lg md:text-2xl lg:text-3xl mb-8 md:mb-10 leading-relaxed font-light max-w-3xl">
+                &ldquo;At ApniEstate, we believe in transparency, trust, and delivering the perfect home for every dream. Excellence isn't just a goal—it's our promise.&rdquo;
               </p>
 
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-blue-200 to-transparent max-w-xs mb-8"></div>
 
               {/* Author info */}
-              <div className="flex items-center justify-center gap-3 md:gap-4">
-                <div
-                  className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-blue-500 to-indigo-500 
-                  rounded-full flex items-center justify-center text-white font-bold text-base md:text-lg"
-                >
-                  D
+              <div className="flex items-center justify-center gap-4">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-blue-500 rounded-full blur opacity-20"></div>
+                  <img
+                    src="/pfp.jpeg"
+                    alt="Koushik Roy"
+                    className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover border-4 border-white shadow-lg relative z-10"
+                  />
                 </div>
                 <div className="text-left">
-                  <p className="font-bold text-gray-900 text-sm md:text-base">Deepak Yadav</p>
-                  <p className="text-gray-600 text-xs md:text-sm">Agartala,Tripura</p>
+                  <h4 className="font-bold text-slate-900 text-lg md:text-xl tracking-tight">Koushik Roy</h4>
+                  <p className="text-blue-600 text-sm md:text-base font-medium tracking-wide">Founder & CEO</p>
                 </div>
-              </div>
-
-
-              {/* Stars */}
-              <div className="flex justify-center mt-3 md:mt-4 gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 1 + i * 0.1 }}
-                  >
-                    <Star className="w-4 h-4 md:w-5 md:h-5 text-yellow-400 fill-current" />
-                  </motion.div>
-                ))}
               </div>
             </motion.div>
           </div>

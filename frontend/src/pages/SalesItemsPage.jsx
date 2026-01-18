@@ -403,7 +403,7 @@ const SalesItemsPage = () => {
           animate={{ y: 0, opacity: 1 }}
           className="text-center mb-6 sm:mb-12"
         >
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-blue-700 mb-2 sm:mb-4">
             Shop Interior & Construction Items
           </h1>
           <p className="text-sm sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">
@@ -480,8 +480,8 @@ const SalesItemsPage = () => {
                         }))
                       }
                       className={`p-2 rounded-lg transition ${viewState.showFilters
-                          ? "bg-purple-100 text-purple-600"
-                          : "hover:bg-gray-100 text-gray-600"
+                        ? "bg-purple-100 text-purple-600"
+                        : "hover:bg-gray-100 text-gray-600"
                         }`}
                       title="Toggle Filters"
                     >
@@ -496,8 +496,8 @@ const SalesItemsPage = () => {
                         }))
                       }
                       className={`p-2 rounded-lg transition ${viewState.isGridView
-                          ? "bg-purple-100 text-purple-600"
-                          : "hover:bg-gray-100 text-gray-600"
+                        ? "bg-purple-100 text-purple-600"
+                        : "hover:bg-gray-100 text-gray-600"
                         }`}
                       title="Grid View"
                     >
@@ -512,8 +512,8 @@ const SalesItemsPage = () => {
                         }))
                       }
                       className={`p-2 rounded-lg transition ${!viewState.isGridView
-                          ? "bg-purple-100 text-purple-600"
-                          : "hover:bg-gray-100 text-gray-600"
+                        ? "bg-purple-100 text-purple-600"
+                        : "hover:bg-gray-100 text-gray-600"
                         }`}
                       title="List View"
                     >
@@ -527,8 +527,8 @@ const SalesItemsPage = () => {
             <motion.div
               layout
               className={`grid gap-1.5 sm:gap-4 md:gap-6 ${viewState.isGridView
-                  ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
-                  : "grid-cols-1"
+                ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
+                : "grid-cols-1"
                 }`}
             >
               <AnimatePresence>
