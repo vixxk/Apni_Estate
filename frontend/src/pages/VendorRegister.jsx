@@ -69,14 +69,7 @@ const inputVariants = {
 };
 
 
-const floatingAnimation = {
-  y: [-3, 3, -3],
-  transition: {
-    duration: 4,
-    repeat: Infinity,
-    ease: "easeInOut"
-  }
-};
+
 
 
 const pulseAnimation = {
@@ -218,24 +211,24 @@ const VendorRegister = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 relative overflow-hidden">
-      {/* Animated Background Elements */}
+      {/* Animated Background Elements - Static/Stable */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
-          animate={floatingAnimation}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
           className="absolute top-20 left-10 w-72 h-72 bg-indigo-400/10 rounded-full blur-3xl"
         />
         <motion.div
-          animate={{
-            y: [5, -5, 5],
-            transition: { duration: 6, repeat: Infinity, ease: "easeInOut" }
-          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.2 }}
           className="absolute top-40 right-20 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl"
         />
         <motion.div
-          animate={{
-            y: [-5, 5, -5],
-            transition: { duration: 5, repeat: Infinity, ease: "easeInOut" }
-          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.4 }}
           className="absolute bottom-20 left-1/3 w-64 h-64 bg-pink-400/10 rounded-full blur-3xl"
         />
       </div>
@@ -266,7 +259,7 @@ const VendorRegister = () => {
       </div>
 
 
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20">
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-8 md:py-12">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -385,10 +378,10 @@ const VendorRegister = () => {
                     onBlur={() => handleBlur('name')}
                     disabled={loading}
                     className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${validationErrors.name
-                        ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                        : fieldFocus.name
-                          ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
-                          : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
+                      : fieldFocus.name
+                        ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
+                        : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
                       } focus:ring-4 focus:outline-none`}
                     placeholder="Enter your business name"
                   />
@@ -447,10 +440,10 @@ const VendorRegister = () => {
                     onBlur={() => handleBlur('email')}
                     disabled={loading}
                     className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${validationErrors.email
-                        ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                        : fieldFocus.email
-                          ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
-                          : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
+                      : fieldFocus.email
+                        ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
+                        : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
                       } focus:ring-4 focus:outline-none`}
                     placeholder="vendor@company.com"
                   />
@@ -509,10 +502,10 @@ const VendorRegister = () => {
                     onBlur={() => handleBlur('phone')}
                     disabled={loading}
                     className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${validationErrors.phone
-                        ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                        : fieldFocus.phone
-                          ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
-                          : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
+                      : fieldFocus.phone
+                        ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
+                        : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
                       } focus:ring-4 focus:outline-none`}
                     placeholder="10-digit phone number"
                   />
@@ -571,10 +564,10 @@ const VendorRegister = () => {
                     onBlur={() => handleBlur('password')}
                     disabled={loading}
                     className={`w-full pl-10 pr-12 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${validationErrors.password
-                        ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                        : fieldFocus.password
-                          ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
-                          : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
+                      : fieldFocus.password
+                        ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
+                        : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
                       } focus:ring-4 focus:outline-none`}
                     placeholder="Create a strong password"
                   />
@@ -602,7 +595,7 @@ const VendorRegister = () => {
                       <div className="flex items-center space-x-2 mb-1">
                         <span className="text-sm text-gray-600">Password strength:</span>
                         <span className={`text-sm font-medium ${passwordStrength < 50 ? 'text-red-500' :
-                            passwordStrength < 75 ? 'text-yellow-500' : 'text-green-500'
+                          passwordStrength < 75 ? 'text-yellow-500' : 'text-green-500'
                           }`}>
                           {passwordStrength < 50 ? 'Weak' :
                             passwordStrength < 75 ? 'Medium' : 'Strong'}
@@ -614,7 +607,7 @@ const VendorRegister = () => {
                           animate={{ width: `${passwordStrength}%` }}
                           transition={{ duration: 0.3 }}
                           className={`h-2 rounded-full transition-colors duration-300 ${passwordStrength < 50 ? 'bg-red-500' :
-                              passwordStrength < 75 ? 'bg-yellow-500' : 'bg-green-500'
+                            passwordStrength < 75 ? 'bg-yellow-500' : 'bg-green-500'
                             }`}
                         />
                       </div>
@@ -646,8 +639,8 @@ const VendorRegister = () => {
                   type="submit"
                   disabled={loading || Object.keys(validationErrors).some(key => validationErrors[key])}
                   className={`w-full py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg ${loading || Object.keys(validationErrors).some(key => validationErrors[key])
-                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-indigo-500/25 hover:shadow-indigo-500/40'
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-indigo-500/25 hover:shadow-indigo-500/40'
                     }`}
                 >
                   {loading ? (

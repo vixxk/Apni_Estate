@@ -23,6 +23,15 @@ import { Backendurl } from "../App";
 import { toast } from "react-toastify";
 
 // Animation Variants
+const pulseAnimation = {
+  scale: [1, 1.05, 1],
+  transition: {
+    duration: 2,
+    repeat: Infinity,
+    ease: "easeInOut",
+  },
+};
+
 const containerVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -65,33 +74,7 @@ const inputVariants = {
   },
 };
 
-const floatingAnimation = {
-  y: [-3, 3, -3],
-  transition: {
-    duration: 4,
-    repeat: Infinity,
-    ease: "easeInOut",
-  },
-};
 
-const sparkleAnimation = {
-  scale: [1, 1.2, 1],
-  rotate: [0, 180, 360],
-  transition: {
-    duration: 3,
-    repeat: Infinity,
-    ease: "easeInOut",
-  },
-};
-
-const pulseAnimation = {
-  scale: [1, 1.05, 1],
-  transition: {
-    duration: 2,
-    repeat: Infinity,
-    ease: "easeInOut",
-  },
-};
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -236,21 +219,24 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
-      {/* Animated Background Elements */}
+      {/* Animated Background Elements - Static/Stable */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
-          animate={floatingAnimation}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
           className="absolute top-20 left-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl"
         />
         <motion.div
-          animate={{
-            y: [5, -5, 5],
-            transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.2 }}
           className="absolute top-40 right-20 w-96 h-96 bg-indigo-400/10 rounded-full blur-3xl"
         />
         <motion.div
-          animate={sparkleAnimation}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.4 }}
           className="absolute bottom-20 left-1/3 w-64 h-64 bg-purple-400/10 rounded-full blur-3xl"
         />
       </div>
@@ -261,13 +247,12 @@ const Signup = () => {
           <motion.div
             key={i}
             animate={{
-              y: [-20, 20, -20],
-              x: [-10, 10, -10],
-              rotate: [0, 360],
-              opacity: [0.3, 0.8, 0.3],
+              y: [-10, 10, -10],
+              x: [-5, 5, -5],
+              opacity: [0.3, 0.6, 0.3],
             }}
             transition={{
-              duration: 4 + i,
+              duration: 6 + i,
               repeat: Infinity,
               ease: "easeInOut",
               delay: i * 0.5,
@@ -279,7 +264,7 @@ const Signup = () => {
         ))}
       </div>
 
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20">
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-8 md:py-12">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -672,10 +657,10 @@ const Signup = () => {
                     }`}
                 >
                   {loading ? (
-                    <>
-                      <Loader className="w-5 h-5 animate-spin" />
+                    <div className="flex items-center gap-2 animate-pulse">
+                      <Loader className="w-5 h-5" />
                       <span>Creating Account...</span>
-                    </>
+                    </div>
                   ) : (
                     <>
                       <UserPlus className="w-5 h-5" />

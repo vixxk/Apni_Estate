@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 const FeatureCard = ({
@@ -191,18 +192,49 @@ const AIFeaturesPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 py-8 sm:py-12 md:py-20">
-        {/* Animated Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }} />
+      {/* Header */}
+      <div className="relative overflow-hidden bg-gray-50 py-8 sm:py-12 md:py-16">
+        {/* Animated gradient background - Lighter theme */}
+        <div className="absolute inset-0 z-0">
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"
+            animate={{
+              background: [
+                "linear-gradient(to bottom right, rgba(239, 246, 255, 1), rgba(238, 242, 255, 1), rgba(250, 245, 255, 1))",
+                "linear-gradient(to bottom right, rgba(238, 242, 255, 1), rgba(250, 245, 255, 1), rgba(239, 246, 255, 1))",
+              ],
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          />
+
+          {/* Animated shapes - Subtler colors */}
+          <div className="absolute inset-0 opacity-40">
+            <motion.div
+              className="absolute top-1/4 left-1/4 w-48 h-48 sm:w-64 sm:h-64 rounded-full bg-blue-200 blur-3xl"
+              animate={{
+                x: [0, 30, 0, -30, 0],
+                y: [0, -30, 0, 30, 0],
+                scale: [1, 1.1, 1, 0.9, 1],
+              }}
+              transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+            />
+
+            <motion.div
+              className="absolute bottom-1/4 right-1/4 w-32 h-32 sm:w-48 sm:h-48 rounded-full bg-indigo-200 blur-3xl"
+              animate={{
+                x: [0, -40, 0, 40, 0],
+                y: [0, 40, 0, -40, 0],
+                scale: [1, 0.9, 1, 1.1, 1],
+              }}
+              transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </div>
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl sm:rounded-2xl md:rounded-3xl bg-white/20 backdrop-blur-sm mb-4 sm:mb-6 ">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl sm:rounded-2xl md:rounded-3xl bg-white shadow-lg shadow-blue-100 mb-4 sm:mb-6">
             <svg
-              className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-white"
+              className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-blue-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -215,10 +247,10 @@ const AIFeaturesPage = () => {
               />
             </svg>
           </div>
-          <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 sm:mb-4 md:mb-6 leading-tight px-2">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-900 mb-3 sm:mb-4 md:mb-6 leading-tight px-2">
             AI-Powered Property Tools
           </h1>
-          <p className="text-sm sm:text-base md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed px-4">
+          <p className="text-sm sm:text-base md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed px-4">
             Transform your property journey with cutting-edge artificial intelligence.
           </p>
         </div>

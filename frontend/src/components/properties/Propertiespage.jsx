@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { Grid, List, SlidersHorizontal, MapPin, Home } from "lucide-react";
+import { Grid, List, SlidersHorizontal, MapPin, Home, Loader2 } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import SearchBar from "../properties/Searchbar.jsx";
 import FilterSection from "../properties/Filtersection.jsx";
@@ -324,23 +324,80 @@ const PropertiesPage = () => {
 
   if (propertyState.loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center pb-32 md:pb-0 bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           className="text-center flex flex-col items-center"
         >
           <div className="relative mb-6">
-            <div className="w-16 h-16 md:w-20 md:h-20 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
+            <motion.div
+              className="w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center relative shadow-lg shadow-blue-500/30"
+              animate={{
+                rotate: [0, 0, 360, 360, 0],
+                scale: [1, 0.9, 0.9, 1, 1],
+                borderRadius: ["16%", "50%", "50%", "16%", "16%"],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Home className="w-12 h-12 text-white" />
+            </motion.div>
+
+            <motion.div
+              className="absolute w-3 h-3 bg-blue-300 rounded-full right-4 bottom-10"
+              animate={{
+                x: [0, 30, 0, -30, 0],
+                y: [-30, 0, 30, 0, -30],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            />
+
+            <motion.div
+              className="absolute w-2 h-2 bg-indigo-400 rounded-full"
+              animate={{
+                x: [0, -30, 0, 30, 0],
+                y: [30, 0, -30, 0, 30],
+              }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+            />
+
+            <div
+              className="absolute inset-0 bg-blue-500/10 rounded-full animate-ping"
+              style={{ animationDuration: "3s" }}
+            ></div>
           </div>
 
-          <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
+          <h3 className="text-2xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             Loading Properties
           </h3>
 
-          <p className="text-gray-600 max-w-xs text-center text-sm md:text-base">
-            Finding the perfect homes for you...
+          <p className="text-gray-600 mb-5 max-w-xs text-center">
+            We're finding the best properties for you...
           </p>
+
+          <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
+            <motion.div
+              className="h-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600 bg-size-200 absolute top-0 left-0 right-0"
+              animate={{
+                backgroundPosition: ["0% center", "100% center", "0% center"],
+              }}
+              style={{ backgroundSize: "200% 100%" }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            />
+          </div>
+
+          <div className="flex items-center mt-4 text-xs text-blue-600">
+            <motion.div
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"
+            />
+            <span>Curating the best listings for you</span>
+          </div>
         </motion.div>
       </div>
     );
@@ -348,20 +405,14 @@ const PropertiesPage = () => {
 
   if (propertyState.error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center text-red-600 p-6 rounded-lg bg-red-50 max-w-md w-full"
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 -mt-20">
+        <p className="text-red-600 font-medium">{propertyState.error}</p>
+        <button
+          onClick={fetchProperties}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
-          <p className="font-medium mb-4">{propertyState.error}</p>
-          <button
-            onClick={fetchProperties}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
-          >
-            Try Again
-          </button>
-        </motion.div>
+          Try Again
+        </button>
       </div>
     );
   }
@@ -370,55 +421,30 @@ const PropertiesPage = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gray-50"
+      exit={{ opacity: 0 }}
+      className="min-h-screen bg-gray-50 pt-20 pb-12"
     >
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.header
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="text-center mb-6 sm:mb-12"
+          className="text-center mb-8"
         >
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-blue-700 mb-2 sm:mb-4">
-            Find Your Perfect Property
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-900 mb-3">
+            Find Your Dream Property
           </h1>
-          <p className="text-sm sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">
-            Discover a curated collection of premium properties in your desired
-            location
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+            Explore our curated list of premium properties available for buy & rent
           </p>
-          <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
+          <p className="text-sm text-gray-500 mt-2">
             {filteredProperties.length} properties found
           </p>
         </motion.header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-8">
-          {/* Filters Sidebar */}
-          <AnimatePresence mode="wait">
-            {viewState.showFilters && (
-              <motion.aside
-                ref={filterRef}
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -20, opacity: 0 }}
-                className="lg:col-span-1"
-              >
-                <FilterSection
-                  filters={filters}
-                  setFilters={setFilters}
-                  onApplyFilters={handleFilterChange}
-                />
-              </motion.aside>
-            )}
-          </AnimatePresence>
-
-          {/* Properties Grid/List */}
-          <div
-            className={`${viewState.showFilters ? "lg:col-span-3" : "lg:col-span-4"
-              }`}
-          >
-            {/* Search and View Controls */}
-            <div className="glass-panel p-3 sm:p-4 rounded-lg mb-4 sm:mb-6">
+        <div className="flex flex-col gap-6">
+          <div className="w-full">
+            <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm mb-4 sm:mb-6">
               <div className="flex flex-col gap-3">
-                {/* Search Bar */}
                 <div className="w-full">
                   <SearchBar
                     onSearch={(query) =>
@@ -431,7 +457,6 @@ const PropertiesPage = () => {
                   />
                 </div>
 
-                {/* Sort and View Controls */}
                 <div className="flex items-center gap-2 w-full">
                   <select
                     value={filters.sortBy}
@@ -507,65 +532,65 @@ const PropertiesPage = () => {
                 </div>
               </div>
             </div>
-
-            {/* Properties Display */}
-            <motion.div
-              layout
-              className={`grid gap-1.5 sm:gap-4 md:gap-6 ${viewState.isGridView
-                ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
-                : "grid-cols-1"
-                }`}
-            >
-              <AnimatePresence>
-                {filteredProperties.length > 0 ? (
-                  filteredProperties.map((property) => (
-                    <PropertyCard
-                      key={property._id}
-                      property={property}
-                      viewType={viewState.isGridView ? "grid" : "list"}
-                      favourites={favourites}
-                      onFavouritesChange={handleFavouritesChange}
-                    />
-                  ))
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="col-span-full text-center py-12 sm:py-16 glass-panel rounded-lg"
-                  >
-                    <MapPin className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                      No properties found
-                    </h3>
-                    <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
-                      Try adjusting your filters or search criteria to find what
-                      you're looking for
-                    </p>
-                    <button
-                      onClick={() => {
-                        setFilters({
-                          propertyType: "",
-                          priceRange: [0, Number.MAX_SAFE_INTEGER],
-                          bedrooms: "0",
-                          bathrooms: "0",
-                          availability: "",
-                          searchQuery: "",
-                          sortBy: "",
-                        });
-                      }}
-                      className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                    >
-                      Clear Filters
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
           </div>
         </div>
-      </div>
-    </motion.div>
+
+        {/* Properties Display */}
+        < motion.div
+          layout
+          className={`grid gap-1.5 sm:gap-4 md:gap-6 ${viewState.isGridView
+            ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
+            : "grid-cols-1"
+            }`}
+        >
+          <AnimatePresence>
+            {filteredProperties.length > 0 ? (
+              filteredProperties.map((property) => (
+                <PropertyCard
+                  key={property._id}
+                  property={property}
+                  viewType={viewState.isGridView ? "grid" : "list"}
+                  favourites={favourites}
+                  onFavouritesChange={handleFavouritesChange}
+                />
+              ))
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="col-span-full text-center py-12 sm:py-16 glass-panel rounded-lg"
+              >
+                <MapPin className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
+                  No properties found
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
+                  Try adjusting your filters or search criteria to find what
+                  you're looking for
+                </p>
+                <button
+                  onClick={() => {
+                    setFilters({
+                      propertyType: "",
+                      priceRange: [0, Number.MAX_SAFE_INTEGER],
+                      bedrooms: "0",
+                      bathrooms: "0",
+                      availability: "",
+                      searchQuery: "",
+                      sortBy: "",
+                    });
+                  }}
+                  className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                >
+                  Clear Filters
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div >
+      </div >
+    </motion.div >
   );
 };
 

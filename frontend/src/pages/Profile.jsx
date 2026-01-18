@@ -313,36 +313,9 @@ function Profile() {
           {/* Icon with Animation */}
           <motion.div
             variants={iconVariants}
-            animate={floatingAnimation}
             className="relative mx-auto mb-6 w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg"
           >
             <User className="w-10 h-10 text-white" />
-
-            {/* Sparkle Effects */}
-            <motion.div
-              variants={sparkleVariants}
-              initial="initial"
-              animate="animate"
-              className="absolute -top-2 -right-2"
-            >
-              <Sparkles className="w-5 h-5 text-yellow-400" />
-            </motion.div>
-
-            <motion.div
-              variants={sparkleVariants}
-              initial="initial"
-              animate="animate"
-              style={{ transitionDelay: "1s" }}
-              className="absolute -bottom-1 -left-1"
-            >
-              <Sparkles className="w-4 h-4 text-pink-400" />
-            </motion.div>
-
-            {/* Pulse Ring */}
-            <motion.div
-              animate={pulseAnimation}
-              className="absolute inset-0 rounded-full border-4 border-blue-400/30"
-            />
           </motion.div>
 
           {/* Heading */}

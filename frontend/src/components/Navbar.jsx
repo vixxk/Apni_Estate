@@ -426,6 +426,7 @@ const Navbar = () => {
                               )}
 
 
+
                               <motion.button
                                 whileHover={{
                                   x: 4,
@@ -440,6 +441,7 @@ const Navbar = () => {
                                 <Bookmark className="w-4 h-4" />
                                 <span>Favourite Properties</span>
                               </motion.button>
+
 
 
                               <div className="border-t border-gray-100 my-2" />
@@ -759,13 +761,23 @@ const Navbar = () => {
                       onClick={toggleMobileMenu}
                     />
                   )}
-                  <MobileNavItem
-                    icon={Bookmark}
-                    label="Favourite Properties"
-                    path="/saved"
-                    currentPath={location.pathname}
-                    onClick={toggleMobileMenu}
-                  />
+                  {isVendor ? (
+                    <MobileNavItem
+                      icon={MessageSquare}
+                      label="Chat"
+                      path="/messages"
+                      currentPath={location.pathname}
+                      onClick={toggleMobileMenu}
+                    />
+                  ) : (
+                    <MobileNavItem
+                      icon={Bookmark}
+                      label="Favourite Properties"
+                      path="/saved"
+                      currentPath={location.pathname}
+                      onClick={toggleMobileMenu}
+                    />
+                  )}
                   <button
                     onClick={handleLogout}
                     className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-red-600 hover:bg-red-50 transition-all mt-1"

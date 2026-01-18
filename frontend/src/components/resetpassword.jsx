@@ -60,33 +60,7 @@ const inputVariants = {
   }
 };
 
-const floatingAnimation = {
-  y: [-3, 3, -3],
-  transition: {
-    duration: 4,
-    repeat: Infinity,
-    ease: "easeInOut"
-  }
-};
 
-const sparkleAnimation = {
-  scale: [1, 1.2, 1],
-  rotate: [0, 180, 360],
-  transition: {
-    duration: 3,
-    repeat: Infinity,
-    ease: "easeInOut"
-  }
-};
-
-const pulseAnimation = {
-  scale: [1, 1.05, 1],
-  transition: {
-    duration: 2,
-    repeat: Infinity,
-    ease: "easeInOut"
-  }
-};
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -184,19 +158,25 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center px-4 py-12 relative overflow-hidden">
-      {/* Animated Background Elements */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center px-4 py-8 md:py-12 relative overflow-hidden">
+      {/* Animated Background Elements - Static/Stable */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
-          animate={floatingAnimation}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
           className="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-20"
         />
         <motion.div
-          animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 1 } }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.2 }}
           className="absolute top-40 right-20 w-16 h-16 bg-indigo-200 rounded-full opacity-30"
         />
         <motion.div
-          animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 2 } }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.4 }}
           className="absolute bottom-20 left-20 w-24 h-24 bg-purple-200 rounded-full opacity-25"
         />
       </div>
@@ -225,8 +205,9 @@ const ResetPassword = () => {
             >
               <div className="text-center">
                 <motion.div
-                  animate={{ scale: [1, 1.1, 1], rotate: [0, 180, 360] }}
-                  transition={{ duration: 1, repeat: Infinity }}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
                   className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4"
                 >
                   <CheckCircle className="w-8 h-8 text-white" />
@@ -245,24 +226,15 @@ const ResetPassword = () => {
                 whileTap={{ scale: 0.95 }}
                 className="relative"
               >
-                <motion.div
-                  animate={sparkleAnimation}
-                  className="absolute -top-2 -right-2 w-6 h-6 text-yellow-400"
-                >
-                  <Sparkles className="w-full h-full" />
-                </motion.div>
                 <h2 className="text-4xl font-bold text-blue-700">
                   ApniEstate
                 </h2>
               </motion.div>
             </Link>
 
-            <motion.div
-              animate={pulseAnimation}
-              className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/25"
-            >
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/25">
               <Key className="w-8 h-8 text-white" />
-            </motion.div>
+            </div>
 
             <h2 className="text-2xl font-bold text-gray-800 mb-2">Reset Password</h2>
             <p className="text-gray-600">Create a new secure password for your account</p>

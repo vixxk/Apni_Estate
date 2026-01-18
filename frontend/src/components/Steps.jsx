@@ -117,13 +117,7 @@ function Step({ icon: Icon, title, description, stepNumber }) {
       </motion.div>
 
 
-      {/* Floating sparkles */}
-      <motion.div
-        className="absolute -top-1 md:-top-2 -right-1 md:-right-2 text-yellow-400"
-        animate={sparkleAnimation}
-      >
-        <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
-      </motion.div>
+
 
 
       {/* Icon container with glassmorphism effect */}
@@ -258,52 +252,21 @@ export default function HowItWorks() {
           className="text-center mb-12 md:mb-24"
         >
           {/* Badge */}
-          <motion.span
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-indigo-100 
-              text-blue-700 px-4 md:px-6 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-semibold tracking-wide uppercase 
-              shadow-lg border border-blue-200/50 backdrop-blur-sm"
-            animate={pulseAnimation}
+          <span
+            className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 md:px-6 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-semibold tracking-wide uppercase shadow-sm border border-blue-100"
           >
-            <Zap className="w-3 h-3 md:w-4 md:h-4" />
             Simple Process
-            <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
-          </motion.span>
+          </span>
 
 
           {/* Main heading */}
-          <motion.h2
-            className="text-3xl md:text-5xl lg:text-6xl font-bold mt-4 md:mt-6 mb-4 md:mb-6"
-            animate={{
-              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-            }}
-            transition={{ duration: 5, repeat: Infinity }}
-            style={{
-              background:
-                "linear-gradient(90deg, #1e293b, #3b82f6, #6366f1, #8b5cf6, #1e293b)",
-              backgroundSize: "200% 100%",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mt-4 md:mt-6 mb-4 md:mb-6 text-blue-800">
             How It Works
-          </motion.h2>
+          </h2>
 
 
           {/* Decorative line */}
-          <motion.div
-            className="w-24 md:w-32 h-1 md:h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 
-              mx-auto mb-6 md:mb-8 rounded-full relative overflow-hidden"
-            initial={{ width: 0 }}
-            whileInView={{ width: window.innerWidth >= 768 ? 128 : 96 }}
-            transition={{ duration: 1, delay: 0.5 }}
-          >
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-white/40 to-transparent"
-              animate={{ x: [-100, 200] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            />
-          </motion.div>
+          <div className="w-24 md:w-32 h-1 md:h-1.5 bg-blue-600 mx-auto mb-6 md:mb-8 rounded-full" />
 
 
           {/* Description */}
@@ -314,7 +277,7 @@ export default function HowItWorks() {
             transition={{ delay: 0.8 }}
           >
             Finding your perfect property is easy with our{" "}
-            <span className="font-semibold text-blue-600">AI-powered</span>{" "}
+            <span className="font-semibold text-blue-700">AI-powered</span>{" "}
             three-step process
           </motion.p>
 
@@ -333,8 +296,8 @@ export default function HowItWorks() {
             ].map((stat, index) => (
               <motion.div
                 key={index}
-                className="glass-card flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 
-                    rounded-full border border-white/20"
+                className="bg-white flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 
+                    rounded-full border border-slate-200 shadow-sm"
                 whileHover={{ scale: 1.05 }}
               >
                 <stat.icon className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-600" />

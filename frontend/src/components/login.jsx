@@ -62,33 +62,7 @@ const inputVariants = {
   }
 };
 
-const floatingAnimation = {
-  y: [-3, 3, -3],
-  transition: {
-    duration: 4,
-    repeat: Infinity,
-    ease: "easeInOut"
-  }
-};
 
-const sparkleAnimation = {
-  scale: [1, 1.2, 1],
-  rotate: [0, 180, 360],
-  transition: {
-    duration: 3,
-    repeat: Infinity,
-    ease: "easeInOut"
-  }
-};
-
-const pulseAnimation = {
-  scale: [1, 1.05, 1],
-  transition: {
-    duration: 2,
-    repeat: Infinity,
-    ease: "easeInOut"
-  }
-};
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -151,27 +125,27 @@ const Login = () => {
         <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-indigo-100/20 to-transparent"></div>
       </div>
 
-      {/* Animated Background Elements */}
+      {/* Animated Background Elements - Static/Stable */}
       <motion.div
         className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-blue-400/20 to-indigo-500/20 rounded-full blur-xl"
-        animate={floatingAnimation}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
       />
       <motion.div
         className="absolute bottom-32 right-32 w-40 h-40 bg-gradient-to-br from-purple-400/20 to-pink-500/20 rounded-full blur-xl"
-        animate={{
-          ...floatingAnimation,
-          transition: { ...floatingAnimation.transition, delay: 1 }
-        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 0.2 }}
       />
       <motion.div
         className="absolute top-1/2 left-10 w-24 h-24 bg-gradient-to-br from-green-400/20 to-blue-500/20 rounded-full blur-xl"
-        animate={{
-          ...floatingAnimation,
-          transition: { ...floatingAnimation.transition, delay: 2 }
-        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 0.4 }}
       />
 
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20">
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-8 md:py-12">
         <motion.div
           initial="hidden"
           animate="visible"
@@ -187,7 +161,7 @@ const Login = () => {
             <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-full blur-xl"></div>
             <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-pink-600/20 rounded-full blur-xl"></div>
 
-            <div className="relative p-8 pt-12">
+            <div className="relative p-8 pt-10">
               {/* Logo & Title Section */}
               <motion.div
                 className="text-center mb-10"
@@ -196,24 +170,15 @@ const Login = () => {
                 <Link to="/" className="inline-block group">
                   <motion.div
                     className="flex items-center justify-center gap-3 mb-6"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <motion.div
-                      className="p-3 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl shadow-lg"
-                      animate={pulseAnimation}
-                    >
+                    <div className="p-3 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl shadow-lg">
                       <Home className="w-6 h-6 text-white" />
-                    </motion.div>
+                    </div>
                     <h1 className="text-3xl font-bold text-blue-700">
                       ApniEstate
                     </h1>
-                    <motion.div
-                      animate={sparkleAnimation}
-                      className="text-yellow-400"
-                    >
-                      <Sparkles className="w-5 h-5" />
-                    </motion.div>
                   </motion.div>
                 </Link>
 
@@ -347,10 +312,10 @@ const Login = () => {
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   {loading ? (
-                    <>
-                      <Loader className="w-5 h-5 animate-spin" />
+                    <div className="flex items-center gap-2 animate-pulse">
+                      <Loader className="w-5 h-5" />
                       <span>Signing in...</span>
-                    </>
+                    </div>
                   ) : (
                     <>
                       <CheckCircle className="w-5 h-5" />

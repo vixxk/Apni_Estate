@@ -195,7 +195,7 @@ const Hero = () => {
       </div>
 
       {/* ================= CONTENT ================= */}
-      <div className="relative z-10 min-h-screen flex flex-col justify-start px-4 pt-20 md:pt-28 lg:pt-32">
+      <div className="relative z-10 min-h-screen flex flex-col justify-start px-4 pt-10 md:pt-14 lg:pt-16">
         <div className="max-w-7xl mx-auto w-full">
           <motion.div
             variants={containerVariants}
@@ -238,7 +238,7 @@ const Hero = () => {
                       onClick={() => handleServiceClick(service.title)}
                       className="cursor-pointer group flex flex-col items-center gap-3"
                     >
-                      <div className="w-14 h-14 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden border-2 border-transparent group-hover:border-blue-600 transition-all duration-300 shadow-sm group-hover:shadow-md">
+                      <div className="w-12 h-12 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden transition-all duration-300">
                         <img
                           src={service.img}
                           alt={service.title}
@@ -246,7 +246,7 @@ const Hero = () => {
                         />
                       </div>
 
-                      <p className="font-semibold text-slate-600 text-center text-xs sm:text-sm leading-tight group-hover:text-blue-700 transition-colors">
+                      <p className="font-semibold text-slate-700 text-center text-xs sm:text-base leading-tight group-hover:text-blue-700 transition-colors">
                         {service.title}
                       </p>
                     </motion.div>

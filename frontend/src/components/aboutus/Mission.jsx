@@ -4,30 +4,30 @@ import { Target, Eye } from "lucide-react";
 
 export default function MissionVision() {
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-gray-50">
+    <section className="py-12 md:py-24 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-10 md:mb-16"
         >
-          <h2 className="text-4xl font-bold">Our Purpose</h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto"></div>
+          <h2 className="text-2xl md:text-4xl font-bold">Our Purpose</h2>
+          <div className="w-16 md:w-24 h-1 bg-blue-600 mx-auto mt-2"></div>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-12">
           <motion.div
             initial={{ x: -20, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
             viewport={{ once: true }}
-            className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300"
+            className="bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-shadow duration-300"
           >
-            <div className="flex items-center mb-6">
-              <Target className="w-8 h-8 text-blue-600 mr-3" />
-              <h2 className="text-2xl font-bold">Our Mission</h2>
+            <div className="flex items-center mb-4 md:mb-6">
+              <Target className="w-6 h-6 md:w-8 md:h-8 text-blue-600 mr-3" />
+              <h2 className="text-xl md:text-2xl font-bold">Our Mission</h2>
             </div>
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-sm md:text-base text-gray-600 leading-relaxed">
               To make property decisions simple and trustworthy for people
               across India. ApniEstate connects users with verified listings,
               clear information, and guided journeys from online discovery to
@@ -39,13 +39,13 @@ export default function MissionVision() {
             initial={{ x: 20, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
             viewport={{ once: true }}
-            className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300"
+            className="bg-white rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-shadow duration-300"
           >
-            <div className="flex items-center mb-6">
-              <Eye className="w-8 h-8 text-blue-600 mr-3" />
-              <h2 className="text-2xl font-bold">Our Vision</h2>
+            <div className="flex items-center mb-4 md:mb-6">
+              <Eye className="w-6 h-6 md:w-8 md:h-8 text-blue-600 mr-3" />
+              <h2 className="text-xl md:text-2xl font-bold">Our Vision</h2>
             </div>
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-sm md:text-base text-gray-600 leading-relaxed">
               To become the most trusted digital partner for renting, buying,
               and investing in homes in Tier‑1 and Tier‑2 cities. We envision a
               future where every user finds not just a property, but the right

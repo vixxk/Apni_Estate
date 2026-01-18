@@ -290,8 +290,8 @@ const VendorAddProperty = () => {
       let finalCategory = "none";
 
       if (["sell", "rent"].includes(finalType)) {
-        finalCategory = finalType; 
-        finalType = form.propertySubType || "others"; 
+        finalCategory = finalType;
+        finalType = form.propertySubType || "others";
       } else if (finalType.includes("construction") || finalType === "contractor") {
       }
 
@@ -350,7 +350,7 @@ const VendorAddProperty = () => {
         },
         images: uploadedImages,
         tags: form.tags,
-        status: "pending", 
+        status: "pending",
       };
 
       const propertyRes = await fetch(`${API}/api/properties/vendor-add`, {
@@ -451,7 +451,7 @@ const VendorAddProperty = () => {
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-        className="max-w-4xl mx-auto"
+        className="max-w-4xl mx-auto pt-8"
       >
         {/* Header */}
         <motion.div variants={itemVariants} className="text-center mb-6">
@@ -589,7 +589,7 @@ const VendorAddProperty = () => {
                     Select Property Type
                   </h2>
                 </div>
-                <div className="grid grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
+                <div className="grid grid-cols-3 gap-2 md:gap-4">
                   {[
                     { value: "apartment", label: "Apartment", icon: Building2 },
                     { value: "house", label: "House", icon: Home },
@@ -603,13 +603,13 @@ const VendorAddProperty = () => {
                         key={type.value}
                         type="button"
                         onClick={() => setForm({ ...form, propertySubType: type.value })}
-                        className={`p-3 md:p-4 rounded-xl border-2 transition-all duration-300 flex flex-col items-center justify-center gap-2 ${form.propertySubType === type.value
+                        className={`p-1.5 md:p-4 rounded-xl border-2 transition-all duration-300 flex flex-col items-center justify-center gap-1 md:gap-2 ${form.propertySubType === type.value
                           ? "border-indigo-600 bg-indigo-50 shadow-md scale-105"
                           : "border-gray-200 hover:border-indigo-300 hover:shadow-sm"
                           }`}
                       >
-                        <Icon size={24} className={form.propertySubType === type.value ? "text-indigo-600" : "text-gray-400"} />
-                        <span className={`text-xs md:text-sm font-semibold ${form.propertySubType === type.value ? "text-indigo-600" : "text-gray-700"}`}>
+                        <Icon size={18} className={`md:w-6 md:h-6 ${form.propertySubType === type.value ? "text-indigo-600" : "text-gray-400"}`} />
+                        <span className={`text-[10px] md:text-sm font-semibold truncate w-full text-center ${form.propertySubType === type.value ? "text-indigo-600" : "text-gray-700"}`}>
                           {type.label}
                         </span>
                       </button>
