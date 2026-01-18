@@ -48,6 +48,10 @@ const PropertyDetails = () => {
 
     if (Array.isArray(s)) {
       if (s.length === 0) return [];
+      // If we have multiple items, assume it's a valid list already
+      if (s.length > 1) {
+        return s.map(item => String(item).trim()).filter(Boolean);
+      }
       s = s[0];
     }
 

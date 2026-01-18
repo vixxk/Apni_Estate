@@ -31,10 +31,10 @@ const VendorAddProperty = () => {
   const token = localStorage.getItem("token");
   const fileInputRef = useRef(null);
 
-  // All Categories (matching your image exactly)
+  // All Categories (matching original UI but keeping logic)
   const allCategories = [
-    { value: "sell", label: "Sell", icon: Store },
-    { value: "rent", label: "Rent", icon: Home },
+    { value: "sell", label: "Sell Property", icon: Store },
+    { value: "rent", label: "Rent/Lease", icon: Home },
     { value: "construction services", label: "Construction Services", icon: Hammer },
     { value: "interior", label: "Interior Designing", icon: Palette },
     { value: "legal service", label: "Legal Service", icon: Scale },
@@ -51,8 +51,8 @@ const VendorAddProperty = () => {
     title: "",
     description: "",
     price: "",
-    type: "sell",
-    propertySubType: "apartment", // Default sub-type
+    type: "sell", // This tracks the high-level intent (sell/rent) OR the service type
+    propertySubType: "apartment", // Only for real estate
     category: "none",
     location: {
       address: "",
@@ -96,22 +96,30 @@ const VendorAddProperty = () => {
 
   const furnishedOptions = ["furnished", "semi-furnished", "unfurnished"];
   const propertyAmenities = [
+    "24/7 Security",
+    "Power Backup",
+    "Car Parking",
+    "Lift",
     "Swimming Pool",
     "Gym",
-    "Garden",
-    "Security",
-    "Lift",
+    "Garden / Park",
+    "Club House",
+    "CCTV",
+    "Water Supply",
     "Balcony",
     "Modular Kitchen",
-    "Power Backup",
-    "Water Supply",
-    "CCTV",
-    "Club House",
-    "Play Area",
+    "Vastu Compliant",
+    "Intercom",
+    "Fire Safety",
+    "Wi-Fi/Internet",
+    "Maintenance Staff",
+    "Visitor Parking"
   ];
 
   // Determine if property fields are needed 
-  const needsPropertyDetails = ["sell", "rent"].includes(form.type);
+  // We check if the selected 'type' is one of our Listing Goals (sell/rent)
+  const isRealEstateListing = ["sell", "rent"].includes(form.type);
+  const needsPropertyDetails = isRealEstateListing;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -579,7 +587,7 @@ const VendorAddProperty = () => {
             </div>
 
             {/* Property Type Selection (Only for Sell/Rent) */}
-            {["sell", "rent"].includes(form.type) && (
+            {isRealEstateListing && (
               <div className="mt-6 animate-in fade-in slide-in-from-top-4 duration-500">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">

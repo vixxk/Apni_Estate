@@ -2,7 +2,7 @@ import { Home, IndianRupee, Filter } from "lucide-react";
 import { motion } from "framer-motion";
 
 const propertyTypes = ["House", "Apartment", "Villa", "Plot", "Commercial"];
-const availabilityTypes = ["Rent", "Buy", "Lease"];
+const availabilityTypes = ["Rent", "Buy"];
 const priceRanges = [
   { min: 0, max: 5000000, label: "Under ₹50L" },
   { min: 5000000, max: 10000000, label: "₹50L - ₹1Cr" },
@@ -75,6 +75,30 @@ const FilterSection = ({ filters, setFilters, onApplyFilters }) => {
                 })}
                 className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
                   ${filters.propertyType === type.toLowerCase()
+                    ? "bg-blue-600 text-white"
+                    : "bg-white/50 text-gray-700 hover:bg-white/80 border border-gray-100"}`}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Availability */}
+        <div className="filter-group">
+          <label className="filter-label text-sm sm:text-base mb-2 block font-medium text-gray-700">
+            <Filter className="w-4 h-4 mr-2 inline" />
+            Availability
+          </label>
+          <div className="grid grid-cols-3 gap-2">
+            {availabilityTypes.map((type) => (
+              <button
+                key={type}
+                onClick={() => handleChange({
+                  target: { name: "availability", value: type.toLowerCase() }
+                })}
+                className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
+                  ${filters.availability === type.toLowerCase()
                     ? "bg-blue-600 text-white"
                     : "bg-white/50 text-gray-700 hover:bg-white/80 border border-gray-100"}`}
               >

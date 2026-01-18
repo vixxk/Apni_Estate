@@ -52,12 +52,15 @@ const PropertiesPage = () => {
     const filterToApply = location.state?.filterType || typeParam;
 
     if (filterToApply) {
+      const isAvailability = ["buy", "sell", "rent"].includes(filterToApply.toLowerCase());
+
       setFilters(prev => ({
         ...prev,
-        propertyType: filterToApply,
-        searchQuery: "" // Keep search bar empty
+        // If it's buy/rent, set availability. Otherwise set propertyType (e.g. apartment)
+        availability: isAvailability ? filterToApply : "",
+        propertyType: isAvailability ? "" : filterToApply,
+        searchQuery: ""
       }));
-      // Clear the navigation state to prevent reapplying on refresh, but keep URL param valid for deep linking
       window.history.replaceState({}, document.title);
     }
   }, [location.state, typeParam]);
@@ -87,7 +90,8 @@ const PropertiesPage = () => {
     try {
       setPropertyState((prev) => ({ ...prev, loading: true }));
 
-      const response = await axios.get(`${Backendurl}/api/properties`);
+      // Fetch more properties to ensure client-side search works effectively
+      const response = await axios.get(`${Backendurl}/api/properties?limit=100`);
 
       if (response.data.success) {
         const rawList = response.data.data || [];
@@ -127,6 +131,7 @@ const PropertiesPage = () => {
             description: p.description,
             price: p.price,
             type: p.type || p.propertyType,
+            category: p.category || p.type || p.propertyType, // Ensure category is available
             location: locationString || "Location not specified",
             beds: p.features?.bedrooms ?? 0,
             baths: p.features?.bathrooms ?? 0,
@@ -199,20 +204,8 @@ const PropertiesPage = () => {
   }, [token]);
 
   const filteredProperties = useMemo(() => {
-    // Define allowed property types
     return propertyState.properties
       .filter((property) => {
-        // Broad filter: We generally want to show properties that are either
-        // categorized as sell/rent OR have specific types we support.
-        // Let's rely on the specific filters below instead of a hard 'allowedTypes' check that might miss new types.
-        // But if we must filter out 'services', we can check that.
-
-        // For now, let's consider everything valid unless filtered out by user filters.
-        // If we want to exclude Services from 'Properties' page, we can check category/type.
-
-        // Example: Exclude 'construction services' etc if we only want 'Real Estate'
-        // const isRealEstate = ['apartment','house','villa','plot','commercial','flat','shop'].includes(property.type) || ['sell','rent'].includes(property.category);
-        // if (!isRealEstate) return false;
 
         const searchMatch =
           !filters.searchQuery ||
@@ -221,33 +214,42 @@ const PropertiesPage = () => {
               field?.toLowerCase().includes(filters.searchQuery.toLowerCase())
           );
 
-        // Type Check
-        // If filters.propertyType is set (e.g. from navbar dropdown 'apartment', 'house'),
-        // we check if property.type matches that.
-        // OR if filter is 'buy-sell'/'rent', we check category.
-
         let typeMatch = true;
         if (filters.propertyType) {
-          const fType = filters.propertyType.toLowerCase();
-
-          if (fType === 'buy' || fType === 'sell') {
-            // Check category for buy/sell
-            typeMatch = (property.category === 'sell' || property.category === 'buy');
-            typeMatch = (property.category === 'rent');
-          } else {
-            // It's a specific property type like 'apartment', 'house', 'villa'
-            // Ensure robust comparison (handle plural/singular mismatch if any)
-            const pType = property.type?.toLowerCase() || "";
-            const targetType = fType; // already lowercased above
-
-            // Simple exact match or "contains" if we want to be lenient with "apartments" vs "apartment"
-            typeMatch = pType === targetType || pType.includes(targetType) || targetType.includes(pType);
-          }
-        } else {
-          // Default view: Show everything relevant?
-          // Or maybe restrict to Buy/Rent/Sell categories by default if no type selected?
-          // For now, let's allow all.
+          const targetType = filters.propertyType.toLowerCase();
+          const pType = (property.type || "").toLowerCase();
+          typeMatch = pType === targetType || pType.includes(targetType);
         }
+
+        let availabilityMatch = true;
+
+        const SALES_CATEGORIES = [
+          "construction materials",
+          "furniture",
+          "decoratives",
+          "interior",
+          "interior designing"
+        ];
+
+        if (filters.availability) {
+          const targetAvail = filters.availability.toLowerCase();
+          const checkAvail = targetAvail === 'buy' ? 'sell' : targetAvail;
+
+          const pCategory = (property.category || "").toLowerCase();
+          const pAvail = (property.availability || "").toLowerCase();
+          const pType = (property.type || "").toLowerCase();
+
+          const isCategoryMatch =
+            pCategory === checkAvail ||
+            pAvail === checkAvail ||
+            pCategory === 'both' ||
+            pAvail === 'both';
+
+          const isSalesItemMatch = checkAvail === 'sell' && SALES_CATEGORIES.some(cat => pType.includes(cat) || pCategory.includes(cat));
+
+          availabilityMatch = isCategoryMatch || isSalesItemMatch;
+        }
+
 
         const priceMatch =
           property.price >= filters.priceRange[0] &&
@@ -263,18 +265,13 @@ const PropertiesPage = () => {
           filters.bathrooms === "0" ||
           property.baths >= parseInt(filters.bathrooms);
 
-        const availabilityMatch =
-          !filters.availability ||
-          property.availability?.toLowerCase() ===
-          filters.availability.toLowerCase();
-
         return (
           searchMatch &&
           typeMatch &&
+          availabilityMatch &&
           priceMatch &&
           bedroomsMatch &&
-          bathroomsMatch &&
-          availabilityMatch
+          bathroomsMatch
         );
       })
       .sort((a, b) => {
@@ -430,7 +427,7 @@ const PropertiesPage = () => {
           animate={{ y: 0, opacity: 1 }}
           className="text-center mb-8"
         >
-          <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-blue-900 mb-3 whitespace-nowrap overflow-hidden text-ellipsis px-1 tracking-tighter">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-blue-700 mb-2 sm:mb-4">
             Find Your Dream Property
           </h1>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">

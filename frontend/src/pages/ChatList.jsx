@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
   MessageCircle,
-  Loader2,
   User,
   Search,
 } from "lucide-react";
@@ -162,17 +161,22 @@ const ChatList = () => {
           className="bg-white rounded-3xl shadow-xl overflow-hidden"
         >
           {loading ? (
-            <div className="flex items-center justify-center py-16">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center gap-3"
-              >
-                <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-                <p className="text-sm text-slate-500 font-medium">
-                  Loading conversations...
-                </p>
-              </motion.div>
+            <div className="divide-y divide-slate-100">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-4 py-4 px-5 animate-pulse"
+                >
+                  <div className="w-12 h-12 bg-slate-200 rounded-full shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <div className="flex justify-between">
+                      <div className="h-4 bg-slate-200 rounded w-1/3" />
+                      <div className="h-3 bg-slate-200 rounded w-12" />
+                    </div>
+                    <div className="h-3 bg-slate-200 rounded w-2/3" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : filteredConversations.length === 0 ? (
             <motion.div

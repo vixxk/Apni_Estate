@@ -471,22 +471,7 @@ const SalesItemsPage = () => {
                   </select>
 
                   <div className="flex items-center gap-1">
-                    <button
-                      ref={filterButtonRef}
-                      onClick={() =>
-                        setViewState((prev) => ({
-                          ...prev,
-                          showFilters: !prev.showFilters,
-                        }))
-                      }
-                      className={`p-2 rounded-lg transition ${viewState.showFilters
-                        ? "bg-purple-100 text-purple-600"
-                        : "hover:bg-gray-100 text-gray-600"
-                        }`}
-                      title="Toggle Filters"
-                    >
-                      <SlidersHorizontal className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </button>
+                    
 
                     <button
                       onClick={() =>
