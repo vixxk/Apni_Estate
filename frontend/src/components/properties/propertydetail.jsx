@@ -467,7 +467,7 @@ const PropertyDetails = () => {
     property.phone || property.email || property.alternatePhone || true;
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 md:pt-20 pb-8 md:pb-12">
+    <div className="min-h-screen bg-gray-50 pb-8 md:pb-12">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         {/* Call Request Notification */}
         <AnimatePresence>
