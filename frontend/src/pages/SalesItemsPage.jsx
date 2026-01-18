@@ -428,6 +428,8 @@ const SalesItemsPage = () => {
                   filters={filters}
                   setFilters={setFilters}
                   onApplyFilters={handleFilterChange}
+                  typeOptions={SALES_CATEGORIES}
+                  availabilityOptions={["Buy"]}
                 />
               </motion.aside>
             )}
@@ -471,7 +473,7 @@ const SalesItemsPage = () => {
                   </select>
 
                   <div className="flex items-center gap-1">
-                    
+
 
                     <button
                       onClick={() =>

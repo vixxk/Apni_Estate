@@ -213,7 +213,7 @@ const EverythingPage = () => {
         );
         if (!categoryMatch) return false;
 
-        const searchMatch =
+        const matchesSearch =
           !filters.searchQuery ||
           [property.title, property.description, property.location].some(
             (field) =>
@@ -222,13 +222,45 @@ const EverythingPage = () => {
 
         let typeMatch = true;
         if (filters.propertyType) {
-          if (filters.propertyType === 'buy-sell') {
-            typeMatch = ['buy', 'sell'].includes(property.type?.toLowerCase());
-          } else {
-            typeMatch =
-              property.type?.toLowerCase() === filters.propertyType.toLowerCase() ||
-              property.category?.toLowerCase() === filters.propertyType.toLowerCase();
-          }
+          const targetType = filters.propertyType.toLowerCase();
+          const pType = (property.type || "").toLowerCase();
+          const pCategory = (property.category || "").toLowerCase();
+          typeMatch = pType === targetType || pType.includes(targetType) || pCategory === targetType || pCategory.includes(targetType);
+        }
+
+        let availabilityMatch = true;
+
+        const SALES_CATEGORIES = [
+          "construction materials",
+          "furniture",
+          "decoratives",
+          "interior",
+          "interior designing"
+        ];
+
+        if (filters.availability) {
+          const targetAvail = filters.availability.toLowerCase();
+          // "buy" filter generally maps to "sell" availability in db
+          const checkAvail = targetAvail === 'buy' ? 'sell' : targetAvail; // map buy to sell checks
+
+          const pCategory = (property.category || "").toLowerCase();
+          const pAvail = (property.availability || "").toLowerCase();
+          const pType = (property.type || "").toLowerCase();
+          const status = (property.status || "").toLowerCase();
+
+          // Check direct category/availability match
+          // Also handle "sale" vs "sell" variations if any
+          const isCategoryMatch =
+            pCategory === checkAvail ||
+            pAvail === checkAvail ||
+            pCategory === 'both' ||
+            pAvail === 'both' ||
+            (checkAvail === 'sell' && (status === 'available' || status === 'sale' || pAvail === 'sale'));
+
+          // If filtering for "Buy" (sell), also include Sales Items (Furniture, etc.)
+          const isSalesItemMatch = checkAvail === 'sell' && SALES_CATEGORIES.some(cat => pType.includes(cat) || pCategory.includes(cat));
+
+          availabilityMatch = isCategoryMatch || isSalesItemMatch;
         }
 
         const priceMatch =
@@ -245,13 +277,8 @@ const EverythingPage = () => {
           filters.bathrooms === "0" ||
           property.baths >= parseInt(filters.bathrooms);
 
-        const availabilityMatch =
-          !filters.availability ||
-          property.availability?.toLowerCase() ===
-          filters.availability.toLowerCase();
-
         return (
-          searchMatch &&
+          matchesSearch &&
           typeMatch &&
           priceMatch &&
           bedroomsMatch &&
@@ -286,6 +313,8 @@ const EverythingPage = () => {
       ...prev,
       ...newFilters,
     }));
+    // Close sidebar on mobile/tablet when filters are applied (match PropertiesPage behavior)
+    setViewState((prev) => ({ ...prev, showFilters: false }));
   };
 
   const handleFavouritesChange = (propertyId, action) => {
@@ -300,6 +329,18 @@ const EverythingPage = () => {
       return prev;
     });
   };
+
+  // Comprehensive options for Everything Page
+  const everythingTypeOptions = [
+    // Properties
+    "House", "Apartment", "Villa", "Plot", "Commercial",
+    // Services
+    "Construction Services", "Legal Service", "Vastu", "Construction Consulting", "Home Loan", "Interior Designing",
+    // Sales
+    "Construction Materials", "Furniture", "Decoratives",
+    // Other
+    "Others"
+  ];
 
   if (propertyState.loading) {
     return (
@@ -438,6 +479,8 @@ const EverythingPage = () => {
                   filters={filters}
                   setFilters={setFilters}
                   onApplyFilters={handleFilterChange}
+                  typeOptions={everythingTypeOptions}
+                  availabilityOptions={["Rent", "Buy"]}
                 />
               </motion.aside>
             )}

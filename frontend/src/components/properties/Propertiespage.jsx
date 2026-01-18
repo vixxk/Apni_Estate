@@ -53,12 +53,12 @@ const PropertiesPage = () => {
 
     if (filterToApply) {
       const isAvailability = ["buy", "sell", "rent"].includes(filterToApply.toLowerCase());
+      const cleanFilter = filterToApply.toLowerCase();
 
       setFilters(prev => ({
         ...prev,
-        // If it's buy/rent, set availability. Otherwise set propertyType (e.g. apartment)
-        availability: isAvailability ? filterToApply : "",
-        propertyType: isAvailability ? "" : filterToApply,
+        availability: isAvailability ? cleanFilter : "",
+        propertyType: isAvailability ? "" : cleanFilter,
         searchQuery: ""
       }));
       window.history.replaceState({}, document.title);
@@ -298,6 +298,7 @@ const PropertiesPage = () => {
 
 
   const handleFilterChange = (newFilters) => {
+    console.log("Applying filters:", newFilters);
     setFilters((prev) => ({
       ...prev,
       ...newFilters,
@@ -452,6 +453,8 @@ const PropertiesPage = () => {
                   filters={filters}
                   setFilters={setFilters}
                   onApplyFilters={handleFilterChange}
+                  typeOptions={["House", "Apartment", "Villa", "Plot", "Commercial"]}
+                  availabilityOptions={["Rent", "Buy"]}
                 />
               </motion.aside>
             )}

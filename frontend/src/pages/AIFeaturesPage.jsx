@@ -247,7 +247,7 @@ const AIFeaturesPage = () => {
               />
             </svg>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-900 mb-3 sm:mb-4 md:mb-6 leading-tight px-2">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-700 mb-3 sm:mb-4 md:mb-6 leading-tight px-2">
             AI-Powered Property Tools
           </h1>
           <p className="text-sm sm:text-base md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed px-4">

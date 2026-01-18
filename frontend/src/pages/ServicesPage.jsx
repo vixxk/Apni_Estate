@@ -426,6 +426,8 @@ const ServicesPage = () => {
                   filters={filters}
                   setFilters={setFilters}
                   onApplyFilters={handleFilterChange}
+                  typeOptions={SERVICE_CATEGORIES}
+                  availabilityOptions={[]}
                 />
               </motion.aside>
             )}

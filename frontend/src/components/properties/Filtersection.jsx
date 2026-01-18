@@ -1,8 +1,10 @@
+import { useState, useEffect } from "react";
 import { Home, IndianRupee, Filter } from "lucide-react";
 import { motion } from "framer-motion";
 
-const propertyTypes = ["House", "Apartment", "Villa", "Plot", "Commercial"];
-const availabilityTypes = ["Rent", "Buy"];
+const defaultPropertyTypes = ["House", "Apartment", "Villa", "Plot", "Commercial"];
+const defaultAvailabilityTypes = ["Rent", "Buy"];
+
 const priceRanges = [
   { min: 0, max: 5000000, label: "Under ₹50L" },
   { min: 5000000, max: 10000000, label: "₹50L - ₹1Cr" },
@@ -10,24 +12,41 @@ const priceRanges = [
   { min: 20000000, max: Number.MAX_SAFE_INTEGER, label: "Above ₹2Cr" }
 ];
 
-const FilterSection = ({ filters, setFilters, onApplyFilters }) => {
+const FilterSection = ({
+  filters,
+  setFilters,
+  onApplyFilters,
+  typeOptions = defaultPropertyTypes,
+  availabilityOptions = defaultAvailabilityTypes
+}) => {
+  const [localFilters, setLocalFilters] = useState(filters);
+
+  // Sync local filters if parent filters change externally (e.g. reset)
+  useEffect(() => {
+    setLocalFilters(filters);
+  }, [filters]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFilters(prev => ({
+    setLocalFilters(prev => ({
       ...prev,
       [name]: value
     }));
   };
 
   const handlePriceRangeChange = (min, max) => {
-    setFilters(prev => ({
+    setLocalFilters(prev => ({
       ...prev,
       priceRange: [min, max]
     }));
   };
 
+  const handleApply = () => {
+    onApplyFilters(localFilters);
+  };
+
   const handleReset = () => {
-    setFilters({
+    const resetState = {
       propertyType: "",
       priceRange: [0, Number.MAX_SAFE_INTEGER],
       bedrooms: "0",
@@ -35,7 +54,9 @@ const FilterSection = ({ filters, setFilters, onApplyFilters }) => {
       availability: "",
       searchQuery: "",
       sortBy: ""
-    });
+    };
+    setLocalFilters(resetState);
+    onApplyFilters(resetState);
   };
 
   return (
@@ -60,53 +81,69 @@ const FilterSection = ({ filters, setFilters, onApplyFilters }) => {
       </div>
 
       <div className="space-y-4 sm:space-y-6">
-        {/* Property Type */}
+        {/* Property Type or Category */}
         <div className="filter-group">
           <label className="filter-label text-sm sm:text-base mb-2 block font-medium text-gray-700">
             <Home className="w-4 h-4 mr-2 inline" />
-            Property Type
+            Type / Category
           </label>
           <div className="grid grid-cols-2 gap-2">
-            {propertyTypes.map((type) => (
-              <button
-                key={type}
-                onClick={() => handleChange({
-                  target: { name: "propertyType", value: type.toLowerCase() }
-                })}
-                className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
-                  ${filters.propertyType === type.toLowerCase()
-                    ? "bg-blue-600 text-white"
-                    : "bg-white/50 text-gray-700 hover:bg-white/80 border border-gray-100"}`}
-              >
-                {type}
-              </button>
-            ))}
+            {typeOptions.map((type) => {
+              const value = type.toLowerCase();
+              const isSelected = localFilters.propertyType === value;
+              return (
+                <button
+                  key={type}
+                  onClick={() => handleChange({
+                    target: {
+                      name: "propertyType",
+                      value: isSelected ? "" : value
+                    }
+                  })}
+                  className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
+                    ${isSelected
+                      ? "bg-blue-600 text-white"
+                      : "bg-white/50 text-gray-700 hover:bg-white/80 border border-gray-100"}`}
+                >
+                  {type}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Availability */}
-        <div className="filter-group">
-          <label className="filter-label text-sm sm:text-base mb-2 block font-medium text-gray-700">
-            <Filter className="w-4 h-4 mr-2 inline" />
-            Availability
-          </label>
-          <div className="grid grid-cols-3 gap-2">
-            {availabilityTypes.map((type) => (
-              <button
-                key={type}
-                onClick={() => handleChange({
-                  target: { name: "availability", value: type.toLowerCase() }
-                })}
-                className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
-                  ${filters.availability === type.toLowerCase()
-                    ? "bg-blue-600 text-white"
-                    : "bg-white/50 text-gray-700 hover:bg-white/80 border border-gray-100"}`}
-              >
-                {type}
-              </button>
-            ))}
+        {/* Availability - Only show if options exist */}
+        {availabilityOptions && availabilityOptions.length > 0 && (
+          <div className="filter-group">
+            <label className="filter-label text-sm sm:text-base mb-2 block font-medium text-gray-700">
+              <Filter className="w-4 h-4 mr-2 inline" />
+              Availability
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {availabilityOptions.map((type) => {
+                const value = type.toLowerCase();
+                const isSelected = localFilters.availability === value;
+                return (
+                  <button
+                    key={type}
+                    onClick={() => handleChange({
+                      target: {
+                        name: "availability",
+                        value: isSelected ? "" : value
+                      }
+                    })}
+                    className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
+                      ${isSelected
+                        ? "bg-blue-600 text-white"
+                        : "bg-white/50 text-gray-700 hover:bg-white/80 border border-gray-100"}`}
+                  >
+                    {type}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Price Range */}
         <div className="filter-group">
@@ -120,7 +157,7 @@ const FilterSection = ({ filters, setFilters, onApplyFilters }) => {
                 key={label}
                 onClick={() => handlePriceRangeChange(min, max)}
                 className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
-                  ${filters.priceRange[0] === min && filters.priceRange[1] === max
+                  ${localFilters.priceRange[0] === min && localFilters.priceRange[1] === max
                     ? "bg-blue-600 text-white"
                     : "bg-white/50 text-gray-700 hover:bg-white/80 border border-gray-100"}`}
               >
@@ -132,7 +169,7 @@ const FilterSection = ({ filters, setFilters, onApplyFilters }) => {
 
         <div className="flex space-x-4 mt-6 sm:mt-8 pt-2 sm:pt-4 border-t border-gray-100">
           <button
-            onClick={() => onApplyFilters(filters)}
+            onClick={handleApply}
             className="w-full bg-blue-600 text-white py-2 sm:py-3 rounded-lg hover:bg-blue-700 
               transition-colors font-medium text-sm sm:text-base shadow-lg shadow-blue-500/30"
           >
