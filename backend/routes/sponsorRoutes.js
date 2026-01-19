@@ -48,13 +48,13 @@ router.post("/add", async (req, res) => {
         return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    const { name, logoUrl } = req.body;
+    const { name, logoUrl, description } = req.body;
     
     if (!name || !logoUrl) {
       return res.status(400).json({ success: false, message: "Name and Logo URL are required" });
     }
 
-    const newSponsor = new Sponsor({ name, logoUrl });
+    const newSponsor = new Sponsor({ name, logoUrl, description });
     await newSponsor.save();
 
     res.status(201).json({ success: true, data: newSponsor, message: "Sponsor added successfully" });

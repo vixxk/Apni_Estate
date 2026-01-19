@@ -122,12 +122,6 @@ const AdminDashboard = () => {
 
       setAllProperties(data.data || []);
 
-      const categories = {};
-      data.data.forEach((property) => {
-        const type = property.type || "others";
-        categories[type] = (categories[type] || 0) + 1;
-      });
-      setCategoryStats(categories);
 
     } catch (error) {
       console.error("Failed to fetch properties:", error);
@@ -137,24 +131,37 @@ const AdminDashboard = () => {
     }
   };
 
-  // Apply filters to properties (client-side filtering)
+  // Apply filters and update category stats
   const applyFilters = () => {
-    let filtered = [...allProperties];
+    let baseProperties = [...allProperties];
 
+    // 1. First apply status filter to get the "current set" for category counting
+    let statusFiltered = baseProperties;
     if (statusFilter !== "all") {
-      filtered = filtered.filter(
+      statusFiltered = baseProperties.filter(
         (property) => property.status === statusFilter
       );
     }
 
+    // Update category stats based on the status-filtered list
+    const newCategoryStats = {};
+    statusFiltered.forEach((property) => {
+      const type = (property.type || "others").toLowerCase();
+      newCategoryStats[type] = (newCategoryStats[type] || 0) + 1;
+    });
+    setCategoryStats(newCategoryStats);
+
+    // 2. Now apply category filter and search query for the display list
+    let finalFiltered = statusFiltered;
+
     if (categoryFilter !== "all") {
-      filtered = filtered.filter(
-        (property) => property.type === categoryFilter
+      finalFiltered = finalFiltered.filter(
+        (property) => (property.type || "others").toLowerCase() === categoryFilter.toLowerCase()
       );
     }
 
     if (searchQuery.trim()) {
-      filtered = filtered.filter((property) =>
+      finalFiltered = finalFiltered.filter((property) =>
         property.title?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
@@ -164,10 +171,10 @@ const AdminDashboard = () => {
       categoryFilter,
       searchQuery,
       originalCount: allProperties.length,
-      filteredCount: filtered.length,
+      filteredCount: finalFiltered.length,
     });
 
-    setDisplayedProperties(filtered);
+    setDisplayedProperties(finalFiltered);
   };
 
   const handleLogout = () => {
@@ -498,8 +505,8 @@ const AdminDashboard = () => {
                     <div className="text-xl sm:text-2xl font-bold text-white mb-0.5">
                       {stats.totalProperties}
                     </div>
-                    <p className="text-blue-200 text-[10px] sm:text-xs font-medium">
-                      Total Properties
+                    <p className="text-white/90 text-[10px] sm:text-xs font-medium">
+                      Total Services
                     </p>
                   </div>
                 </motion.button>
@@ -888,9 +895,10 @@ const AdminDashboard = () => {
               </div>
             )}
           </motion.div>
-        )}
-      </div>
-    </div>
+        )
+        }
+      </div >
+    </div >
   );
 };
 
