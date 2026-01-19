@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import {
   Shield,
-  Sparkles,
   Users,
   Home,
   Star,
@@ -10,7 +9,7 @@ import {
 import { useState, useEffect } from "react";
 import heroimage from "../assets/images/heroimage.png";
 import tsLogo from "../assets/tsLogo.jpg";
-import { RadialGradient } from "react-text-gradients";
+
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useMobileMenu } from "../context/MobileMenuContext";
@@ -97,11 +96,7 @@ const floatingAnimation = {
   transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
 };
 
-const sparkleAnimation = {
-  scale: [1, 1.2, 1],
-  rotate: [0, 180, 360],
-  transition: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-};
+
 
 /* ================= COMPONENT ================= */
 const Hero = () => {
@@ -182,7 +177,7 @@ const Hero = () => {
 
     if (title === "buy") {
       navigate("/properties", {
-        state: { filterType: "buy-sell" },
+        state: { filterType: "buy" },
       });
     } else if (title === "sell") {
       navigate("/vendor/add-service");
@@ -254,19 +249,7 @@ const Hero = () => {
           />
         </div>
 
-        {/* Sparkles */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              animate={sparkleAnimation}
-              className="absolute text-yellow-400/60"
-              style={{ top: `${20 + i * 10}%`, left: `${15 + i * 12}%` }}
-            >
-              <Sparkles />
-            </motion.div>
-          ))}
-        </div>
+
       </div>
 
       {/* ================= TRIPURA STARTUP BADGE ================= */}
@@ -316,7 +299,7 @@ const Hero = () => {
 
       {/* ================= CONTENT ================= */}
       <div className="relative z-10 min-h-screen flex items-center px-4 pt-4 md:pt-8 lg:pt-10">
-      <div className="max-w-7xl mx-auto w-full">
+        <div className="max-w-7xl mx-auto w-full">
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -326,9 +309,9 @@ const Hero = () => {
             {/* Heading */}
             <motion.div variants={itemVariants} className="mb-8">
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-4">
-                <RadialGradient gradient={["circle, #3f5efb 0%, #fc466b 100%"]}>
+                <span className="text-blue-700">
                   Find Your Perfect
-                </RadialGradient>
+                </span>
                 <br />
                 <span className="text-gray-900">Dream Home</span>
               </h1>
@@ -345,7 +328,7 @@ const Hero = () => {
             >
               <div className="bg-white/95 rounded-3xl p-4 sm:p-8 shadow-2xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-10">
-                  All Your <span className="text-purple-600">Real Estate</span>{" "}
+                  All Your <span className="text-blue-700">Real Estate</span>{" "}
                   Needs In One Place
                 </h2>
 
@@ -415,7 +398,7 @@ const Hero = () => {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate("/messages")}
-            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-yellow-400 p-3 md:p-4 rounded-full shadow-xl z-[9999]"
+            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-blue-600 p-3 md:p-4 rounded-full shadow-xl z-[9999]"
           >
             <MessageCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
 

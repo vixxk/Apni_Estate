@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { HelmetProvider } from "react-helmet-async";
 import Navbar from "./components/Navbar";
@@ -31,14 +36,19 @@ import SalesItemsPage from "./pages/SalesItemsPage";
 import EverythingPage from "./pages/EverythingPage";
 import AdminLogin from "./components/admin/AdminLogin";
 import AdminDashboard from "./components/admin/AdminDashboard";
-import VendorContactRequests from './pages/VendorContactRequests';
+import VendorContactRequests from "./pages/VendorContactRequests";
 import ChatList from "./pages/ChatList.jsx";
+import LoanAnalysisPage from "./pages/LoanAnalysisPage.jsx";
+import AIFeaturesPage from "./pages/AIFeaturesPage";
+import ComingSoonPage from "./pages/ComingSoonPage";
 
 export const Backendurl = import.meta.env.VITE_API_BASE_URL;
 
 const AppLayout = ({ children }) => {
   const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith('/admin');
+  const isAdminRoute = location.pathname.startsWith("/admin");
+  const isLoanPage = location.pathname === "/loan-analyzer";
+  const isAIPage = location.pathname === "/ai-features" || location.pathname === "/coming-soon";
 
   return (
     <>
@@ -53,8 +63,9 @@ const AppLayout = ({ children }) => {
       <div className="flex flex-col min-h-screen">
         {!isAdminRoute && <Navbar />}
 
-        {/* Main content */}
-        <main className={`flex-grow ${!isAdminRoute ? 'md:pb-0' : ''}`}>
+        <main
+          className={`flex-grow ${!isAdminRoute ? "pt-20 pb-24 md:pb-0" : ""}`}
+        >
           {children}
         </main>
 
@@ -84,7 +95,7 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<VendorRegister />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset/:token" element={<ResetPassword />} />
+                <Route path="/reset-password/:token" element={<ResetPassword />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/services" element={<ServicesPage />} />
                 <Route path="/sales-items" element={<SalesItemsPage />} />
@@ -104,7 +115,7 @@ const App = () => {
                 />
                 <Route path="/vendor/:vendorId" element={<VendorProfile />} />
                 <Route path="/saved" element={<SavedProperties />} />
- 
+
                 <Route path="/chat/:vendorId" element={<Chat />} />
                 <Route path="/messages" element={<ChatList />} />
 
@@ -113,7 +124,13 @@ const App = () => {
 
                 <Route path="/vendor/contact-requests" element={<VendorContactRequests />} />
 
+                <Route path="/loan-analyzer" element={<LoanAnalysisPage />} />
+
                 <Route path="*" element={<NotFoundPage />} />
+
+                <Route path="/ai-features" element={<AIFeaturesPage />} />
+                <Route path="/coming-soon" element={<ComingSoonPage />} />
+
               </Routes>
             </AppLayout>
           </Router>

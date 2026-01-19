@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { Grid, List, SlidersHorizontal, MapPin, Home } from "lucide-react";
+import { Grid, List, SlidersHorizontal, MapPin, Home, Loader2 } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import SearchBar from "../properties/Searchbar.jsx";
 import FilterSection from "../properties/Filtersection.jsx";
@@ -43,18 +43,27 @@ const PropertiesPage = () => {
 
   const token = localStorage.getItem("token");
 
-  // Update filter when navigating from Hero page
+  // Update filter when navigating from Hero page or Navbar (query param)
+  const queryParams = new URLSearchParams(location.search);
+  const typeParam = queryParams.get('type');
+
   useEffect(() => {
-    if (location.state?.filterType) {
+    // Priority: Location State > Query Param
+    const filterToApply = location.state?.filterType || typeParam;
+
+    if (filterToApply) {
+      const isAvailability = ["buy", "sell", "rent"].includes(filterToApply.toLowerCase());
+      const cleanFilter = filterToApply.toLowerCase();
+
       setFilters(prev => ({
         ...prev,
-        propertyType: location.state.filterType,
-        searchQuery: "" // Keep search bar empty
+        availability: isAvailability ? cleanFilter : "",
+        propertyType: isAvailability ? "" : cleanFilter,
+        searchQuery: ""
       }));
-      // Clear the navigation state to prevent reapplying on refresh
       window.history.replaceState({}, document.title);
     }
-  }, [location.state]);
+  }, [location.state, typeParam]);
 
   // Close filters when clicking outside
   useEffect(() => {
@@ -81,7 +90,8 @@ const PropertiesPage = () => {
     try {
       setPropertyState((prev) => ({ ...prev, loading: true }));
 
-      const response = await axios.get(`${Backendurl}/api/properties`);
+      // Fetch more properties to ensure client-side search works effectively
+      const response = await axios.get(`${Backendurl}/api/properties?limit=100`);
 
       if (response.data.success) {
         const rawList = response.data.data || [];
@@ -121,6 +131,7 @@ const PropertiesPage = () => {
             description: p.description,
             price: p.price,
             type: p.type || p.propertyType,
+            category: p.category || p.type || p.propertyType, // Ensure category is available
             location: locationString || "Location not specified",
             beds: p.features?.bedrooms ?? 0,
             baths: p.features?.bathrooms ?? 0,
@@ -135,8 +146,8 @@ const PropertiesPage = () => {
             images: Array.isArray(p.images)
               ? p.images.map((img) => toFullUrl(img.url || img))
               : firstImage
-              ? [firstImage]
-              : [],
+                ? [firstImage]
+                : [],
             image: firstImage,
             owner: p.owner,
             status: p.status,
@@ -193,60 +204,74 @@ const PropertiesPage = () => {
   }, [token]);
 
   const filteredProperties = useMemo(() => {
-    // Define allowed property types
-    const allowedTypes = ['buy', 'sell', 'rent'];
-    
     return propertyState.properties
       .filter((property) => {
-        // Only show properties with allowed types (buy, sell, rent)
-        const typeAllowed = allowedTypes.includes(
-          property.type?.toLowerCase()
-        );
-        if (!typeAllowed) return false;
-        
+
         const searchMatch =
           !filters.searchQuery ||
           [property.title, property.description, property.location].some(
             (field) =>
               field?.toLowerCase().includes(filters.searchQuery.toLowerCase())
           );
-  
+
         let typeMatch = true;
         if (filters.propertyType) {
-          if (filters.propertyType === 'buy-sell') {
-            typeMatch = ['buy', 'sell'].includes(property.type?.toLowerCase());
-          } else {
-            // Show only the specific type
-            typeMatch = property.type?.toLowerCase() === filters.propertyType.toLowerCase();
-          }
+          const targetType = filters.propertyType.toLowerCase();
+          const pType = (property.type || "").toLowerCase();
+          typeMatch = pType === targetType || pType.includes(targetType);
         }
-  
+
+        let availabilityMatch = true;
+
+        const SALES_CATEGORIES = [
+          "construction materials",
+          "furniture",
+          "decoratives",
+          "interior",
+          "interior designing"
+        ];
+
+        if (filters.availability) {
+          const targetAvail = filters.availability.toLowerCase();
+          const checkAvail = targetAvail === 'buy' ? 'sell' : targetAvail;
+
+          const pCategory = (property.category || "").toLowerCase();
+          const pAvail = (property.availability || "").toLowerCase();
+          const pType = (property.type || "").toLowerCase();
+
+          const isCategoryMatch =
+            pCategory === checkAvail ||
+            pAvail === checkAvail ||
+            pCategory === 'both' ||
+            pAvail === 'both';
+
+          const isSalesItemMatch = checkAvail === 'sell' && SALES_CATEGORIES.some(cat => pType.includes(cat) || pCategory.includes(cat));
+
+          availabilityMatch = isCategoryMatch || isSalesItemMatch;
+        }
+
+
         const priceMatch =
           property.price >= filters.priceRange[0] &&
           property.price <= filters.priceRange[1];
-  
+
         const bedroomsMatch =
           !filters.bedrooms ||
           filters.bedrooms === "0" ||
           property.beds >= parseInt(filters.bedrooms);
-  
+
         const bathroomsMatch =
           !filters.bathrooms ||
           filters.bathrooms === "0" ||
           property.baths >= parseInt(filters.bathrooms);
-  
-        const availabilityMatch =
-          !filters.availability ||
-          property.availability?.toLowerCase() ===
-            filters.availability.toLowerCase();
-  
+
         return (
           searchMatch &&
           typeMatch &&
+          availabilityMatch &&
           priceMatch &&
           bedroomsMatch &&
-          bathroomsMatch &&
-          availabilityMatch
+          bathroomsMatch
         );
       })
       .sort((a, b) => {
@@ -270,13 +295,16 @@ const PropertiesPage = () => {
         }
       });
   }, [propertyState.properties, filters]);
-  
+
 
   const handleFilterChange = (newFilters) => {
+    console.log("Applying filters:", newFilters);
     setFilters((prev) => ({
       ...prev,
       ...newFilters,
     }));
+    // Close sidebar on mobile/tablet when filters are applied
+    setViewState((prev) => ({ ...prev, showFilters: false }));
   };
 
   const handleFavouritesChange = (propertyId, action) => {
@@ -342,7 +370,7 @@ const PropertiesPage = () => {
           </h3>
 
           <p className="text-gray-600 mb-5 max-w-xs text-center">
-            We're finding the perfect homes that match your preferences...
+            We're finding the best properties for you...
           </p>
 
           <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
@@ -366,7 +394,7 @@ const PropertiesPage = () => {
               transition={{ duration: 1.5, repeat: Infinity }}
               className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"
             />
-            <span>Please wait while we curate properties for you</span>
+            <span>Curating the best listings for you</span>
           </div>
         </motion.div>
       </div>
@@ -375,20 +403,14 @@ const PropertiesPage = () => {
 
   if (propertyState.error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center text-red-600 p-6 rounded-lg bg-red-50 max-w-md w-full"
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 -mt-20">
+        <p className="text-red-600 font-medium">{propertyState.error}</p>
+        <button
+          onClick={fetchProperties}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
-          <p className="font-medium mb-4">{propertyState.error}</p>
-          <button
-            onClick={fetchProperties}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
-          >
-            Try Again
-          </button>
-        </motion.div>
+          Try Again
+        </button>
       </div>
     );
   }
@@ -397,28 +419,27 @@ const PropertiesPage = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gray-50 pt-16"
+      exit={{ opacity: 0 }}
+      className="min-h-screen bg-gray-50"
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
         <motion.header
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="text-center mb-6 sm:mb-12"
+          className="text-center mb-8"
         >
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
-            Find Your Perfect Property
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-blue-700 mb-2 sm:mb-4">
+            Find Your Dream Property
           </h1>
-          <p className="text-sm sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">
-            Discover a curated collection of premium properties in your desired
-            location
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+            Explore our curated list of premium properties available for buy & rent
           </p>
-          <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
+          <p className="text-sm text-gray-500 mt-2">
             {filteredProperties.length} properties found
           </p>
         </motion.header>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-8">
-          {/* Filters Sidebar */}
           <AnimatePresence mode="wait">
             {viewState.showFilters && (
               <motion.aside
@@ -432,21 +453,19 @@ const PropertiesPage = () => {
                   filters={filters}
                   setFilters={setFilters}
                   onApplyFilters={handleFilterChange}
+                  typeOptions={["House", "Apartment", "Villa", "Plot", "Commercial"]}
+                  availabilityOptions={["Rent", "Buy"]}
                 />
               </motion.aside>
             )}
           </AnimatePresence>
 
-          {/* Properties Grid/List */}
           <div
-            className={`${
-              viewState.showFilters ? "lg:col-span-3" : "lg:col-span-4"
-            }`}
+            className={`${viewState.showFilters ? "lg:col-span-3" : "lg:col-span-4"
+              }`}
           >
-            {/* Search and View Controls */}
             <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm mb-4 sm:mb-6">
               <div className="flex flex-col gap-3">
-                {/* Search Bar */}
                 <div className="w-full">
                   <SearchBar
                     onSearch={(query) =>
@@ -459,7 +478,6 @@ const PropertiesPage = () => {
                   />
                 </div>
 
-                {/* Sort and View Controls */}
                 <div className="flex items-center gap-2 w-full">
                   <select
                     value={filters.sortBy}
@@ -489,11 +507,10 @@ const PropertiesPage = () => {
                           showFilters: !prev.showFilters,
                         }))
                       }
-                      className={`p-2 rounded-lg transition ${
-                        viewState.showFilters
-                          ? "bg-blue-100 text-blue-600"
-                          : "hover:bg-gray-100 text-gray-600"
-                      }`}
+                      className={`p-2 rounded-lg transition ${viewState.showFilters
+                        ? "bg-blue-100 text-blue-600"
+                        : "hover:bg-gray-100 text-gray-600"
+                        }`}
                       title="Toggle Filters"
                     >
                       <SlidersHorizontal className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -507,11 +524,10 @@ const PropertiesPage = () => {
                           isGridView: true,
                         }))
                       }
-                      className={`p-2 rounded-lg transition ${
-                        viewState.isGridView
-                          ? "bg-blue-100 text-blue-600"
-                          : "hover:bg-gray-100 text-gray-600"
-                      }`}
+                      className={`p-2 rounded-lg transition ${viewState.isGridView
+                        ? "bg-blue-100 text-blue-600"
+                        : "hover:bg-gray-100 text-gray-600"
+                        }`}
                       title="Grid View"
                     >
                       <Grid className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -525,11 +541,10 @@ const PropertiesPage = () => {
                           isGridView: false,
                         }))
                       }
-                      className={`p-2 rounded-lg transition ${
-                        !viewState.isGridView
-                          ? "bg-blue-100 text-blue-600"
-                          : "hover:bg-gray-100 text-gray-600"
-                      }`}
+                      className={`p-2 rounded-lg transition ${!viewState.isGridView
+                        ? "bg-blue-100 text-blue-600"
+                        : "hover:bg-gray-100 text-gray-600"
+                        }`}
                       title="List View"
                     >
                       <List className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -538,64 +553,63 @@ const PropertiesPage = () => {
                 </div>
               </div>
             </div>
-
-            {/* Properties Display */}
-            <motion.div
-              layout
-              className={`grid gap-1.5 sm:gap-4 md:gap-6 ${
-                viewState.isGridView
-                  ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
-                  : "grid-cols-1"
-              }`}
-            >
-              <AnimatePresence>
-                {filteredProperties.length > 0 ? (
-                  filteredProperties.map((property) => (
-                    <PropertyCard
-                      key={property._id}
-                      property={property}
-                      viewType={viewState.isGridView ? "grid" : "list"}
-                      favourites={favourites}
-                      onFavouritesChange={handleFavouritesChange}
-                    />
-                  ))
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="col-span-full text-center py-12 sm:py-16 bg-white rounded-lg shadow-sm"
-                  >
-                    <MapPin className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                      No properties found
-                    </h3>
-                    <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
-                      Try adjusting your filters or search criteria to find what
-                      you're looking for
-                    </p>
-                    <button
-                      onClick={() => {
-                        setFilters({
-                          propertyType: "",
-                          priceRange: [0, Number.MAX_SAFE_INTEGER],
-                          bedrooms: "0",
-                          bathrooms: "0",
-                          availability: "",
-                          searchQuery: "",
-                          sortBy: "",
-                        });
-                      }}
-                      className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                    >
-                      Clear Filters
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
           </div>
         </div>
+
+        {/* Properties Display */}
+        <motion.div
+          layout
+          className={`grid gap-1.5 sm:gap-4 md:gap-6 ${viewState.isGridView
+            ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
+            : "grid-cols-1"
+            }`}
+        >
+          <AnimatePresence>
+            {filteredProperties.length > 0 ? (
+              filteredProperties.map((property) => (
+                <PropertyCard
+                  key={property._id}
+                  property={property}
+                  viewType={viewState.isGridView ? "grid" : "list"}
+                  favourites={favourites}
+                  onFavouritesChange={handleFavouritesChange}
+                />
+              ))
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="col-span-full text-center py-12 sm:py-16 glass-panel rounded-lg"
+              >
+                <MapPin className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
+                  No properties found
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
+                  Try adjusting your filters or search criteria to find what
+                  you're looking for
+                </p>
+                <button
+                  onClick={() => {
+                    setFilters({
+                      propertyType: "",
+                      priceRange: [0, Number.MAX_SAFE_INTEGER],
+                      bedrooms: "0",
+                      bathrooms: "0",
+                      availability: "",
+                      searchQuery: "",
+                      sortBy: "",
+                    });
+                  }}
+                  className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                >
+                  Clear Filters
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </motion.div>
   );

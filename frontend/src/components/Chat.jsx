@@ -22,9 +22,8 @@ const LoadingSkeleton = () => (
         className={`flex ${i % 2 === 0 ? "justify-end" : "justify-start"}`}
       >
         <div
-          className={`max-w-[75%] md:max-w-[70%] rounded-2xl px-3 py-2 md:px-4 md:py-2.5 ${
-            i % 2 === 0 ? "bg-blue-100 rounded-br-sm" : "bg-white rounded-bl-sm"
-          } animate-pulse`}
+          className={`max-w-[75%] md:max-w-[70%] rounded-2xl px-3 py-2 md:px-4 md:py-2.5 ${i % 2 === 0 ? "bg-blue-100 rounded-br-sm" : "bg-white rounded-bl-sm"
+            } animate-pulse`}
         >
           <div className="h-3 md:h-4 bg-gray-300 rounded w-32 md:w-40 mb-2"></div>
           <div className="h-2 md:h-3 bg-gray-200 rounded w-16 md:w-20"></div>
@@ -155,7 +154,7 @@ const Chat = () => {
   const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({
-        behavior: "smooth",
+        behavior: "auto",
         block: "end",
         inline: "nearest",
       });
@@ -285,13 +284,13 @@ const Chat = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-16 md:pt-20 pb-24 md:pb-20 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-20 md:pt-24 pb-32 md:pb-20 flex items-start justify-center px-4">
       <div className="w-full max-w-3xl">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-white rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[70vh] md:h-[75vh]"
+          className="bg-white rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[65vh] md:h-[75vh]"
         >
           {/* Header */}
           <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4 shadow-lg">
@@ -394,17 +393,15 @@ const Chat = () => {
                           initial={{ opacity: 0, y: 10, scale: 0.95 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           transition={{ duration: 0.2 }}
-                          className={`flex ${
-                            isMe ? "justify-end" : "justify-start"
-                          }`}
+                          className={`flex ${isMe ? "justify-end" : "justify-start"
+                            }`}
                         >
                           <motion.div
                             whileHover={{ scale: 1.01 }}
-                            className={`max-w-[75%] md:max-w-[70%] rounded-2xl px-3 py-2 md:px-4 md:py-2.5 text-xs md:text-sm shadow-md ${
-                              isMe
-                                ? "bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-br-sm"
-                                : "bg-white text-gray-900 rounded-bl-sm border border-gray-100"
-                            }`}
+                            className={`max-w-[75%] md:max-w-[70%] rounded-2xl px-3 py-2 md:px-4 md:py-2.5 text-xs md:text-sm shadow-md ${isMe
+                              ? "bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-br-sm"
+                              : "bg-white text-gray-900 rounded-bl-sm border border-gray-100"
+                              }`}
                           >
                             {m.type === "image" && m.image?.url ? (
                               <div
@@ -433,9 +430,8 @@ const Chat = () => {
                             )}
                             <div className="flex items-center justify-end gap-1 mt-1">
                               <p
-                                className={`text-[10px] md:text-[11px] ${
-                                  isMe ? "text-blue-100" : "text-gray-400"
-                                }`}
+                                className={`text-[10px] md:text-[11px] ${isMe ? "text-blue-100" : "text-gray-400"
+                                  }`}
                               >
                                 {new Date(m.createdAt).toLocaleTimeString([], {
                                   hour: "2-digit",
@@ -444,11 +440,10 @@ const Chat = () => {
                               </p>
                               {isMe && (
                                 <CheckCheck
-                                  className={`w-3 h-3 ${
-                                    index === messages.length - 1
-                                      ? "text-blue-200"
-                                      : "text-blue-300"
-                                  }`}
+                                  className={`w-3 h-3 ${index === messages.length - 1
+                                    ? "text-blue-200"
+                                    : "text-blue-300"
+                                    }`}
                                 />
                               )}
                             </div>
@@ -509,11 +504,10 @@ const Chat = () => {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading || sending || input.trim().length > 0}
-                className={`p-2 md:p-2.5 rounded-full transition-all shadow-sm ${
-                  uploading || sending || input.trim().length > 0
-                    ? "opacity-50 cursor-not-allowed bg-gray-100 text-gray-400"
-                    : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800"
-                }`}
+                className={`p-2 md:p-2.5 rounded-full transition-all shadow-sm ${uploading || sending || input.trim().length > 0
+                  ? "opacity-50 cursor-not-allowed bg-gray-100 text-gray-400"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800"
+                  }`}
               >
                 {uploading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -551,11 +545,10 @@ const Chat = () => {
                 disabled={
                   sending || uploading || (!input.trim() && !selectedImage)
                 }
-                className={`inline-flex items-center justify-center rounded-full px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-medium text-white shadow-lg transition-all ${
-                  sending || uploading || (!input.trim() && !selectedImage)
-                    ? "bg-gray-300 cursor-not-allowed"
-                    : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-blue-500/25"
-                }`}
+                className={`inline-flex items-center justify-center rounded-full px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-medium text-white shadow-lg transition-all ${sending || uploading || (!input.trim() && !selectedImage)
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-blue-500/25"
+                  }`}
               >
                 {sending || uploading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />

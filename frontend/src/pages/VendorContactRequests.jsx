@@ -199,7 +199,7 @@ const VendorContactRequests = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 pt-16 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -229,7 +229,7 @@ const VendorContactRequests = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 pt-16 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Mobile-Optimized Header */}
         <motion.div
@@ -237,7 +237,7 @@ const VendorContactRequests = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6 pt-6"
         >
-          <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent mb-2 leading-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-blue-700 mb-2 leading-tight">
             Contact Requests
           </h1>
           <p className="text-sm sm:text-base text-gray-600 font-medium">
@@ -288,21 +288,18 @@ const VendorContactRequests = () => {
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleStatCardClick(stat.filterValue)}
-                className={`relative bg-white rounded-xl sm:rounded-2xl p-2.5 sm:p-4 shadow-lg border-2 flex flex-col items-center justify-center text-center cursor-pointer ${
-                  isActive
-                    ? "border-blue-500 ring-2 ring-blue-200"
-                    : "border-gray-100 hover:border-blue-300"
-                }`}
+                className={`relative bg-white rounded-xl sm:rounded-2xl p-2.5 sm:p-4 shadow-lg border-2 flex flex-col items-center justify-center text-center cursor-pointer ${isActive
+                  ? "border-blue-500 ring-2 ring-blue-200"
+                  : "border-gray-100 hover:border-blue-300"
+                  }`}
               >
                 {isActive && (
                   <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-blue-50/50 pointer-events-none" />
                 )}
                 <div
-                  className={`w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br ${
-                    stat.gradient
-                  } rounded-lg sm:rounded-xl flex items-center justify-center shadow-md mb-2 relative z-10 ${
-                    isActive ? "scale-110" : ""
-                  }`}
+                  className={`w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br ${stat.gradient
+                    } rounded-lg sm:rounded-xl flex items-center justify-center shadow-md mb-2 relative z-10 ${isActive ? "scale-110" : ""
+                    }`}
                 >
                   <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </div>
@@ -372,8 +369,8 @@ const VendorContactRequests = () => {
               {searchTerm
                 ? "Try adjusting your search"
                 : filter !== "all"
-                ? `No ${filter} requests`
-                : "No contact requests yet"}
+                  ? `No ${filter} requests`
+                  : "No contact requests yet"}
             </p>
           </motion.div>
         ) : (

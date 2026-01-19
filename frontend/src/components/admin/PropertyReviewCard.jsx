@@ -228,7 +228,7 @@ const PropertyReviewCard = ({ property, onApprove, onReject, onDelete }) => {
                           {property.location.address}
                         </p>
                       )}
-                      <div className="grid grid-cols-3 gap-2 lg:gap-4 text-xs lg:text-sm">
+                      <div className="flex flex-wrap gap-y-2 gap-x-4 text-xs lg:text-sm">
                         {property.location.city && (
                           <p className="text-gray-700">
                             <span className="font-semibold">City:</span>{" "}

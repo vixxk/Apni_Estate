@@ -18,7 +18,7 @@ import PropertyCard from "../components/properties/Propertycard";
 
 const VendorProfileSkeleton = () => {
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 md:pt-20 pb-16 md:pb-20 lg:pb-12">
+    <div className="min-h-screen bg-gray-50 pb-16 md:pb-20 lg:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-pulse">
         {/* Header Skeleton */}
         <div className="bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden mb-6 md:mb-8">
@@ -169,8 +169,8 @@ const VendorProfile = () => {
           images: Array.isArray(p.images)
             ? p.images.map((img) => toFullUrl(img.url || img))
             : firstImage
-            ? [firstImage]
-            : [],
+              ? [firstImage]
+              : [],
           image: firstImage,
           owner: p.owner,
         };
@@ -222,20 +222,20 @@ const VendorProfile = () => {
       navigate("/login");
       return;
     }
-  
+
     if (!vendor?._id) {
       alert("Vendor information not available");
       return;
     }
-  
+
     navigate(`/chat/${vendor._id}`, {
       state: {
         vendorName: vendor.name,
         vendorAvatar: vendor.avatar || null,
       },
     });
-  };  
-  
+  };
+
 
   const submitContactRequest = async () => {
     try {
@@ -285,7 +285,7 @@ const VendorProfile = () => {
 
   if (error || !vendor) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-16 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="text-center p-6 md:p-8 bg-white rounded-xl md:rounded-2xl shadow-lg max-w-md w-full">
           <div className="w-16 h-16 md:w-20 md:h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
             <User className="w-8 h-8 md:w-10 md:h-10 text-red-600" />
@@ -336,7 +336,7 @@ const VendorProfile = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 md:pt-20 pb-16 md:pb-20 lg:pb-12">
+    <div className="min-h-screen bg-gray-50 pb-16 md:pb-20 lg:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Vendor Header Card */}
         <div className="bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden mb-6 md:mb-8">
@@ -360,7 +360,7 @@ const VendorProfile = () => {
               </div>
 
               <div className="flex-1 text-center lg:text-left lg:mt-4">
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-2xl md:text-3xl font-bold text-blue-700 md:text-gray-900 mb-2">
                   {vendor.name}
                 </h1>
                 <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-blue-100 text-blue-700 rounded-full font-semibold text-xs md:text-sm mb-3 md:mb-4">

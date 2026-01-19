@@ -23,6 +23,15 @@ import { Backendurl } from "../App";
 import { toast } from "react-toastify";
 
 // Animation Variants
+const pulseAnimation = {
+  scale: [1, 1.05, 1],
+  transition: {
+    duration: 2,
+    repeat: Infinity,
+    ease: "easeInOut",
+  },
+};
+
 const containerVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -65,40 +74,14 @@ const inputVariants = {
   },
 };
 
-const floatingAnimation = {
-  y: [-3, 3, -3],
-  transition: {
-    duration: 4,
-    repeat: Infinity,
-    ease: "easeInOut",
-  },
-};
 
-const sparkleAnimation = {
-  scale: [1, 1.2, 1],
-  rotate: [0, 180, 360],
-  transition: {
-    duration: 3,
-    repeat: Infinity,
-    ease: "easeInOut",
-  },
-};
-
-const pulseAnimation = {
-  scale: [1, 1.05, 1],
-  transition: {
-    duration: 2,
-    repeat: Infinity,
-    ease: "easeInOut",
-  },
-};
 
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    phone: "",      
+    phone: "",
     role: "user",
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -145,17 +128,17 @@ const Signup = () => {
         else if (value.length < 6)
           errors.password = "Password must be at least 6 characters";
         break;
-      case "phone":  
+      case "phone":
         if (!value.trim()) errors.phone = "Phone number is required";
         else if (!/^\+?[\d\s\-\(\)]{10,}$/.test(value.trim()))
           errors.phone = "Please enter a valid phone number";
         break;
     }
-  
+
     setValidationErrors((prev) => ({ ...prev, ...errors }));
     return Object.keys(errors).length === 0;
   };
-  
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -236,21 +219,24 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
-      {/* Animated Background Elements */}
+      {/* Animated Background Elements - Static/Stable */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
-          animate={floatingAnimation}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
           className="absolute top-20 left-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl"
         />
         <motion.div
-          animate={{
-            y: [5, -5, 5],
-            transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.2 }}
           className="absolute top-40 right-20 w-96 h-96 bg-indigo-400/10 rounded-full blur-3xl"
         />
         <motion.div
-          animate={sparkleAnimation}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.4 }}
           className="absolute bottom-20 left-1/3 w-64 h-64 bg-purple-400/10 rounded-full blur-3xl"
         />
       </div>
@@ -261,27 +247,24 @@ const Signup = () => {
           <motion.div
             key={i}
             animate={{
-              y: [-20, 20, -20],
-              x: [-10, 10, -10],
-              rotate: [0, 360],
-              opacity: [0.3, 0.8, 0.3],
+              y: [-10, 10, -10],
+              x: [-5, 5, -5],
+              opacity: [0.3, 0.6, 0.3],
             }}
             transition={{
-              duration: 4 + i,
+              duration: 6 + i,
               repeat: Infinity,
               ease: "easeInOut",
               delay: i * 0.5,
             }}
-            className={`absolute w-2 h-2 bg-blue-400 rounded-full ${
-              i % 2 === 0 ? "top-1/4" : "top-3/4"
-            } ${
-              i % 3 === 0 ? "left-1/4" : i % 3 === 1 ? "left-1/2" : "left-3/4"
-            }`}
+            className={`absolute w-2 h-2 bg-blue-400 rounded-full ${i % 2 === 0 ? "top-1/4" : "top-3/4"
+              } ${i % 3 === 0 ? "left-1/4" : i % 3 === 1 ? "left-1/2" : "left-3/4"
+              }`}
           />
         ))}
       </div>
 
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20">
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-8 md:py-12">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -291,7 +274,7 @@ const Signup = () => {
         >
           <motion.div
             variants={cardVariants}
-            className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-blue-500/10 p-8 border border-white/20"
+            className="glass-card rounded-3xl shadow-blue-500/10 p-8"
           >
             {/* Logo & Title */}
             <motion.div variants={inputVariants} className="text-center mb-8">
@@ -307,7 +290,7 @@ const Signup = () => {
                   >
                     <Home className="w-6 h-6 text-white" />
                   </motion.div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  <h1 className="text-3xl font-bold text-blue-700">
                     ApniEstate
                   </h1>
                 </motion.div>
@@ -328,7 +311,7 @@ const Signup = () => {
                 >
                   <AlertCircle className="w-4 h-4 text-blue-600" />
                   <span>
-                    You'll need to <strong>sign in after signing up</strong> 
+                    You'll need to <strong>sign in after signing up</strong>
                   </span>
                 </motion.div>
 
@@ -361,9 +344,8 @@ const Signup = () => {
                 </label>
                 <div className="relative group">
                   <div
-                    className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${
-                      fieldFocus.name ? "text-blue-500" : "text-gray-400"
-                    }`}
+                    className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${fieldFocus.name ? "text-blue-500" : "text-gray-400"
+                      }`}
                   >
                     <User className="h-5 w-5" />
                   </div>
@@ -376,13 +358,12 @@ const Signup = () => {
                     onChange={handleChange}
                     onFocus={() => handleFocus("name")}
                     onBlur={() => handleBlur("name")}
-                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${
-                      validationErrors.name
-                        ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
-                        : fieldFocus.name
+                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${validationErrors.name
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                      : fieldFocus.name
                         ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
                         : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
-                    } focus:ring-4 focus:outline-none`}
+                      } focus:ring-4 focus:outline-none`}
                     placeholder="Enter your full name"
                   />
                   {validationErrors.name && (
@@ -428,9 +409,8 @@ const Signup = () => {
                 </label>
                 <div className="relative group">
                   <div
-                    className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${
-                      fieldFocus.email ? "text-blue-500" : "text-gray-400"
-                    }`}
+                    className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${fieldFocus.email ? "text-blue-500" : "text-gray-400"
+                      }`}
                   >
                     <Mail className="h-5 w-5" />
                   </div>
@@ -443,13 +423,12 @@ const Signup = () => {
                     onChange={handleChange}
                     onFocus={() => handleFocus("email")}
                     onBlur={() => handleBlur("email")}
-                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${
-                      validationErrors.email
-                        ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
-                        : fieldFocus.email
+                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${validationErrors.email
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                      : fieldFocus.email
                         ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
                         : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
-                    } focus:ring-4 focus:outline-none`}
+                      } focus:ring-4 focus:outline-none`}
                     placeholder="name@company.com"
                   />
                   {validationErrors.email && (
@@ -486,71 +465,69 @@ const Signup = () => {
               </motion.div>
 
               {/* Phone Field */}
-<motion.div variants={inputVariants}>
-  <label
-    htmlFor="phone"
-    className="block text-sm font-medium text-gray-700 mb-2"
-  >
-    Phone Number
-  </label>
-  <div className="relative group">
-    <div
-      className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${
-        fieldFocus.phone ? "text-blue-500" : "text-gray-400"
-      }`}
-    >
-      <Phone className="h-5 w-5" />  
-    </div>
-    <input
-      type="tel"
-      name="phone"
-      id="phone"
-      required
-      value={formData.phone}
-      onChange={handleChange}
-      onFocus={() => handleFocus("phone")}
-      onBlur={() => handleBlur("phone")}
-      className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${
-        validationErrors.phone
-          ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
-          : fieldFocus.phone
-          ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
-          : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
-      } focus:ring-4 focus:outline-none`}
-      placeholder="+91 98765 43210"
-    />
-    {validationErrors.phone && (
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="absolute right-3 top-1/2 -translate-y-1/2"
-      >
-        <AlertCircle className="h-5 w-5 text-red-500" />
-      </motion.div>
-    )}
-    {formData.phone && !validationErrors.phone && (
-      <motion.div
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="absolute right-3 top-1/2 -translate-y-1/2"
-      >
-        <CheckCircle className="h-5 w-5 text-green-500" />
-      </motion.div>
-    )}
-  </div>
-  <AnimatePresence>
-    {validationErrors.phone && (
-      <motion.p
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        className="mt-1 text-sm text-red-600"
-      >
-        {validationErrors.phone}
-      </motion.p>
-    )}
-  </AnimatePresence>
-</motion.div>
+              <motion.div variants={inputVariants}>
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Phone Number
+                </label>
+                <div className="relative group">
+                  <div
+                    className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${fieldFocus.phone ? "text-blue-500" : "text-gray-400"
+                      }`}
+                  >
+                    <Phone className="h-5 w-5" />
+                  </div>
+                  <input
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    required
+                    value={formData.phone}
+                    onChange={handleChange}
+                    onFocus={() => handleFocus("phone")}
+                    onBlur={() => handleBlur("phone")}
+                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${validationErrors.phone
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                      : fieldFocus.phone
+                        ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
+                        : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
+                      } focus:ring-4 focus:outline-none`}
+                    placeholder="+91 98765 43210"
+                  />
+                  {validationErrors.phone && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                    >
+                      <AlertCircle className="h-5 w-5 text-red-500" />
+                    </motion.div>
+                  )}
+                  {formData.phone && !validationErrors.phone && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                    >
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                    </motion.div>
+                  )}
+                </div>
+                <AnimatePresence>
+                  {validationErrors.phone && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="mt-1 text-sm text-red-600"
+                    >
+                      {validationErrors.phone}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </motion.div>
 
 
               {/* Password Field */}
@@ -563,9 +540,8 @@ const Signup = () => {
                 </label>
                 <div className="relative group">
                   <div
-                    className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${
-                      fieldFocus.password ? "text-blue-500" : "text-gray-400"
-                    }`}
+                    className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${fieldFocus.password ? "text-blue-500" : "text-gray-400"
+                      }`}
                   >
                     <Key className="h-5 w-5" />
                   </div>
@@ -578,13 +554,12 @@ const Signup = () => {
                     onChange={handleChange}
                     onFocus={() => handleFocus("password")}
                     onBlur={() => handleBlur("password")}
-                    className={`w-full pl-10 pr-12 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${
-                      validationErrors.password
-                        ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
-                        : fieldFocus.password
+                    className={`w-full pl-10 pr-12 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 ${validationErrors.password
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                      : fieldFocus.password
                         ? "border-blue-500 focus:border-blue-500 focus:ring-blue-500/20"
                         : "border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-blue-500/20"
-                    } focus:ring-4 focus:outline-none`}
+                      } focus:ring-4 focus:outline-none`}
                     placeholder="Create a strong password"
                   />
                   <motion.button
@@ -616,19 +591,18 @@ const Signup = () => {
                           Password strength:
                         </span>
                         <span
-                          className={`text-sm font-medium ${
-                            passwordStrength < 50
-                              ? "text-red-500"
-                              : passwordStrength < 75
+                          className={`text-sm font-medium ${passwordStrength < 50
+                            ? "text-red-500"
+                            : passwordStrength < 75
                               ? "text-yellow-500"
                               : "text-green-500"
-                          }`}
+                            }`}
                         >
                           {passwordStrength < 50
                             ? "Weak"
                             : passwordStrength < 75
-                            ? "Medium"
-                            : "Strong"}
+                              ? "Medium"
+                              : "Strong"}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
@@ -636,13 +610,12 @@ const Signup = () => {
                           initial={{ width: 0 }}
                           animate={{ width: `${passwordStrength}%` }}
                           transition={{ duration: 0.3 }}
-                          className={`h-2 rounded-full transition-colors duration-300 ${
-                            passwordStrength < 50
-                              ? "bg-red-500"
-                              : passwordStrength < 75
+                          className={`h-2 rounded-full transition-colors duration-300 ${passwordStrength < 50
+                            ? "bg-red-500"
+                            : passwordStrength < 75
                               ? "bg-yellow-500"
                               : "bg-green-500"
-                          }`}
+                            }`}
                         />
                       </div>
                     </motion.div>
@@ -675,20 +648,19 @@ const Signup = () => {
                       (key) => validationErrors[key]
                     )
                   }
-                  className={`w-full py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg ${
-                    loading ||
+                  className={`w-full py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg ${loading ||
                     Object.keys(validationErrors).some(
                       (key) => validationErrors[key]
                     )
-                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-blue-500/25 hover:shadow-blue-500/40"
-                  }`}
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-blue-500/25 hover:shadow-blue-500/40"
+                    }`}
                 >
                   {loading ? (
-                    <>
-                      <Loader className="w-5 h-5 animate-spin" />
+                    <div className="flex items-center gap-2 animate-pulse">
+                      <Loader className="w-5 h-5" />
                       <span>Creating Account...</span>
-                    </>
+                    </div>
                   ) : (
                     <>
                       <UserPlus className="w-5 h-5" />

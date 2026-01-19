@@ -145,8 +145,8 @@ const EverythingPage = () => {
             images: Array.isArray(p.images)
               ? p.images.map((img) => toFullUrl(img.url || img))
               : firstImage
-              ? [firstImage]
-              : [],
+                ? [firstImage]
+                : [],
             image: firstImage,
             owner: p.owner,
             status: p.status,
@@ -213,7 +213,7 @@ const EverythingPage = () => {
         );
         if (!categoryMatch) return false;
 
-        const searchMatch =
+        const matchesSearch =
           !filters.searchQuery ||
           [property.title, property.description, property.location].some(
             (field) =>
@@ -222,13 +222,45 @@ const EverythingPage = () => {
 
         let typeMatch = true;
         if (filters.propertyType) {
-          if (filters.propertyType === 'buy-sell') {
-            typeMatch = ['buy', 'sell'].includes(property.type?.toLowerCase());
-          } else {
-            typeMatch =
-              property.type?.toLowerCase() === filters.propertyType.toLowerCase() ||
-              property.category?.toLowerCase() === filters.propertyType.toLowerCase();
-          }
+          const targetType = filters.propertyType.toLowerCase();
+          const pType = (property.type || "").toLowerCase();
+          const pCategory = (property.category || "").toLowerCase();
+          typeMatch = pType === targetType || pType.includes(targetType) || pCategory === targetType || pCategory.includes(targetType);
+        }
+
+        let availabilityMatch = true;
+
+        const SALES_CATEGORIES = [
+          "construction materials",
+          "furniture",
+          "decoratives",
+          "interior",
+          "interior designing"
+        ];
+
+        if (filters.availability) {
+          const targetAvail = filters.availability.toLowerCase();
+          // "buy" filter generally maps to "sell" availability in db
+          const checkAvail = targetAvail === 'buy' ? 'sell' : targetAvail; // map buy to sell checks
+
+          const pCategory = (property.category || "").toLowerCase();
+          const pAvail = (property.availability || "").toLowerCase();
+          const pType = (property.type || "").toLowerCase();
+          const status = (property.status || "").toLowerCase();
+
+          // Check direct category/availability match
+          // Also handle "sale" vs "sell" variations if any
+          const isCategoryMatch =
+            pCategory === checkAvail ||
+            pAvail === checkAvail ||
+            pCategory === 'both' ||
+            pAvail === 'both' ||
+            (checkAvail === 'sell' && (status === 'available' || status === 'sale' || pAvail === 'sale'));
+
+          // If filtering for "Buy" (sell), also include Sales Items (Furniture, etc.)
+          const isSalesItemMatch = checkAvail === 'sell' && SALES_CATEGORIES.some(cat => pType.includes(cat) || pCategory.includes(cat));
+
+          availabilityMatch = isCategoryMatch || isSalesItemMatch;
         }
 
         const priceMatch =
@@ -245,13 +277,8 @@ const EverythingPage = () => {
           filters.bathrooms === "0" ||
           property.baths >= parseInt(filters.bathrooms);
 
-        const availabilityMatch =
-          !filters.availability ||
-          property.availability?.toLowerCase() ===
-            filters.availability.toLowerCase();
-
         return (
-          searchMatch &&
+          matchesSearch &&
           typeMatch &&
           priceMatch &&
           bedroomsMatch &&
@@ -286,6 +313,8 @@ const EverythingPage = () => {
       ...prev,
       ...newFilters,
     }));
+    // Close sidebar on mobile/tablet when filters are applied (match PropertiesPage behavior)
+    setViewState((prev) => ({ ...prev, showFilters: false }));
   };
 
   const handleFavouritesChange = (propertyId, action) => {
@@ -300,6 +329,18 @@ const EverythingPage = () => {
       return prev;
     });
   };
+
+  // Comprehensive options for Everything Page
+  const everythingTypeOptions = [
+    // Properties
+    "House", "Apartment", "Villa", "Plot", "Commercial",
+    // Services
+    "Construction Services", "Legal Service", "Vastu", "Construction Consulting", "Home Loan", "Interior Designing",
+    // Sales
+    "Construction Materials", "Furniture", "Decoratives",
+    // Other
+    "Others"
+  ];
 
   if (propertyState.loading) {
     return (
@@ -346,7 +387,7 @@ const EverythingPage = () => {
             ></div>
           </div>
 
-          <h3 className="text-2xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+          <h3 className="text-2xl font-bold text-slate-800 mb-3">
             Loading All Listings
           </h3>
 
@@ -356,13 +397,12 @@ const EverythingPage = () => {
 
           <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
             <motion.div
-              className="h-full bg-gradient-to-r from-orange-600 via-red-500 to-orange-600 bg-size-200 absolute top-0 left-0 right-0"
+              className="h-full bg-orange-500 absolute top-0 left-0 right-0"
               animate={{
-                backgroundPosition: ["0% center", "100% center", "0% center"],
+                x: ["-100%", "100%"],
               }}
-              style={{ backgroundSize: "200% 100%" }}
               transition={{
-                duration: 2,
+                duration: 1.5,
                 repeat: Infinity,
                 ease: "linear",
               }}
@@ -406,7 +446,7 @@ const EverythingPage = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gray-50 pt-16"
+      className="min-h-screen bg-gray-50"
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
         <motion.header
@@ -414,7 +454,7 @@ const EverythingPage = () => {
           animate={{ y: 0, opacity: 1 }}
           className="text-center mb-6 sm:mb-12"
         >
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-blue-700 mb-2 sm:mb-4">
             Everything You Need
           </h1>
           <p className="text-sm sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">
@@ -439,15 +479,16 @@ const EverythingPage = () => {
                   filters={filters}
                   setFilters={setFilters}
                   onApplyFilters={handleFilterChange}
+                  typeOptions={everythingTypeOptions}
+                  availabilityOptions={["Rent", "Buy"]}
                 />
               </motion.aside>
             )}
           </AnimatePresence>
 
           <div
-            className={`${
-              viewState.showFilters ? "lg:col-span-3" : "lg:col-span-4"
-            }`}
+            className={`${viewState.showFilters ? "lg:col-span-3" : "lg:col-span-4"
+              }`}
           >
             <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm mb-4 sm:mb-6">
               <div className="flex flex-col gap-3">
@@ -491,11 +532,10 @@ const EverythingPage = () => {
                           showFilters: !prev.showFilters,
                         }))
                       }
-                      className={`p-2 rounded-lg transition ${
-                        viewState.showFilters
-                          ? "bg-orange-100 text-orange-600"
-                          : "hover:bg-gray-100 text-gray-600"
-                      }`}
+                      className={`p-2 rounded-lg transition ${viewState.showFilters
+                        ? "bg-orange-100 text-orange-600"
+                        : "hover:bg-gray-100 text-gray-600"
+                        }`}
                       title="Toggle Filters"
                     >
                       <SlidersHorizontal className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -508,11 +548,10 @@ const EverythingPage = () => {
                           isGridView: true,
                         }))
                       }
-                      className={`p-2 rounded-lg transition ${
-                        viewState.isGridView
-                          ? "bg-orange-100 text-orange-600"
-                          : "hover:bg-gray-100 text-gray-600"
-                      }`}
+                      className={`p-2 rounded-lg transition ${viewState.isGridView
+                        ? "bg-orange-100 text-orange-600"
+                        : "hover:bg-gray-100 text-gray-600"
+                        }`}
                       title="Grid View"
                     >
                       <Grid className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -525,11 +564,10 @@ const EverythingPage = () => {
                           isGridView: false,
                         }))
                       }
-                      className={`p-2 rounded-lg transition ${
-                        !viewState.isGridView
-                          ? "bg-orange-100 text-orange-600"
-                          : "hover:bg-gray-100 text-gray-600"
-                      }`}
+                      className={`p-2 rounded-lg transition ${!viewState.isGridView
+                        ? "bg-orange-100 text-orange-600"
+                        : "hover:bg-gray-100 text-gray-600"
+                        }`}
                       title="List View"
                     >
                       <List className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -541,11 +579,10 @@ const EverythingPage = () => {
 
             <motion.div
               layout
-              className={`grid gap-1.5 sm:gap-4 md:gap-6 ${
-                viewState.isGridView
-                  ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
-                  : "grid-cols-1"
-              }`}
+              className={`grid gap-1.5 sm:gap-4 md:gap-6 ${viewState.isGridView
+                ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
+                : "grid-cols-1"
+                }`}
             >
               <AnimatePresence>
                 {filteredProperties.length > 0 ? (

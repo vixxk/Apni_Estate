@@ -81,7 +81,7 @@ const MobileFooterSection = ({ title, children, icon: Icon }) => {
 
   return (
     <motion.div
-      className="border border-gray-200/50 bg-white/50 backdrop-blur-sm rounded-xl p-4 hover:shadow-lg transition-all duration-300"
+      className="glass-panel rounded-xl p-4 hover:shadow-lg transition-all duration-300"
       whileHover={{ scale: 1.02 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -195,18 +195,17 @@ const SocialLinks = () => {
     <div className="flex items-center gap-4 mt-8">
       <span className="text-sm text-gray-600 font-medium">Follow us:</span>
       <div className="flex gap-3">
-        {socialLinks.map(({ icon: Icon, href, label, color, hoverColor }) => (
+        {socialLinks.map(({ icon: Icon, href, label }) => (
           <motion.a
             key={label}
-            whileHover={{ scale: 1.15, y: -2 }}
+            whileHover={{ scale: 1.1, y: -2 }}
             whileTap={{ scale: 0.95 }}
             href={href}
             title={label}
             target="_blank"
             rel="noopener noreferrer"
-            className={`flex items-center justify-center text-white bg-gradient-to-br ${color} ${hoverColor} rounded-xl w-11 h-11 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group`}
+            className="flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 rounded-xl w-11 h-11 shadow-md hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
           >
-            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
             <Icon className="w-5 h-5 relative z-10" />
           </motion.a>
         ))}
@@ -247,12 +246,7 @@ const contactInfo = [
 
 const Footer = () => {
   return (
-    <footer className="relative">
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/50"></div>
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-300 to-transparent"></div>
-
-
+    <footer className="relative bg-white border-t border-gray-100">
       {/* Main Footer */}
       <div className="relative pt-16 lg:pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -266,13 +260,13 @@ const Footer = () => {
           >
             <div className="flex items-center justify-center lg:justify-start mb-6">
               <motion.div
-                className="p-3 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl shadow-lg"
-                animate={glowAnimation}
+                className="p-3 bg-blue-600 rounded-2xl shadow-md"
+                whileHover={{ scale: 1.05 }}
               >
                 <Home className="h-8 w-8 text-white" />
               </motion.div>
               <div className="ml-4">
-                <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
+                <span className="text-3xl font-bold text-gray-900">
                   ApniEstate
                 </span>
                 <p className="text-sm text-gray-500 font-medium">
@@ -400,7 +394,7 @@ const Footer = () => {
 
 
       {/* Bottom Bar - COMPLETELY REDESIGNED */}
-      <div className="relative border-t border-gray-200 bg-white/80 backdrop-blur-sm">
+      <div className="relative border-t border-gray-100 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             {/* Copyright Section */}
@@ -411,7 +405,7 @@ const Footer = () => {
               transition={{ duration: 0.5 }}
             >
               <div className="flex items-center gap-2 text-gray-600 text-sm">
-                <Shield className="w-4 h-4 text-blue-600" />
+                <Shield className="w-4 h-4 text-theme-dark" />
                 <span>© {new Date().getFullYear()} ApniEstate.</span>
               </div>
               <span className="hidden md:inline text-gray-300">|</span>
@@ -435,6 +429,7 @@ const Footer = () => {
                 <span className="text-xs font-medium text-green-700">Secure</span>
               </div>
             </motion.div>
+
 
           </div>
         </div>

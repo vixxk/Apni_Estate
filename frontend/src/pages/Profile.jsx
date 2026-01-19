@@ -84,7 +84,7 @@ const sparkleVariants = {
 
 // Skeleton Loading Component
 const SkeletonLoader = () => (
-  <div className="max-w-4xl mx-auto p-4 sm:p-6 mt-16 sm:mt-20 animate-pulse">
+  <div className="max-w-4xl mx-auto p-4 sm:p-6 animate-pulse">
     {/* <div className="h-8 sm:h-10 bg-gray-200 rounded-lg w-48 mb-6"></div> */}
 
     <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
@@ -285,12 +285,12 @@ function Profile() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center px-4 pt-20">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center px-4 py-8">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-lg w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 p-8 sm:p-10 text-center relative overflow-hidden"
+          className="max-w-lg w-full glass-panel p-8 sm:p-10 text-center relative overflow-hidden"
         >
           {/* Background Gradient Orbs */}
           <motion.div
@@ -313,36 +313,9 @@ function Profile() {
           {/* Icon with Animation */}
           <motion.div
             variants={iconVariants}
-            animate={floatingAnimation}
             className="relative mx-auto mb-6 w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg"
           >
             <User className="w-10 h-10 text-white" />
-            
-            {/* Sparkle Effects */}
-            <motion.div
-              variants={sparkleVariants}
-              initial="initial"
-              animate="animate"
-              className="absolute -top-2 -right-2"
-            >
-              <Sparkles className="w-5 h-5 text-yellow-400" />
-            </motion.div>
-            
-            <motion.div
-              variants={sparkleVariants}
-              initial="initial"
-              animate="animate"
-              style={{ transitionDelay: "1s" }}
-              className="absolute -bottom-1 -left-1"
-            >
-              <Sparkles className="w-4 h-4 text-pink-400" />
-            </motion.div>
-
-            {/* Pulse Ring */}
-            <motion.div
-              animate={pulseAnimation}
-              className="absolute inset-0 rounded-full border-4 border-blue-400/30"
-            />
           </motion.div>
 
           {/* Heading */}
@@ -431,8 +404,8 @@ function Profile() {
             </motion.button>
 
             <motion.button
-              whileHover={{ 
-                scale: 1.05, 
+              whileHover={{
+                scale: 1.05,
                 borderColor: "rgb(96, 165, 250)",
                 backgroundColor: "rgb(239, 246, 255)"
               }}
@@ -462,7 +435,7 @@ function Profile() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 mt-16 sm:mt-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 mt-4 sm:mt-8">
         {/* Success Toast */}
         {showSuccess && (
           <div className="fixed top-20 right-4 sm:right-6 z-50 bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-slide-in">
@@ -471,9 +444,10 @@ function Profile() {
           </div>
         )}
 
-        <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
+        <div className="glass-panel rounded-2xl overflow-hidden shadow-2xl">
           {/* Compact Avatar Section */}
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 sm:p-6 border-b">
+            <h1 className="text-2xl font-bold text-blue-700 text-center mb-6">My Profile</h1>
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
               {/* Avatar */}
               <div className="relative group flex-shrink-0">
@@ -506,10 +480,9 @@ function Profile() {
               {/* User Info & Actions */}
               <div className="flex-1 text-center sm:text-left space-y-3">
                 <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                  <h2 className="text-lg sm:text-xl font-bold text-blue-700">
                     {name || "User"}
                   </h2>
-                  <p className="text-xs sm:text-sm text-gray-600">{user.email}</p>
                 </div>
 
                 {/* Avatar Actions - Compact */}

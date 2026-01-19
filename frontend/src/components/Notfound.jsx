@@ -1,12 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Home, 
-  ArrowLeft, 
-  Sparkles, 
-  Search, 
-  Star, 
-  Zap, 
+import {
+  Home,
+  ArrowLeft,
   MapPin,
   Clock,
   Shield
@@ -29,8 +25,8 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: {
       type: "spring",
@@ -52,16 +48,7 @@ const floatingAnimation = {
 };
 
 
-const sparkleAnimation = {
-  scale: [1, 1.3, 1],
-  rotate: [0, 180, 360],
-  opacity: [0.7, 1, 0.7],
-  transition: {
-    duration: 3,
-    repeat: Infinity,
-    ease: "easeInOut"
-  }
-};
+
 
 
 const glowAnimation = {
@@ -149,7 +136,7 @@ export default function NotFoundPage() {
 
       {/* Main Content */}
       <div className="min-h-screen flex items-center justify-center px-4 py-20 md:py-8 relative z-10">
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -164,42 +151,29 @@ export default function NotFoundPage() {
             >
               404
             </motion.div>
-            
-            {/* Floating Sparkles */}
-            {[...Array(6)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute hidden sm:block"
-                style={{
-                  left: `${20 + Math.random() * 60}%`,
-                  top: `${20 + Math.random() * 60}%`,
-                }}
-                animate={sparkleAnimation}
-              >
-                <Sparkles className="w-4 h-4 md:w-6 md:h-6 text-yellow-500" />
-              </motion.div>
-            ))}
+
+
           </motion.div>
 
 
           {/* Error Message */}
           <motion.div variants={itemVariants} className="mb-6 md:mb-8 px-2">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4 text-gray-900">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4 text-blue-700">
               Oops! Page Not Found
             </h1>
-            
-            <motion.p 
+
+            <motion.p
               className="text-base sm:text-lg md:text-xl mb-4 md:mb-6 max-w-2xl mx-auto leading-relaxed text-gray-600"
               animate={floatingAnimation}
             >
-              The page you're looking for seems to have taken a vacation! 
+              The page you're looking for seems to have taken a vacation!
               Don't worry, we'll help you find your way back home.
             </motion.p>
           </motion.div>
 
 
           {/* Action Buttons */}
-          <motion.div 
+          <motion.div
             variants={itemVariants}
             className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 mb-8 md:mb-12 px-4"
           >
@@ -220,7 +194,7 @@ export default function NotFoundPage() {
                 transition={{ duration: 0.3 }}
               />
             </motion.button>
-            
+
             <Link to="/" className="w-full sm:w-auto">
               <motion.div
                 className="group relative overflow-hidden px-6 md:px-8 py-3 md:py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-xl transition-all duration-300"
@@ -247,7 +221,7 @@ export default function NotFoundPage() {
             <h3 className="text-lg md:text-xl font-semibold mb-4 md:mb-6 text-gray-800">
               Or explore these popular sections:
             </h3>
-            
+
             <div className="grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-4">
               {suggestions.map((item, index) => (
                 <Link key={index} to={item.path}>
@@ -271,7 +245,7 @@ export default function NotFoundPage() {
 
 
           {/* Fun Stats */}
-          <motion.div 
+          <motion.div
             variants={itemVariants}
             className="text-xs md:text-sm text-gray-500 flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-6 px-4"
           >
@@ -280,11 +254,6 @@ export default function NotFoundPage() {
               <span>Time wasted: 0.5 seconds</span>
             </div>
             <div className="flex items-center gap-2">
-              <Star className="w-3 h-3 md:w-4 md:h-4" />
-              <span>Error level: Friendly</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Zap className="w-3 h-3 md:w-4 md:h-4" />
               <span>Recovery speed: Lightning fast</span>
             </div>
           </motion.div>

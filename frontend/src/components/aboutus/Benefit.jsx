@@ -31,23 +31,23 @@ const benefits = [
 
 export default function Benefits() {
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-gray-50">
+    <section className="py-12 md:py-24 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-10 md:mb-16"
         >
-          <h2 className="text-4xl font-bold mb-4">Why Choose ApniEstate?</h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <h2 className="text-2xl md:text-4xl font-bold mb-4">Why Choose ApniEstate?</h2>
+          <div className="w-16 md:w-24 h-1 bg-blue-600 mx-auto mb-4 md:mb-6"></div>
+          <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
             ApniEstate combines verified data, smart tools, and a clean
             interface to make property search genuinely easier.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
             return (
@@ -57,14 +57,14 @@ export default function Benefits() {
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.2 }}
-                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                className="bg-white p-6 md:p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
                 whileHover={{ y: -5 }}
               >
-                <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 transform transition-transform duration-300 hover:rotate-6">
-                  <Icon className="w-8 h-8 text-blue-600" />
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-4 md:mb-6 transform transition-transform duration-300 hover:rotate-6">
+                  <Icon className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-bold mb-4">{benefit.title}</h3>
-                <p className="text-gray-600 text-lg">{benefit.description}</p>
+                <h3 className="text-lg md:text-xl font-bold mb-3 md:mb-4">{benefit.title}</h3>
+                <p className="text-gray-600 text-sm md:text-lg">{benefit.description}</p>
               </motion.div>
             );
           })}

@@ -3,7 +3,7 @@ import "./config/env.js";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import rateLimit from "express-rate-limit";
+// import rateLimit from "express-rate-limit";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -20,6 +20,9 @@ import serviceUploadRoutes from "./routes/serviceUploadRoute.js";
 import contactRequestRoutes from "./routes/contactRequestRoute.js";
 import chatRoutes from "./routes/ChatRoute.js";
 import chatUploadRoute from "./routes/chatUploadRoute.js";
+import loanAnalysisRoute from './loanEngine/loanAnalysisRoute.js';
+import sponsorRoutes from "./routes/sponsorRoutes.js";
+import testimonialRoutes from "./routes/testimonialRoute.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -77,6 +80,10 @@ app.use("/api/contact-requests", contactRequestRoutes);
 
 app.use("/api/chats", chatRoutes);
 app.use("/api/upload", chatUploadRoute);
+
+app.use('/api/loan', loanAnalysisRoute);
+app.use("/api/sponsors", sponsorRoutes);
+app.use("/api/testimonials", testimonialRoutes);
 
 // Status endpoint
 app.get("/status", (req, res) => {

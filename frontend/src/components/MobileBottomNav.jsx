@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import {
   Home,
   Search,
-  Heart,
+  Bookmark,
   User,
   LogIn,
   MessageCircle,
@@ -27,7 +27,7 @@ const MobileBottomNav = () => {
     { path: "/", icon: Home },
     { path: "/properties", icon: Search },
     { path: "/messages", icon: MessageCircle },
-    { path: "/saved", icon: Heart },
+    { path: "/saved", icon: Bookmark },
     { path: "/profile", icon: User },
   ];
 
@@ -40,7 +40,7 @@ const MobileBottomNav = () => {
       icon: Plus,
       isVendorAction: true,
     },
-    { path: "/saved", icon: Heart },
+    { path: "/saved", icon: Bookmark },
     { path: "/profile", icon: User },
   ];
 
@@ -100,7 +100,7 @@ const MobileBottomNav = () => {
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       {/* Floating pill */}
-      <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/90 backdrop-blur-xl shadow-lg border border-gray-200">
+      <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/80 backdrop-blur-md shadow-xl border border-white/20">
         {navItems.map((item, index) => {
           const isActive =
             item.path === "/"
@@ -113,13 +113,12 @@ const MobileBottomNav = () => {
             <Link key={index} to={item.path} className="relative">
               <motion.div
                 whileTap={{ scale: 0.85 }}
-                className={`p-2.5 rounded-full transition ${
-                  item.isVendorAction
-                    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md"
-                    : isActive
+                className={`p-2.5 rounded-full transition ${item.isVendorAction
+                  ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md"
+                  : isActive
                     ? "bg-violet-100 text-violet-600"
                     : "text-gray-600 hover:bg-gray-100"
-                }`}
+                  }`}
               >
                 <Icon className="w-5 h-5" strokeWidth={2.2} />
               </motion.div>

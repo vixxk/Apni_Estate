@@ -125,7 +125,7 @@ const AIPropertyHub = () => {
     return (
       <div className="flex flex-col items-center justify-center py-8 sm:py-12">
         {/* Loading animation with property icon - adjusted for better mobile view */}
-        <div className="relative mb-8 sm:mb-12 pt-12 sm:pt-16">
+        <div className="relative mb-8 sm:mb-12">
           {/* Main circle -   on mobile */}
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center relative shadow-lg shadow-blue-500/30">
             {loadingStage === "properties" ? (
@@ -291,7 +291,7 @@ const AIPropertyHub = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 sm:pt-20 pb-8 sm:pb-12">
+    <div className="min-h-screen bg-gray-50 pb-8 sm:pb-12">
       <AiHubSEO />
       <StructuredData type="aiHub" />
       <div className="container mx-auto px-4">

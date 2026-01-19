@@ -137,8 +137,8 @@ const ServicesPage = () => {
             images: Array.isArray(p.images)
               ? p.images.map((img) => toFullUrl(img.url || img))
               : firstImage
-              ? [firstImage]
-              : [],
+                ? [firstImage]
+                : [],
             image: firstImage,
             owner: p.owner,
             status: p.status,
@@ -236,7 +236,7 @@ const ServicesPage = () => {
         const availabilityMatch =
           !filters.availability ||
           property.availability?.toLowerCase() ===
-            filters.availability.toLowerCase();
+          filters.availability.toLowerCase();
 
         return (
           searchMatch &&
@@ -334,7 +334,7 @@ const ServicesPage = () => {
             ></div>
           </div>
 
-          <h3 className="text-2xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+          <h3 className="text-2xl font-bold text-slate-800 mb-3">
             Loading Services
           </h3>
 
@@ -344,13 +344,12 @@ const ServicesPage = () => {
 
           <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
             <motion.div
-              className="h-full bg-gradient-to-r from-green-600 via-teal-500 to-green-600 bg-size-200 absolute top-0 left-0 right-0"
+              className="h-full bg-green-500 absolute top-0 left-0 right-0"
               animate={{
-                backgroundPosition: ["0% center", "100% center", "0% center"],
+                x: ["-100%", "100%"],
               }}
-              style={{ backgroundSize: "200% 100%" }}
               transition={{
-                duration: 2,
+                duration: 1.5,
                 repeat: Infinity,
                 ease: "linear",
               }}
@@ -394,7 +393,7 @@ const ServicesPage = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gray-50 pt-16"
+      className="min-h-screen bg-gray-50"
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
         <motion.header
@@ -402,7 +401,7 @@ const ServicesPage = () => {
           animate={{ y: 0, opacity: 1 }}
           className="text-center mb-6 sm:mb-12"
         >
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-blue-700 mb-2 sm:mb-4">
             Professional Services
           </h1>
           <p className="text-sm sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-2">
@@ -427,15 +426,16 @@ const ServicesPage = () => {
                   filters={filters}
                   setFilters={setFilters}
                   onApplyFilters={handleFilterChange}
+                  typeOptions={SERVICE_CATEGORIES}
+                  availabilityOptions={[]}
                 />
               </motion.aside>
             )}
           </AnimatePresence>
 
           <div
-            className={`${
-              viewState.showFilters ? "lg:col-span-3" : "lg:col-span-4"
-            }`}
+            className={`${viewState.showFilters ? "lg:col-span-3" : "lg:col-span-4"
+              }`}
           >
             <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm mb-4 sm:mb-6">
               <div className="flex flex-col gap-3">
@@ -471,23 +471,7 @@ const ServicesPage = () => {
                   </select>
 
                   <div className="flex items-center gap-1">
-                    <button
-                      ref={filterButtonRef}
-                      onClick={() =>
-                        setViewState((prev) => ({
-                          ...prev,
-                          showFilters: !prev.showFilters,
-                        }))
-                      }
-                      className={`p-2 rounded-lg transition ${
-                        viewState.showFilters
-                          ? "bg-green-100 text-green-600"
-                          : "hover:bg-gray-100 text-gray-600"
-                      }`}
-                      title="Toggle Filters"
-                    >
-                      <SlidersHorizontal className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </button>
+
 
                     <button
                       onClick={() =>
@@ -496,11 +480,10 @@ const ServicesPage = () => {
                           isGridView: true,
                         }))
                       }
-                      className={`p-2 rounded-lg transition ${
-                        viewState.isGridView
-                          ? "bg-green-100 text-green-600"
-                          : "hover:bg-gray-100 text-gray-600"
-                      }`}
+                      className={`p-2 rounded-lg transition ${viewState.isGridView
+                        ? "bg-green-100 text-green-600"
+                        : "hover:bg-gray-100 text-gray-600"
+                        }`}
                       title="Grid View"
                     >
                       <Grid className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -513,11 +496,10 @@ const ServicesPage = () => {
                           isGridView: false,
                         }))
                       }
-                      className={`p-2 rounded-lg transition ${
-                        !viewState.isGridView
-                          ? "bg-green-100 text-green-600"
-                          : "hover:bg-gray-100 text-gray-600"
-                      }`}
+                      className={`p-2 rounded-lg transition ${!viewState.isGridView
+                        ? "bg-green-100 text-green-600"
+                        : "hover:bg-gray-100 text-gray-600"
+                        }`}
                       title="List View"
                     >
                       <List className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -529,11 +511,10 @@ const ServicesPage = () => {
 
             <motion.div
               layout
-              className={`grid gap-1.5 sm:gap-4 md:gap-6 ${
-                viewState.isGridView
-                  ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
-                  : "grid-cols-1"
-              }`}
+              className={`grid gap-1.5 sm:gap-4 md:gap-6 ${viewState.isGridView
+                ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
+                : "grid-cols-1"
+                }`}
             >
               <AnimatePresence>
                 {filteredProperties.length > 0 ? (

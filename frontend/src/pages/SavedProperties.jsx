@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { Heart, Search, Home, ArrowRight, Sparkles, LogIn } from "lucide-react";
+import { Bookmark, Search, Home, ArrowRight, LogIn } from "lucide-react";
 import PropertyCard from "../components/properties/Propertycard.jsx";
 import { Backendurl } from "../App.jsx";
 
@@ -65,9 +65,9 @@ const SavedProperties = () => {
               typeof p.location === "string"
                 ? p.location
                 : p.location?.city ||
-                  p.location?.address ||
-                  p.location?.state ||
-                  "",
+                p.location?.address ||
+                p.location?.state ||
+                "",
             beds: p.beds ?? p.features?.bedrooms ?? 0,
             baths: p.baths ?? p.features?.bathrooms ?? 0,
             sqft: p.sqft ?? p.features?.area ?? 0,
@@ -79,8 +79,10 @@ const SavedProperties = () => {
               ? p.features.amenities
               : [],
             image: displayImage,
+
             images: firstImage ? [firstImage] : [],
             createdAt: p.createdAt,
+            owner: p.owner,
           };
         });
 
@@ -113,52 +115,27 @@ const SavedProperties = () => {
         >
           <div className="relative mb-6">
             <motion.div
-              className="w-24 h-24 bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl flex items-center justify-center relative shadow-lg shadow-red-500/30"
+              className="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center relative shadow-lg shadow-blue-500/10"
               animate={{
-                rotate: [0, 0, 360, 360, 0],
-                scale: [1, 0.9, 0.9, 1, 1],
-                borderRadius: ["16%", "50%", "50%", "16%", "16%"],
+                scale: [1, 1.05, 1],
               }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
-              <Heart className="w-12 h-12 text-white" fill="white" />
+              <Bookmark className="w-10 h-10 text-blue-600" />
             </motion.div>
-  
-            <motion.div
-              className="absolute w-3 h-3 bg-red-300 rounded-full right-4 bottom-10"
-              animate={{
-                x: [0, 30, 0, -30, 0],
-                y: [-30, 0, 30, 0, -30],
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            />
-  
-            <motion.div
-              className="absolute w-2 h-2 bg-pink-400 rounded-full"
-              animate={{
-                x: [0, -30, 0, 30, 0],
-                y: [30, 0, -30, 0, 30],
-              }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
-            />
-  
-            <div
-              className="absolute inset-0 bg-red-500/10 rounded-full animate-ping"
-              style={{ animationDuration: "3s" }}
-            ></div>
           </div>
-  
-          <h3 className="text-2xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent">
+
+          <h3 className="text-2xl font-bold text-blue-800 mb-3">
             Loading Favorites
           </h3>
-  
+
           <p className="text-gray-600 mb-5 max-w-xs text-center">
             Fetching your saved properties...
           </p>
-  
+
           <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
             <motion.div
-              className="h-full bg-gradient-to-r from-red-600 via-pink-500 to-red-600 bg-size-200 absolute top-0 left-0 right-0"
+              className="h-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600 bg-size-200 absolute top-0 left-0 right-0"
               animate={{
                 backgroundPosition: ["0% center", "100% center", "0% center"],
               }}
@@ -170,12 +147,12 @@ const SavedProperties = () => {
               }}
             />
           </div>
-  
-          <div className="flex items-center mt-4 text-xs text-red-600">
+
+          <div className="flex items-center mt-4 text-xs text-blue-600">
             <motion.div
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1.5 h-1.5 bg-red-600 rounded-full mr-2"
+              className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"
             />
             <span>Retrieving your favorite properties</span>
           </div>
@@ -183,22 +160,22 @@ const SavedProperties = () => {
       </div>
     );
   }
-  
+
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 pt-16 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-md"
         >
-          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 bg-red-100 rounded-full flex items-center justify-center">
-            <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-red-500" />
+          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 bg-blue-100 rounded-full flex items-center justify-center">
+            <Bookmark className="w-8 h-8 sm:w-10 sm:h-10 text-blue-500" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">
+          <h2 className="text-xl sm:text-2xl font-bold text-blue-700 mb-2 sm:mb-3">
             Oops! Something went wrong
           </h2>
-          <p className="text-red-600 mb-4 sm:mb-6 text-sm sm:text-base">
+          <p className="text-blue-600 mb-4 sm:mb-6 text-sm sm:text-base">
             {error}
           </p>
           <motion.button
@@ -216,7 +193,7 @@ const SavedProperties = () => {
 
   if (!properties.length) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 pt-16 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -229,74 +206,33 @@ const SavedProperties = () => {
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             className="relative inline-block mb-6 sm:mb-8"
           >
-            <motion.div
-              animate={{
-                scale: [1, 1.1, 1],
-                rotate: [0, 5, -5, 0],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center shadow-lg"
+            <div
+              className="w-20 h-20 sm:w-24 sm:h-24 bg-blue-100 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/10"
             >
-              <Heart
-                className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400"
+              <Bookmark
+                className="w-10 h-10 sm:w-12 sm:h-12 text-blue-400"
                 strokeWidth={1.5}
               />
-            </motion.div>
-
-            <motion.div
-              animate={{
-                y: [-10, 10, -10],
-                x: [-5, 5, -5],
-                rotate: [0, 180, 360],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2"
-            >
-              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400" />
-            </motion.div>
-
-            <motion.div
-              animate={{
-                y: [10, -10, 10],
-                x: [5, -5, 5],
-                rotate: [360, 180, 0],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="absolute -bottom-1 -left-1 sm:-bottom-2 sm:-left-2"
-            >
-              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-pink-400" />
-            </motion.div>
+            </div>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-2xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 sm:mb-4"
+            className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-900 mb-3 sm:mb-4"
           >
-            No Favorite Properties Yet
+            No Saved Properties Yet
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-gray-600 text-sm sm:text-lg mb-6 sm:mb-10 max-w-md mx-auto"
+            className="text-slate-600 text-sm sm:text-base mb-6 sm:mb-10 max-w-md mx-auto"
           >
             Start exploring and save your favorite properties by clicking the
-            heart icon
+            bookmark icon
           </motion.p>
 
           <motion.div
@@ -352,19 +288,19 @@ const SavedProperties = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
-            className="mt-8 sm:mt-12 p-4 sm:p-6 bg-white/60 backdrop-blur-lg rounded-2xl shadow-lg border border-white/40 max-w-md mx-auto"
+            className="mt-8 sm:mt-12 p-4 sm:p-6 glass-panel rounded-2xl max-w-md mx-auto"
           >
-            <h3 className="text-xs sm:text-sm font-bold text-gray-700 mb-2 sm:mb-3 flex items-center justify-center gap-2">
-              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-500" />
+            <h3 className="text-xs sm:text-sm font-bold text-blue-700 mb-2 sm:mb-3 flex items-center justify-center gap-2">
+              <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500" />
               Quick Tip
             </h3>
-            <p className="text-xs sm:text-sm text-gray-600">
+            <p className="text-xs sm:text-sm text-slate-600">
               Click the{" "}
-              <Heart
-                className="w-3.5 h-3.5 sm:w-4 sm:h-4 inline mx-1 text-red-500"
+              <Bookmark
+                className="w-3.5 h-3.5 sm:w-4 sm:h-4 inline mx-1 text-blue-500"
                 fill="currentColor"
               />{" "}
-              icon on any property card to save it to your favorites. You can
+              icon on any property card to save it to your list. You can
               access them anytime here!
             </p>
           </motion.div>
@@ -388,7 +324,7 @@ const SavedProperties = () => {
         }
       `}</style>
 
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 pt-16 pb-24 sm:pb-8">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 pb-24 sm:pb-8">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-6 lg:py-8">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -396,19 +332,17 @@ const SavedProperties = () => {
             className="mb-4 sm:mb-6 lg:mb-8"
           >
             <div className="flex items-center gap-2 sm:gap-3 mb-2">
-              <motion.div
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg flex-shrink-0"
+              <div
+                className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-blue-100 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0"
               >
-                <Heart
-                  className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white"
-                  fill="white"
+                <Bookmark
+                  className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-blue-600"
+                  fill="currentColor"
                 />
-              </motion.div>
+              </div>
               <div className="min-w-0 flex-1">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent truncate">
-                  Favorite Properties
+                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-blue-900 truncate">
+                  Saved Properties
                 </h1>
                 <p className="text-gray-600 mt-0.5 sm:mt-1 text-xs sm:text-sm">
                   {properties.length}{" "}

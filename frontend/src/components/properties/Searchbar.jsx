@@ -161,8 +161,8 @@ const SearchBar = ({ onSearch, className }) => {
 
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      {/* ==================== MAIN SEARCH BAR (80%) ==================== */}
-      <div ref={searchContainerRef} className="relative flex-[4]">
+      {/* ==================== MAIN SEARCH BAR (85%) ==================== */}
+      <div ref={searchContainerRef} className="relative flex-[6]">
         <form onSubmit={handleSearchSubmit} className="relative">
           <input
             type="text"
@@ -171,14 +171,9 @@ const SearchBar = ({ onSearch, className }) => {
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setShowSuggestions(true)}
             onKeyDown={handleSearchKeyDown}
-            className="w-full pl-12 pr-14 py-3 rounded-lg border border-gray-200 
+            className="w-full pl-4 pr-14 py-3 rounded-lg border border-gray-200 
               focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
               transition-all text-gray-800 placeholder-gray-400"
-          />
-
-          <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 
-              text-gray-400 h-5 w-5 pointer-events-none"
           />
 
           <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
@@ -216,8 +211,8 @@ const SearchBar = ({ onSearch, className }) => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg 
-                shadow-lg border border-gray-100 overflow-hidden z-50"
+              className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-md rounded-lg 
+                shadow-xl border border-white/20 overflow-hidden z-50"
             >
               <div className="p-2">
                 <h3 className="text-xs font-medium text-gray-500 px-3 mb-2">
@@ -240,10 +235,10 @@ const SearchBar = ({ onSearch, className }) => {
         </AnimatePresence>
       </div>
 
-      {/* ==================== LOCATION SEARCH BAR (20%) ==================== */}
+      {/* ==================== LOCATION SEARCH BAR (15%) ==================== */}
       <div
         ref={locationContainerRef}
-        className="relative flex-[1] min-w-[140px]"
+        className="relative flex-[1] min-w-[120px]"
       >
         <form onSubmit={handleLocationSubmit} className="relative">
           <input
@@ -289,8 +284,8 @@ const SearchBar = ({ onSearch, className }) => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="absolute top-full right-0 mt-2 bg-white rounded-lg 
-        shadow-lg border border-gray-100 overflow-hidden z-50 w-40"
+              className="absolute top-full right-0 mt-2 bg-white/95 backdrop-blur-md rounded-lg 
+        shadow-xl border border-white/20 overflow-hidden z-50 w-40"
             >
               {/* Recent Locations */}
               {recentLocations.length > 0 && (

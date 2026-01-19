@@ -3,26 +3,25 @@ import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <div className="mt-16">
-      <div className="relative h-[80vh] flex items-center justify-center overflow-hidden">
-        {/* Animated gradient background */}
+    <div>
+      <div className="relative min-h-[40vh] py-12 flex items-center justify-center overflow-hidden bg-gray-50">
+        {/* Animated gradient background - Lighter theme */}
         <div className="absolute inset-0 z-0">
           <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800"
+            className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"
             animate={{
               background: [
-                "linear-gradient(to bottom right, rgba(37, 99, 235, 1), rgba(79, 70, 229, 1), rgba(124, 58, 237, 0.8))",
-                "linear-gradient(to bottom right, rgba(79, 70, 229, 1), rgba(124, 58, 237, 0.8), rgba(37, 99, 235, 1))",
-                "linear-gradient(to bottom right, rgba(124, 58, 237, 0.8), rgba(37, 99, 235, 1), rgba(79, 70, 229, 1))",
+                "linear-gradient(to bottom right, rgba(239, 246, 255, 1), rgba(238, 242, 255, 1), rgba(250, 245, 255, 1))",
+                "linear-gradient(to bottom right, rgba(238, 242, 255, 1), rgba(250, 245, 255, 1), rgba(239, 246, 255, 1))",
               ],
             }}
             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
           />
 
-          {/* Animated shapes */}
-          <div className="absolute inset-0 opacity-20">
+          {/* Animated shapes - Subtler colors */}
+          <div className="absolute inset-0 opacity-40">
             <motion.div
-              className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-blue-300"
+              className="absolute top-1/4 left-1/4 w-48 h-48 sm:w-64 sm:h-64 rounded-full bg-blue-200 blur-3xl"
               animate={{
                 x: [0, 30, 0, -30, 0],
                 y: [0, -30, 0, 30, 0],
@@ -32,7 +31,7 @@ export default function Hero() {
             />
 
             <motion.div
-              className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-indigo-300"
+              className="absolute bottom-1/4 right-1/4 w-32 h-32 sm:w-48 sm:h-48 rounded-full bg-indigo-200 blur-3xl"
               animate={{
                 x: [0, -40, 0, 40, 0],
                 y: [0, 40, 0, -40, 0],
@@ -40,20 +39,7 @@ export default function Hero() {
               }}
               transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
             />
-
-            <motion.div
-              className="absolute top-1/3 right-1/3 w-80 h-80 rounded-full bg-purple-300"
-              animate={{
-                x: [0, 50, 0, -50, 0],
-                y: [0, -50, 0, 50, 0],
-                scale: [1, 1.2, 1, 0.8, 1],
-              }}
-              transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-            />
           </div>
-
-          {/* Pattern overlay */}
-          <div className="absolute inset-0 opacity-30 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjMiPjxwYXRoIGQ9Ik01IDEwQzMuODk1IDEwIDMgMTAuODk1IDMgMTJ2MzhjMCAxLjEwNS44OTUgMiAyIDJoMzh2LWE0MlMwIDEwIDV6bTM4LTJINUM2IC44MTAgMSA5LjgxIDEgMTJ2MzhjMCAyLjE5IDEuNzkgNCA0IDRoNDFjMS4xMDUgMCAyLS44OTUgMi0yVjEwYzAtMS4xMDUtLjg5NS0yLTItMmgtM3oiLz48L2c+PC9nPjwvc3ZnPg==')]"></div>
         </div>
 
         {/* Content */}
@@ -61,10 +47,10 @@ export default function Hero() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="relative text-center text-white px-4 max-w-4xl mx-auto z-10"
+          className="relative text-center px-4 max-w-4xl mx-auto z-10"
         >
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-2 leading-tight">
-            About <span className="text-yellow-300">ApniEstate</span>
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-4 leading-tight text-blue-900">
+            About <span className="text-blue-600">ApniEstate</span>
           </h1>
 
           {/* Recognised By Section */}
@@ -74,34 +60,26 @@ export default function Hero() {
             transition={{ delay: 0.4, duration: 0.8 }}
             className="mb-8"
           >
-            <p className="text-sm sm:text-base text-gray-200">
-              Recognised by the <span className="font-semibold text-white">Directorate of Information Technology,</span>
+            <p className="text-xs sm:text-sm text-gray-500 uppercase tracking-wider font-semibold">
+              Recognised by the Directorate of Information Technology,
               <br />
-              <span className="font-semibold text-white">Government of Tripura.</span>
+              Government of Tripura
             </p>
           </motion.div>
 
           {/* Decorative line */}
           <motion.div
-            className="w-24 h-1 bg-white mx-auto mb-8"
+            className="w-16 h-1 bg-blue-600 mx-auto mb-6 rounded-full"
             initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 96, opacity: 1 }}
+            animate={{ width: 64, opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.6 }}
           />
 
-          <p className="text-xl md:text-2xl leading-relaxed font-light">
+          <p className="text-base sm:text-xl md:text-2xl leading-relaxed font-light text-gray-700 max-w-2xl mx-auto">
             ApniEstate is your trusted partner for finding verified homes and
-            investment properties/services across India, with clear details and a smooth,
+            investment properties across India, with clear details and a smooth,
             modern experience.
           </p>
-
-          {/* Decorative line */}
-          <motion.div
-            className="w-24 h-1 bg-white mx-auto mt-8"
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 96, opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
-          />
         </motion.div>
       </div>
     </div>
