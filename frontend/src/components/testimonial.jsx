@@ -155,6 +155,35 @@ TestimonialCard.propTypes = {
   direction: PropTypes.string.isRequired,
 };
 
+const TestimonialSkeleton = () => (
+  <div className="glass-card p-5 md:p-8 rounded-2xl md:rounded-3xl border border-white/20 shadow-xl relative overflow-hidden h-full">
+    <div className="absolute top-4 right-4 animate-pulse">
+      <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-100/50 rounded-full" />
+    </div>
+
+    <div className="mt-10 md:mt-12 space-y-3">
+      <div className="h-4 bg-gray-200 rounded w-full animate-pulse" />
+      <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse" />
+      <div className="h-4 bg-gray-200 rounded w-4/6 animate-pulse" />
+    </div>
+
+    <div className="flex items-center justify-between mt-8">
+      <div className="flex items-center space-x-4">
+        <div className="w-16 h-16 rounded-full bg-gray-200 animate-pulse" />
+        <div className="space-y-2">
+          <div className="h-4 w-32 bg-gray-200 rounded animate-pulse" />
+          <div className="h-3 w-24 bg-gray-200 rounded animate-pulse" />
+          <div className="flex space-x-1">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="w-3 h-3 bg-gray-200 rounded-full animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const Testimonials = () => {
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -264,10 +293,6 @@ const Testimonials = () => {
     { icon: TrendingUp, value: "85%", label: "Success Rate", color: "from-green-500 to-emerald-500" }
   ];
 
-  if (loading) {
-    return <div className="py-20 text-center"><Loader2 className="w-8 h-8 animate-spin mx-auto text-blue-500" /></div>;
-  }
-
   return (
     <section className="relative py-16 md:py-32 bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-50 overflow-hidden">
       {/* Background Elements */}
@@ -342,7 +367,13 @@ const Testimonials = () => {
           ))}
         </motion.div>
 
-        {testimonials.length > 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            {[1, 2, 3].map((i) => (
+              <TestimonialSkeleton key={i} />
+            ))}
+          </div>
+        ) : testimonials.length > 0 ? (
           <>
             {/* Desktop Grid */}
             <div className="hidden lg:grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">

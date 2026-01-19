@@ -22,6 +22,7 @@ const SponsorManager = ({ adminEmail, adminPassword }) => {
 
     // Add Sponsor Form State
     const [newSponsorName, setNewSponsorName] = useState("");
+    const [newSponsorDescription, setNewSponsorDescription] = useState("");
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -67,7 +68,7 @@ const SponsorManager = ({ adminEmail, adminPassword }) => {
     const handleAddSponsor = async (e) => {
         e.preventDefault();
         if (!newSponsorName.trim() || !selectedImage) {
-            setError("Please provide both name and logo");
+            setError("Please provide name and logo");
             return;
         }
 
@@ -104,6 +105,7 @@ const SponsorManager = ({ adminEmail, adminPassword }) => {
                 {
                     name: newSponsorName,
                     logoUrl: logoUrl,
+                    description: newSponsorDescription,
                 },
                 {
                     headers: {
@@ -117,6 +119,7 @@ const SponsorManager = ({ adminEmail, adminPassword }) => {
                 setSponsors([addRes.data.data, ...sponsors]);
                 setSuccess("Sponsor added successfully!");
                 setNewSponsorName("");
+                setNewSponsorDescription("");
                 setSelectedImage(null);
                 setImagePreview(null);
                 if (fileInputRef.current) fileInputRef.current.value = "";
@@ -210,6 +213,19 @@ const SponsorManager = ({ adminEmail, adminPassword }) => {
                                 value={newSponsorName}
                                 onChange={(e) => setNewSponsorName(e.target.value)}
                                 placeholder="e.g. Google, Microsoft"
+                                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500 transition-colors placeholder:text-white/20"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-xs font-medium text-indigo-200/70 mb-1.5">
+                                Description (Optional)
+                            </label>
+                            <input
+                                type="text"
+                                value={newSponsorDescription}
+                                onChange={(e) => setNewSponsorDescription(e.target.value)}
+                                placeholder="Short description (one line)"
                                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500 transition-colors placeholder:text-white/20"
                             />
                         </div>

@@ -180,7 +180,7 @@ const Companies = () => {
               Powering Success for Brands
             </h3>
             <p className="text-sm md:text-base text-gray-600">
-              {`From startups to Fortune 500 companies, we're the trusted choice
+              {`From startups to Market Leaders, we're the trusted choice
 `}{" "}
             </p>
           </motion.div>
@@ -195,23 +195,40 @@ const Companies = () => {
                 key={logo._id || index}
                 variants={logoVariants}
                 whileHover={{
-                  y: -4,
+                  y: -8,
+                  scale: 1.02,
                 }}
                 className="group relative"
               >
-                <div className="relative overflow-hidden rounded-lg md:rounded-xl bg-white border border-gray-100 p-4 md:p-6 shadow-sm group-hover:shadow-md transition-all duration-300">
-                  <img
-                    className="h-8 md:h-12 w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
-                    src={logo.logoUrl}
-                    alt={logo.name}
-                    width="158"
-                    height="48"
-                  />
-                  {/* Tooltip */}
-                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-3 py-1 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
-                    {logo.name}
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
+                <div className="relative overflow-hidden rounded-2xl bg-white border border-gray-100 p-6 shadow-sm group-hover:shadow-xl transition-all duration-300 h-full flex flex-col items-center justify-center gap-4">
+                  <div className="h-16 w-full flex items-center justify-center p-2 rounded-xl bg-gray-50/50 group-hover:bg-blue-50/30 transition-colors">
+                    <img
+                      className="h-full w-auto object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-110"
+                      src={logo.logoUrl}
+                      alt={logo.name}
+                      width="158"
+                      height="48"
+                    />
                   </div>
+
+                  {/* Optional Description */}
+                  {logo.description && (
+                    <motion.p
+                      initial={{ opacity: 0, height: 0 }}
+                      whileInView={{ opacity: 1, height: "auto" }}
+                      className="text-xs text-center text-gray-500 font-medium px-2 leading-relaxed border-t border-gray-100 pt-3 w-full"
+                    >
+                      {logo.description}
+                    </motion.p>
+                  )}
+
+                  {/* Tooltip for Name if no description, or just extra context */}
+                  {!logo.description && (
+                    <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-3 py-1.5 rounded-lg text-xs font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none translate-y-2 group-hover:translate-y-0 shadow-lg">
+                      {logo.name}
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             ))}
