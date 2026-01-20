@@ -331,7 +331,7 @@ const VendorRegister = () => {
                   <motion.div
                     initial={{ scale: 0.8, y: 20 }}
                     animate={{ scale: 1, y: 0 }}
-                    className="bg-white rounded-2xl p-8 shadow-2xl max-w-sm mx-4 text-center"
+                    className="bg-white rounded-2xl p-6 md:p-8 shadow-2xl w-[90%] max-w-sm mx-auto text-center"
                   >
                     <motion.div
                       animate={{

@@ -77,7 +77,7 @@ const ScheduleViewing = ({ propertyId, propertyTitle, propertyLocation, property
 
       setLoading(true);
       const response = await axios.post(
-        `${Backendurl}/api/appointments`, 
+        `${Backendurl}/api/appointments`,
         {
           property: propertyId, // match backend field name (property)
           date: formData.date,
@@ -133,7 +133,7 @@ const ScheduleViewing = ({ propertyId, propertyTitle, propertyLocation, property
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
-          className="bg-white rounded-xl p-6 sm:p-8 w-full max-w-lg shadow-2xl relative overflow-hidden"
+          className="bg-white rounded-xl p-5 sm:p-8 w-[95%] md:w-full max-w-lg shadow-2xl relative overflow-hidden"
         >
           <button
             onClick={onClose}
@@ -176,16 +176,14 @@ const ScheduleViewing = ({ propertyId, propertyTitle, propertyLocation, property
               <div className="mb-6">
                 <div className="flex items-center justify-between">
                   <div
-                    className={`flex flex-col items-center ${
-                      step >= 1 ? 'text-blue-600' : 'text-gray-400'
-                    }`}
+                    className={`flex flex-col items-center ${step >= 1 ? 'text-blue-600' : 'text-gray-400'
+                      }`}
                   >
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center border-2 mb-1 ${
-                        step >= 1
+                      className={`w-8 h-8 rounded-full flex items-center justify-center border-2 mb-1 ${step >= 1
                           ? 'border-blue-600 bg-blue-50'
                           : 'border-gray-300'
-                      }`}
+                        }`}
                     >
                       <Calendar className="w-4 h-4" />
                     </div>
@@ -198,16 +196,14 @@ const ScheduleViewing = ({ propertyId, propertyTitle, propertyLocation, property
                     ></div>
                   </div>
                   <div
-                    className={`flex flex-col items-center ${
-                      step >= 2 ? 'text-blue-600' : 'text-gray-400'
-                    }`}
+                    className={`flex flex-col items-center ${step >= 2 ? 'text-blue-600' : 'text-gray-400'
+                      }`}
                   >
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center border-2 mb-1 ${
-                        step >= 2
+                      className={`w-8 h-8 rounded-full flex items-center justify-center border-2 mb-1 ${step >= 2
                           ? 'border-blue-600 bg-blue-50'
                           : 'border-gray-300'
-                      }`}
+                        }`}
                     >
                       <Info className="w-4 h-4" />
                     </div>

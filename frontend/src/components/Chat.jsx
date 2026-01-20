@@ -55,6 +55,7 @@ const Chat = () => {
     avatar: null,
   });
   const [selectedImage, setSelectedImage] = useState(null);
+  const [otherUserProfile, setOtherUserProfile] = useState(null);
 
   const token = localStorage.getItem("token");
 
@@ -109,6 +110,32 @@ const Chat = () => {
       return () => clearTimeout(timer);
     }
   }, [token, otherUserId, currentUser, navigate]);
+
+  // fetch other user profile to get role for redirection
+  useEffect(() => {
+    const fetchOtherUserProfile = async () => {
+      if (!otherUserId) return;
+      try {
+        const { data } = await axios.get(
+          `${Backendurl}/api/users/public/${otherUserId}`
+        );
+        setOtherUserProfile(data.data);
+      } catch (err) {
+        console.error("Failed to fetch other user profile:", err);
+      }
+    };
+    fetchOtherUserProfile();
+  }, [otherUserId]);
+
+  const handleProfileClick = () => {
+    if (!otherUserProfile) return;
+
+    if (otherUserProfile.role === "vendor") {
+      navigate(`/vendor/${otherUserId}`);
+    } else {
+      navigate(`/user/${otherUserId}`);
+    }
+  };
 
   // polling for messages
   useEffect(() => {
@@ -293,7 +320,10 @@ const Chat = () => {
           className="bg-white rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[65vh] md:h-[75vh]"
         >
           {/* Header */}
-          <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4 shadow-lg">
+          <div
+            onClick={handleProfileClick}
+            className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4 shadow-lg cursor-pointer hover:opacity-95 transition-opacity"
+          >
             {chatHeader.avatar ? (
               <motion.img
                 initial={{ scale: 0 }}
@@ -571,7 +601,7 @@ const Chat = () => {
               <motion.div
                 initial={{ y: 20 }}
                 animate={{ y: 0 }}
-                className="bg-white rounded-xl shadow-2xl px-6 py-5 max-w-sm w-full text-center"
+                className="bg-white rounded-xl shadow-2xl px-5 py-5 md:px-6 w-[85%] max-w-sm text-center"
               >
                 <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3">
                   <UserIcon className="w-6 h-6 text-red-600" />

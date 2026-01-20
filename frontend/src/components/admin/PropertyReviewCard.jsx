@@ -430,7 +430,7 @@ const PropertyReviewCard = ({ property, onApprove, onReject, onDelete }) => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-xl lg:rounded-2xl p-5 lg:p-8 max-w-md w-full shadow-2xl"
+              className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-8 w-[90%] md:w-full max-w-md shadow-2xl"
             >
               <div className="text-center mb-4 lg:mb-6">
                 <div className="w-12 h-12 lg:w-16 lg:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 lg:mb-4">
@@ -493,7 +493,7 @@ const PropertyReviewCard = ({ property, onApprove, onReject, onDelete }) => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-xl lg:rounded-2xl p-5 lg:p-8 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto"
+              className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-8 w-[90%] md:w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto"
             >
               <div className="text-center mb-4 lg:mb-6">
                 <div className="w-12 h-12 lg:w-16 lg:h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3 lg:mb-4">

@@ -860,7 +860,7 @@ const PropertyDetails = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-white rounded-xl md:rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden max-h-[85vh] overflow-y-auto"
+                className="bg-white rounded-xl md:rounded-2xl shadow-2xl w-[90%] md:w-full max-w-lg overflow-hidden max-h-[85vh] overflow-y-auto"
               >
                 {/* Modal Header */}
                 <div className="bg-gradient-to-r from-emerald-600 to-green-600 p-3 md:p-5 sticky top-0 z-10">

@@ -456,9 +456,9 @@ const Testimonials = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden"
+              className="bg-white rounded-2xl shadow-2xl w-[90%] md:w-full max-w-lg overflow-hidden"
             >
-              <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-blue-50 to-indigo-50">
+              <div className="p-4 md:p-6 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-blue-50 to-indigo-50">
                 <div>
                   <h3 className="text-xl font-bold text-gray-900">Share Your Experience</h3>
                   <p className="text-sm text-gray-500">Your review helps others find their dream home.</p>

@@ -17,93 +17,104 @@ import {
   Zap,
   Shield,
   Award,
+  Building2,
+  ExternalLink
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
-
+import { Link } from "react-router-dom";
 
 // Animation Variants
-const containerVariants = {
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" }
+  }
+};
+
+const staggerContainer = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      delayChildren: 0.2,
       staggerChildren: 0.1,
-    },
-  },
+      delayChildren: 0.2
+    }
+  }
 };
 
-
-const sectionVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 20,
-      duration: 0.6,
-    },
-  },
-};
-
-
-const floatingAnimation = {
-  y: [-2, 2, -2],
-  transition: {
-    duration: 4,
-    repeat: Infinity,
-    ease: "easeInOut",
-  },
-};
-
-
-const glowAnimation = {
-  boxShadow: [
-    "0 0 20px rgba(59, 130, 246, 0.3)",
-    "0 0 40px rgba(59, 130, 246, 0.5)",
-    "0 0 20px rgba(59, 130, 246, 0.3)",
-  ],
-  transition: {
-    duration: 2,
-    repeat: Infinity,
-    ease: "easeInOut",
-  },
-};
-
-
-// Mobile Collapsible Footer Section
-const MobileFooterSection = ({ title, children, icon: Icon }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
+const SocialLinks = () => {
+  const links = [
+    {
+      icon: Linkedin,
+      href: "https://www.linkedin.com/company/apni-estate/",
+      label: "LinkedIn",
+      color: "hover:bg-[#0077B5]"
+    }
+  ];
 
   return (
-    <motion.div
-      className="glass-panel rounded-xl p-4 hover:shadow-lg transition-all duration-300"
-      whileHover={{ scale: 1.02 }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+    <div className="flex gap-3">
+      {links.map(({ icon: Icon, href, label, color }) => (
+        <motion.a
+          key={label}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ y: -3 }}
+          whileTap={{ scale: 0.95 }}
+          className={`flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 text-gray-600 transition-all duration-300 ${color} hover:text-white hover:shadow-lg`}
+          aria-label={label}
+        >
+          <Icon className="w-5 h-5" />
+        </motion.a>
+      ))}
+    </div>
+  );
+};
+
+const FooterColumn = ({ title, children }) => (
+  <div className="flex flex-col space-y-4">
+    <h3 className="text-lg font-bold text-gray-900 relative inline-block">
+      {title}
+      <span className="absolute -bottom-2 left-0 w-12 h-1 bg-blue-600 rounded-full"></span>
+    </h3>
+    <ul className="space-y-3 pt-2">{children}</ul>
+  </div>
+);
+
+const FooterLink = ({ to, children }) => (
+  <li>
+    <Link
+      to={to}
+      className="group flex items-center text-gray-600 hover:text-blue-600 transition-colors duration-200"
     >
+      <ChevronRight className="w-4 h-4 mr-2 text-blue-400 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-200" />
+      <span className="group-hover:translate-x-1 transition-transform duration-200">
+        {children}
+      </span>
+    </Link>
+  </li>
+);
+
+// Mobile Accordion
+const MobileFooterAccordion = ({ title, children }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="border-b border-gray-100">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between text-left"
+        className="flex w-full items-center justify-between py-4 text-left"
       >
-        <div className="flex items-center gap-3">
-          {Icon && <Icon className="w-5 h-5 text-blue-600" />}
-          <h3 className="text-base font-bold text-gray-800">{title}</h3>
-        </div>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <ChevronDown className="w-5 h-5 text-gray-400" />
-        </motion.div>
+        <span className="text-base font-semibold text-gray-900">{title}</span>
+        <ChevronDown
+          className={`w-5 h-5 text-gray-500 transition-transform duration-300 ${isOpen ? "rotate-180" : ""
+            }`}
+        />
       </button>
-
-
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -113,313 +124,195 @@ const MobileFooterSection = ({ title, children, icon: Icon }) => {
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="mt-4 pt-4 border-t border-gray-100">{children}</div>
+            <ul className="pb-4 space-y-3 pl-2 text-gray-600">
+              {children}
+            </ul>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
-  );
-};
-
-
-// Footer Column Component
-const FooterColumn = ({
-  title,
-  children,
-  className = "",
-  delay = 0,
-  icon: Icon,
-}) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay }}
-      className={`${className} group`}
-    >
-      {title && (
-        <div className="flex items-center gap-2 mb-6">
-          {Icon && (
-            <motion.div
-              className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg"
-              animate={floatingAnimation}
-            >
-              <Icon className="w-4 h-4 text-white" />
-            </motion.div>
-          )}
-          <h3 className="text-lg font-bold text-gray-800">{title}</h3>
-        </div>
-      )}
-      {children}
-    </motion.div>
-  );
-};
-
-
-// Footer Link Component
-const FooterLink = ({ href, children, icon: Icon }) => {
-  return (
-    <motion.a
-      href={href}
-      className="group flex items-center text-gray-600 transition-all duration-300 hover:text-blue-600 hover:translate-x-2 py-2 relative overflow-hidden"
-      whileHover={{ x: 5 }}
-      whileTap={{ scale: 0.98 }}
-    >
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
-      <div className="relative z-10 flex items-center">
-        {Icon && (
-          <Icon className="w-4 h-4 mr-3 text-blue-500 opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
-        )}
-        <ChevronRight className="w-3 h-3 mr-2 text-blue-500 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-2 group-hover:translate-x-0" />
-        <span className="font-medium">{children}</span>
-      </div>
-    </motion.a>
-  );
-};
-
-
-const socialLinks = [
-  {
-    icon: Linkedin,
-    href: "https://www.linkedin.com/company/apni-estate/",
-    label: "LinkedIn",
-    color: "from-[#0077B5] to-[#005885]",
-    hoverColor: "hover:shadow-[#0077B5]/25",
-  },
-];
-
-
-const SocialLinks = () => {
-  return (
-    <div className="flex items-center gap-4 mt-8">
-      <span className="text-sm text-gray-600 font-medium">Follow us:</span>
-      <div className="flex gap-3">
-        {socialLinks.map(({ icon: Icon, href, label }) => (
-          <motion.a
-            key={label}
-            whileHover={{ scale: 1.1, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            href={href}
-            title={label}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 rounded-xl w-11 h-11 shadow-md hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
-          >
-            <Icon className="w-5 h-5 relative z-10" />
-          </motion.a>
-        ))}
-      </div>
     </div>
   );
 };
 
-
-// Main Footer Component
-const companyLinks = [
-  { name: "Home", href: "/", icon: Home },
-  { name: "Properties", href: "/properties", icon: MapPin },
-  { name: "About Us", href: "/about", icon: Star },
-  { name: "Contact", href: "/contact", icon: Mail },
-  { name: "AI Property Hub", href: "/ai-property-hub", icon: Zap },
-];
-
-
-const contactInfo = [
-  {
-    icon: MapPin,
-    text: "Tripura, Agartala",
-    href: "https://www.google.com/maps/place/Tripura/@23.6880803,91.200007,9.39z",
-  },
-  {
-    icon: Phone,
-    text: "+91 6009396197",
-    href: "tel:+916009396197",
-  },
-  {
-    icon: Mail,
-    text: "apniestateofficial@gmail.com",
-    href: "mailto:apniestateofficial@gmail.com",
-  },
-];
-
-
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
+  const companyRoutes = [
+    { name: "About Us", path: "/about" },
+    { name: "Contact", path: "/contact" },
+  ];
+
+  const exploreRoutes = [
+    { name: "Properties", path: "/properties" },
+    { name: "Services", path: "/services" },
+    { name: "Loan Analyzer", path: "/loan-analyzer" },
+    { name: "Vendor Registration", path: "/register" },
+  ];
+
   return (
-    <footer className="relative bg-white border-t border-gray-100">
-      {/* Main Footer */}
-      <div className="relative pt-16 lg:pt-20 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Brand section */}
-          <motion.div
-            className="text-center lg:text-left mb-16"
-            variants={sectionVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            <div className="flex items-center justify-center lg:justify-start mb-6">
-              <motion.div
-                className="p-3 bg-blue-600 rounded-2xl shadow-md"
-                whileHover={{ scale: 1.05 }}
-              >
-                <Home className="h-8 w-8 text-white" />
-              </motion.div>
-              <div className="ml-4">
-                <span className="text-3xl font-bold text-gray-900">
-                  ApniEstate
-                </span>
-                <p className="text-sm text-gray-500 font-medium">
-                  Premium Real Estate
-                </p>
+    <footer className="bg-white border-t border-gray-200 pt-16 mt-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Top Section: Grid Layout for Desktop */}
+        <div className="hidden lg:grid grid-cols-12 gap-8 mb-16">
+          {/* Brand Info - Spans 4 Cols */}
+          <div className="col-span-4 pr-8">
+            <Link to="/" className="inline-flex items-center gap-2 mb-6 group">
+              <div className="p-2.5 bg-blue-600 rounded-xl shadow-lg group-hover:bg-blue-700 transition-colors">
+                <Home className="w-6 h-6 text-white" />
               </div>
-            </div>
+              <span className="text-2xl font-bold text-gray-900">ApniEstate</span>
+            </Link>
+            <p className="text-gray-600 mb-6 leading-relaxed">
+              Your trusted partner in finding the perfect home. We bridge the gap
+              between dreams and reality with cutting-edge technology and
+              personalized real estate services.
+            </p>
+            <SocialLinks />
+          </div>
 
+          {/* Spacer */}
+          <div className="col-span-1"></div>
 
-            <motion.p
-              className="text-gray-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed text-lg"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-            >
-              Your trusted partner in finding the perfect home. We make property
-              hunting simple, efficient, and tailored to your unique needs with
-              cutting-edge technology and personalized service.
-            </motion.p>
-
-
-            <div className="flex justify-center lg:justify-start">
-              <SocialLinks />
-            </div>
-          </motion.div>
-
-
-          {/* Desktop layout */}
-          <div className="hidden lg:flex justify-between gap-16 mb-12 max-w-4xl">
-            {/* Quick Links Column */}
-            <FooterColumn
-              title="Quick Links"
-              delay={0.2}
-              icon={Home}
-              className="flex-1"
-            >
-              <ul className="space-y-3">
-                {companyLinks.map((link) => (
-                  <li key={link.name}>
-                    <FooterLink href={link.href} icon={link.icon}>
-                      {link.name}
-                    </FooterLink>
-                  </li>
-                ))}
-              </ul>
-            </FooterColumn>
-
-
-            {/* Contact Info */}
-            <FooterColumn
-              title="Contact Us"
-              delay={0.4}
-              icon={MapPin}
-              className="flex-1"
-            >
-              <ul className="space-y-4">
-                {contactInfo.map((item, index) => (
-                  <li key={index}>
-                    <motion.a
-                      href={item.href}
-                      className="group flex items-start text-gray-600 hover:text-blue-600 transition-all duration-300 p-3 rounded-xl hover:bg-blue-50"
-                      target={item.icon === MapPin ? "_blank" : undefined}
-                      rel={
-                        item.icon === MapPin ? "noopener noreferrer" : undefined
-                      }
-                      whileHover={{ x: 5 }}
-                    >
-                      <div className="p-2 bg-blue-100 rounded-lg mr-4 group-hover:bg-blue-200 transition-colors duration-300">
-                        <item.icon className="w-4 h-4 text-blue-600" />
-                      </div>
-                      <span className="text-sm font-medium leading-relaxed">
-                        {item.text}
-                      </span>
-                    </motion.a>
-                  </li>
-                ))}
-              </ul>
+          {/* Quick Links - Spans 2 Cols */}
+          <div className="col-span-2">
+            <FooterColumn title="Company">
+              {companyRoutes.map((link) => (
+                <FooterLink key={link.name} to={link.path}>
+                  {link.name}
+                </FooterLink>
+              ))}
             </FooterColumn>
           </div>
 
+          {/* Explore - Spans 2 Cols */}
+          <div className="col-span-2">
+            <FooterColumn title="Explore">
+              {exploreRoutes.map((link) => (
+                <FooterLink key={link.name} to={link.path}>
+                  {link.name}
+                </FooterLink>
+              ))}
+            </FooterColumn>
+          </div>
 
-          {/* Mobile Accordions */}
-          <motion.div
-            className="lg:hidden space-y-4 mb-8"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            <MobileFooterSection title="Quick Links" icon={Home}>
-              <ul className="space-y-2">
-                {companyLinks.map((link) => (
-                  <li key={link.name}>
-                    <FooterLink href={link.href} icon={link.icon}>
-                      {link.name}
-                    </FooterLink>
-                  </li>
-                ))}
-              </ul>
-            </MobileFooterSection>
+          {/* Contact - Spans 3 Cols */}
+          <div className="col-span-3">
+            <div className="flex flex-col space-y-4">
+              <h3 className="text-lg font-bold text-gray-900 relative inline-block">
+                Contact Us
+                <span className="absolute -bottom-2 left-0 w-12 h-1 bg-blue-600 rounded-full"></span>
+              </h3>
+              <div className="space-y-4 pt-2">
+                <a
+                  href="https://www.google.com/maps/place/Tripura"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-3 group"
+                >
+                  <div className="p-2 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                    <MapPin className="w-5 h-5 flex-shrink-0" />
+                  </div>
+                  <span className="text-gray-600 mt-1 group-hover:text-blue-600 transition-colors">
+                    Tripura, Agartala,<br />India
+                  </span>
+                </a>
 
+                <a
+                  href="tel:+916009396197"
+                  className="flex items-center gap-3 group"
+                >
+                  <div className="p-2 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                    <Phone className="w-5 h-5 flex-shrink-0" />
+                  </div>
+                  <span className="text-gray-600 group-hover:text-blue-600 transition-colors">
+                    +91 6009396197
+                  </span>
+                </a>
 
-            <MobileFooterSection title="Contact Us" icon={MapPin}>
-              <ul className="space-y-3">
-                {contactInfo.map((item, index) => (
-                  <li key={index}>
-                    <motion.a
-                      href={item.href}
-                      className="flex items-start text-gray-600 hover:text-blue-600 transition-colors duration-200 p-2 rounded-lg hover:bg-blue-50"
-                      target={item.icon === MapPin ? "_blank" : undefined}
-                      rel={
-                        item.icon === MapPin ? "noopener noreferrer" : undefined
-                      }
-                    >
-                      <item.icon className="w-4 h-4 mt-1 mr-3 flex-shrink-0 text-blue-500" />
-                      <span className="text-sm">{item.text}</span>
-                    </motion.a>
-                  </li>
-                ))}
-              </ul>
-            </MobileFooterSection>
-          </motion.div>
-        </div>
-      </div>
-
-
-      {/* Bottom Bar - COMPLETELY REDESIGNED */}
-      <div className="relative border-t border-gray-100 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            {/* Copyright Section */}
-            <motion.div
-              className="flex flex-col md:flex-row items-center gap-3 text-center md:text-left"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="flex items-center gap-2 text-gray-600 text-sm">
-                <Shield className="w-4 h-4 text-theme-dark" />
-                <span>© {new Date().getFullYear()} ApniEstate.</span>
+                <a
+                  href="mailto:apniestateofficial@gmail.com"
+                  className="flex items-center gap-3 group"
+                >
+                  <div className="p-2 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                    <Mail className="w-5 h-5 flex-shrink-0" />
+                  </div>
+                  <span className="text-gray-600 group-hover:text-blue-600 transition-colors">
+                    apniestateofficial@gmail.com
+                  </span>
+                </a>
               </div>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <span className="text-gray-500 text-sm">All Rights Reserved.</span>
-            </motion.div>
+            </div>
+          </div>
+        </div>
 
+        {/* Mobile View: Accordion */}
+        <div className="lg:hidden mb-12 space-y-6">
+          {/* Mobile Brand */}
+          <div className="text-center mb-8">
+            <Link to="/" className="inline-flex items-center gap-2 mb-4">
+              <div className="p-2 bg-blue-600 rounded-lg shadow-md">
+                <Home className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-2xl font-bold text-gray-900">ApniEstate</span>
+            </Link>
+            <p className="text-gray-600 mb-6 text-sm">
+              Your trusted partner in finding the perfect home.
+            </p>
+            <div className="flex justify-center">
+              <SocialLinks />
+            </div>
+          </div>
 
-            {/* Trust Badges */}
-            <motion.div
-              className="flex items-center gap-4"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
+          <MobileFooterAccordion title="Company">
+            {companyRoutes.map((link) => (
+              <li key={link.name}>
+                <Link to={link.path} className="block py-1 hover:text-blue-600">
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </MobileFooterAccordion>
+
+          <MobileFooterAccordion title="Explore">
+            {exploreRoutes.map((link) => (
+              <li key={link.name}>
+                <Link to={link.path} className="block py-1 hover:text-blue-600">
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </MobileFooterAccordion>
+
+          <MobileFooterAccordion title="Contact Us">
+            <li className="flex items-center gap-3 py-2">
+              <MapPin className="w-4 h-4 text-blue-600" />
+              <span>Tripura, Agartala</span>
+            </li>
+            <li className="flex items-center gap-3 py-2">
+              <Phone className="w-4 h-4 text-blue-600" />
+              <span>+91 6009396197</span>
+            </li>
+            <li className="flex items-center gap-3 py-2">
+              <Mail className="w-4 h-4 text-blue-600" />
+              <span className="break-all">apniestateofficial@gmail.com</span>
+            </li>
+          </MobileFooterAccordion>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-100 py-8 bg-gray-50/50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 mt-12">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex flex-col md:flex-row items-center gap-2 text-sm text-gray-500">
+              <p className="flex items-center gap-1">
+                <Shield className="w-4 h-4 text-blue-600" />
+                &copy; {currentYear} ApniEstate.
+              </p>
+              <span className="hidden md:inline">|</span>
+              <p>All Rights Reserved.</p>
+            </div>
+
+            <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 rounded-lg">
                 <Award className="w-4 h-4 text-blue-600" />
                 <span className="text-xs font-medium text-blue-700">Verified</span>
@@ -428,9 +321,7 @@ const Footer = () => {
                 <Shield className="w-4 h-4 text-green-600" />
                 <span className="text-xs font-medium text-green-700">Secure</span>
               </div>
-            </motion.div>
-
-
+            </div>
           </div>
         </div>
       </div>
@@ -438,35 +329,19 @@ const Footer = () => {
   );
 };
 
-
-Footer.propTypes = {
-  title: PropTypes.string,
-  children: PropTypes.node,
-  icon: PropTypes.elementType,
-};
-
-
-MobileFooterSection.propTypes = {
+FooterColumn.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
-  icon: PropTypes.elementType,
 };
-
-
-FooterColumn.propTypes = {
-  title: PropTypes.string,
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string,
-  delay: PropTypes.number,
-  icon: PropTypes.elementType,
-};
-
 
 FooterLink.propTypes = {
-  href: PropTypes.string.isRequired,
+  to: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
-  icon: PropTypes.elementType,
 };
 
+MobileFooterAccordion.propTypes = {
+  title: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+};
 
 export default Footer;

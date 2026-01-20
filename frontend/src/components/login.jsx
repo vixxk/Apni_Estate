@@ -72,7 +72,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
-  const [passwordFocused, setPassworhandledFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -229,16 +229,18 @@ const Login = () => {
                       placeholder="name@company.com"
                       whileFocus={{ scale: 1.02 }}
                     />
-                    <motion.div
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                      animate={
-                        emailFocused
-                          ? { scale: 1.1, color: "#3B82F6" }
-                          : { scale: 1 }
-                      }
-                    >
-                      <User className="w-5 h-5" />
-                    </motion.div>
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2">
+                      <motion.div
+                        className="text-gray-400"
+                        animate={
+                          emailFocused
+                            ? { scale: 1.1, color: "#3B82F6" }
+                            : { scale: 1 }
+                        }
+                      >
+                        <User className="w-5 h-5" />
+                      </motion.div>
+                    </div>
                   </div>
                 </motion.div>
 
@@ -268,16 +270,18 @@ const Login = () => {
                       placeholder="••••••••"
                       whileFocus={{ scale: 1.02 }}
                     />
-                    <motion.div
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                      animate={
-                        passwordFocused
-                          ? { scale: 1.1, color: "#3B82F6" }
-                          : { scale: 1 }
-                      }
-                    >
-                      <Key className="w-5 h-5" />
-                    </motion.div>
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2">
+                      <motion.div
+                        className="text-gray-400"
+                        animate={
+                          passwordFocused
+                            ? { scale: 1.1, color: "#3B82F6" }
+                            : { scale: 1 }
+                        }
+                      >
+                        <Key className="w-5 h-5" />
+                      </motion.div>
+                    </div>
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}

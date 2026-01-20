@@ -623,4 +623,34 @@ router.put("/me", protect, async (req, res) => {
 });
 
 
+// @route   GET /api/users/public/:id
+// @desc    Get any user's public profile (user or vendor)
+// @access  Public
+router.get("/public/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select(
+      "name email phone avatar role createdAt"
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    console.error("Public profile fetch error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch public profile",
+      error: error.message,
+    });
+  }
+});
+
 export default router;

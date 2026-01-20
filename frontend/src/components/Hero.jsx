@@ -298,7 +298,7 @@ const Hero = () => {
       </div> */}
 
       {/* ================= CONTENT ================= */}
-      <div className="relative z-10 min-h-screen flex items-center px-4 pt-4 md:pt-8 lg:pt-10">
+      <div className="relative z-10 min-h-screen flex items-center px-4 pt-4 md:pt-8 lg:pt-10 pb-32 md:pb-24">
         <div className="max-w-7xl mx-auto w-full">
           <motion.div
             variants={containerVariants}

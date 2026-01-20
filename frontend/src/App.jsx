@@ -41,6 +41,7 @@ import ChatList from "./pages/ChatList.jsx";
 import LoanAnalysisPage from "./pages/LoanAnalysisPage.jsx";
 import AIFeaturesPage from "./pages/AIFeaturesPage";
 import ComingSoonPage from "./pages/ComingSoonPage";
+import UserProfile from "./pages/UserProfile";
 
 export const Backendurl = import.meta.env.VITE_API_BASE_URL;
 
@@ -114,6 +115,7 @@ const App = () => {
                   element={<VendorAddService />}
                 />
                 <Route path="/vendor/:vendorId" element={<VendorProfile />} />
+                <Route path="/user/:userId" element={<UserProfile />} />
                 <Route path="/saved" element={<SavedProperties />} />
 
                 <Route path="/chat/:vendorId" element={<Chat />} />

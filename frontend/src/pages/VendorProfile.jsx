@@ -511,7 +511,7 @@ const VendorProfile = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-white rounded-xl md:rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden"
+                className="bg-white rounded-xl md:rounded-2xl shadow-2xl w-[90%] md:w-full max-w-lg overflow-hidden"
               >
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 md:p-5">
                   <h3 className="text-white text-lg md:text-xl font-bold">
