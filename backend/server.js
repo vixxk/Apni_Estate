@@ -23,6 +23,7 @@ import chatUploadRoute from "./routes/chatUploadRoute.js";
 import loanAnalysisRoute from './loanEngine/loanAnalysisRoute.js';
 import sponsorRoutes from "./routes/sponsorRoutes.js";
 import testimonialRoutes from "./routes/testimonialRoute.js";
+import estimatorRoutes from "./routes/estimatorRoute.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -84,6 +85,7 @@ app.use("/api/upload", chatUploadRoute);
 app.use('/api/loan', loanAnalysisRoute);
 app.use("/api/sponsors", sponsorRoutes);
 app.use("/api/testimonials", testimonialRoutes);
+app.use("/api/estimator", estimatorRoutes);
 
 // Status endpoint
 app.get("/status", (req, res) => {

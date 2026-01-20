@@ -138,8 +138,8 @@ const AIFeaturesPage = () => {
         </svg>
       ),
       gradient: "bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500",
-      link: "/coming-soon",
-      available: false,
+      link: "/construction-estimator",
+      available: true,
     },
     {
       title: "Vastu Shastra Helper",

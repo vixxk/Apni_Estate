@@ -42,6 +42,7 @@ import LoanAnalysisPage from "./pages/LoanAnalysisPage.jsx";
 import AIFeaturesPage from "./pages/AIFeaturesPage";
 import ComingSoonPage from "./pages/ComingSoonPage";
 import UserProfile from "./pages/UserProfile";
+import ConstructionEstimator from "./components/ConstructionEstimator";
 
 export const Backendurl = import.meta.env.VITE_API_BASE_URL;
 
@@ -131,6 +132,7 @@ const App = () => {
                 <Route path="*" element={<NotFoundPage />} />
 
                 <Route path="/ai-features" element={<AIFeaturesPage />} />
+                <Route path="/construction-estimator" element={<ConstructionEstimator />} />
                 <Route path="/coming-soon" element={<ComingSoonPage />} />
 
               </Routes>
