@@ -262,21 +262,7 @@ const VastuConsultant = () => {
                                         </div>
                                     </div>
 
-                                    {/* Remedies */}
-                                    <div>
-                                        <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                            <CheckCircle className="w-5 h-5 text-emerald-600" />
-                                            Remedial Measures
-                                        </h4>
-                                        <ul className="space-y-2">
-                                            {result.remedies.map((remedy, idx) => (
-                                                <li key={idx} className="flex items-start gap-2 text-sm text-slate-600">
-                                                    <span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-blue-400 flex-shrink-0" />
-                                                    {remedy}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
+
                                 </div>
                             </div>
                         ) : (

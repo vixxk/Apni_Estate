@@ -92,12 +92,7 @@ export const calculateVastu = async (req, res) => {
                 reasons,
                 layout: layout_plan,
                 zone_details, // Sending back for potential UI usage
-                remedies: [
-                    "If Kitchen is not in SE: Place a Green Marble under the gas stove.",
-                    "If Toilet is in wrong zone: Use Vastu tape (Metal strip) around commode.",
-                    "Entrance Defect: Hang a Swastik or Om symbol above the main door.",
-                    "Irregular Shape: Buried Copper/Lead Helix at missing corners."
-                ],
+
                 brahmasthan: [
                     "Keep the exact center of the house empty and well-lit.",
                     "No pillars, staircase, or heavy furniture in the center."
