@@ -43,6 +43,7 @@ import AIFeaturesPage from "./features/ai-tools/AIFeaturesPage";
 import ComingSoonPage from "./components/common/ComingSoonPage";
 import UserProfile from "./features/users/PublicUserProfile";
 import ConstructionEstimator from "./features/ai-tools/ConstructionEstimator";
+import VastuConsultant from "./features/ai-tools/VastuConsultant";
 
 export const Backendurl = import.meta.env.VITE_API_BASE_URL;
 
@@ -133,6 +134,7 @@ const App = () => {
 
                 <Route path="/ai-features" element={<AIFeaturesPage />} />
                 <Route path="/construction-estimator" element={<ConstructionEstimator />} />
+                <Route path="/vastu-consultant" element={<VastuConsultant />} />
                 <Route path="/coming-soon" element={<ComingSoonPage />} />
 
               </Routes>

@@ -1,0 +1,8 @@
+{
+  "verbose": true,
+  "ignore": ["node_modules", ".git", "public", "uploads", "*.test.js", "fixtures/*"],
+  "watch": ["server.js", "config", "features", "middleware", "utils", "routes"],
+  "ext": "js,json",
+  "legacyWatch": true,
+  "pollingInterval": 1000
+}

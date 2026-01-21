@@ -160,9 +160,9 @@ const AIFeaturesPage = () => {
           />
         </svg>
       ),
-      gradient: "bg-gradient-to-br from-orange-500 via-red-500 to-pink-500",
-      link: "/coming-soon",
-      available: false,
+      gradient: "bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-400",
+      link: "/vastu-consultant",
+      available: true,
     },
     {
       title: "AI Legal Property Guide",
