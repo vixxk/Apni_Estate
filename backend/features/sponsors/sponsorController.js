@@ -28,14 +28,32 @@ export const uploadSponsorLogo = asyncHandler(async (req, res) => {
 // @route   POST /api/sponsors/add
 // @access  Admin Protected
 export const addSponsor = asyncHandler(async (req, res) => {
-  const { name, logoUrl, description } = req.body;
+  const { 
+    name, 
+    logoUrl, 
+    description,
+    location,
+    launchDate,
+    contactPhone,
+    contactEmail,
+    website
+  } = req.body;
 
   if (!name || !logoUrl) {
     res.status(400);
     throw new Error('Name and Logo URL are required');
   }
 
-  const newSponsor = new Sponsor({ name, logoUrl, description });
+  const newSponsor = new Sponsor({ 
+    name, 
+    logoUrl, 
+    description,
+    location,
+    launchDate,
+    contactPhone,
+    contactEmail,
+    website
+  });
   await newSponsor.save();
 
   res.status(201).json({
