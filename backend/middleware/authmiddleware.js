@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/Usermodel.js";
+import User from '../features/users/userModel.js';
 import { appConfig as config } from "../config/config.js";
 
 // Protect routes - require authentication
