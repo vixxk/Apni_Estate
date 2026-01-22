@@ -15,7 +15,14 @@ const VastuConsultant = () => {
         plotArea: "",
         soilType: "unknown",
         slopeDirection: "unknown",
-        surroundings: []
+        surroundings: [],
+        // Layout Inputs
+        masterBedroom: "South-West",
+        kitchen: "South-East",
+        toilet: "North-West",
+        staircaseLocation: "South",
+        pujaLocation: "North-East",
+        waterTank: "South-West"
     });
 
     const [result, setResult] = useState(null);
@@ -293,6 +300,83 @@ const VastuConsultant = () => {
                                     </label>
                                 </div>
 
+                                {/* Layout / Room Locations DO NOT REMOVE */}
+                                <div>
+                                    <h3 className="text-md font-bold text-slate-700 mb-3 flex items-center gap-2">
+                                        <LayoutDashboard className="w-4 h-4 text-blue-500" />
+                                        Room Locations (For Advanced Analysis)
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-slate-700 mb-1">Master Bedroom Location</label>
+                                            <select
+                                                name="masterBedroom"
+                                                value={formData.masterBedroom}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all outline-none"
+                                            >
+                                                {["North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West", "Center"].map(d => (
+                                                    <option key={d} value={d}>{d}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-slate-700 mb-1">Kitchen Location</label>
+                                            <select
+                                                name="kitchen"
+                                                value={formData.kitchen}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all outline-none"
+                                            >
+                                                {["North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West", "Center"].map(d => (
+                                                    <option key={d} value={d}>{d}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-slate-700 mb-1">Toilet Location</label>
+                                            <select
+                                                name="toilet"
+                                                value={formData.toilet}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all outline-none"
+                                            >
+                                                {["North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West", "Center"].map(d => (
+                                                    <option key={d} value={d}>{d}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-slate-700 mb-1">Overhead Water Tank</label>
+                                            <select
+                                                name="waterTank"
+                                                value={formData.waterTank}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all outline-none"
+                                            >
+                                                {["North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West", "Center"].map(d => (
+                                                    <option key={d} value={d}>{d}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        {formData.stairs && (
+                                            <div>
+                                                <label className="block text-sm font-medium text-slate-700 mb-1">Staircase Location</label>
+                                                <select
+                                                    name="staircaseLocation"
+                                                    value={formData.staircaseLocation}
+                                                    onChange={handleChange}
+                                                    className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all outline-none"
+                                                >
+                                                    {["North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West", "Center"].map(d => (
+                                                        <option key={d} value={d}>{d}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
                                 <div className="pt-2 lg:pt-4">
                                     <button
                                         type="submit"
@@ -335,18 +419,18 @@ const VastuConsultant = () => {
                                     <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-400 opacity-10 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl"></div>
 
                                     <div className="relative z-10 text-center">
-                                        <p className="inline-block px-3 py-1 rounded-full bg-white/10 text-blue-50 text-xs font-semibold tracking-wider uppercase mb-3 backdrop-blur-sm border border-white/20">
+                                        <p className="inline-block px-2 py-1 lg:px-3 rounded-full bg-white/10 text-blue-50 text-[10px] lg:text-xs font-semibold tracking-wider uppercase mb-2 lg:mb-3 backdrop-blur-sm border border-white/20">
                                             Vastu Compliance Score
                                         </p>
                                         <div className="flex items-center justify-center mb-2">
-                                            <span className="text-5xl sm:text-6xl font-bold tracking-tight">
+                                            <span className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
                                                 {result.score}
                                             </span>
-                                            <span className="text-2xl sm:text-3xl text-blue-200 font-medium ml-1">/100</span>
+                                            <span className="text-xl sm:text-2xl lg:text-3xl text-blue-200 font-medium ml-1">/100</span>
                                         </div>
 
-                                        <div className="space-y-4">
-                                            <div className="w-full max-w-xs mx-auto bg-blue-900/30 rounded-full h-3 backdrop-blur-sm overflow-hidden border border-white/10">
+                                        <div className="space-y-3 lg:space-y-4">
+                                            <div className="w-full max-w-xs mx-auto bg-blue-900/30 rounded-full h-2 lg:h-3 backdrop-blur-sm overflow-hidden border border-white/10">
                                                 <div
                                                     className={`h-full rounded-full transition-all duration-1000 ease-out ${result.score >= 80 ? "bg-emerald-400" :
                                                         result.score >= 50 ? "bg-amber-400" :
@@ -355,7 +439,7 @@ const VastuConsultant = () => {
                                                     style={{ width: `${result.score}%` }}
                                                 ></div>
                                             </div>
-                                            <p className="text-blue-100 text-sm sm:text-base font-medium">
+                                            <p className="text-blue-100 text-xs sm:text-sm lg:text-base font-medium px-4">
                                                 {result.score >= 80 ? "Excellent! Your plot has great potential." :
                                                     result.score >= 50 ? "Good. Some corrections are recommended." :
                                                         "Critical corrections needed for better Vastu."}
@@ -374,31 +458,31 @@ const VastuConsultant = () => {
                                         <div className="grid grid-cols-1 gap-4">
                                             {result.detailedAnalysis && result.detailedAnalysis.map((item, idx) => (
                                                 <div key={idx} className={`
-                                                    rounded-2xl p-5 border shadow-sm transition-all hover:shadow-md bg-white
-                                                    ${item.status === 'positive' ? 'border-emerald-100 border-l-[6px] border-l-emerald-500' :
-                                                        item.status === 'negative' ? 'border-red-100 border-l-[6px] border-l-red-500' :
-                                                            'border-slate-100 border-l-[6px] border-l-slate-400'}
+                                                    rounded-xl lg:rounded-2xl p-4 lg:p-5 border shadow-sm transition-all hover:shadow-md bg-white
+                                                    ${item.status === 'positive' ? 'border-emerald-100 border-l-[4px] lg:border-l-[6px] border-l-emerald-500' :
+                                                        item.status === 'negative' ? 'border-red-100 border-l-[4px] lg:border-l-[6px] border-l-red-500' :
+                                                            'border-slate-100 border-l-[4px] lg:border-l-[6px] border-l-slate-400'}
                                                 `}>
-                                                    <div className="flex justify-between items-start mb-3">
-                                                        <div className="flex-1 pr-4">
+                                                    <div className="flex justify-between items-start mb-2 lg:mb-3">
+                                                        <div className="flex-1 pr-3 lg:pr-4">
                                                             <span className={`
-                                                                text-[10px] font-bold uppercase tracking-wider py-1 px-2 rounded-md mb-2 inline-block
+                                                                text-[9px] lg:text-[10px] font-bold uppercase tracking-wider py-0.5 px-1.5 lg:py-1 lg:px-2 rounded-md mb-1 lg:mb-2 inline-block
                                                                 ${item.status === 'positive' ? 'bg-emerald-50 text-emerald-700' :
                                                                     item.status === 'negative' ? 'bg-red-50 text-red-700' :
                                                                         'bg-slate-100 text-slate-600'}
                                                             `}>
                                                                 {item.category}
                                                             </span>
-                                                            <h5 className="font-bold text-slate-800 text-lg leading-tight">{item.observation}</h5>
+                                                            <h5 className="font-bold text-slate-800 text-base lg:text-lg leading-tight">{item.observation}</h5>
                                                         </div>
-                                                        <div className="mt-1">
-                                                            {item.status === 'positive' ? <div className="p-2 bg-emerald-50 rounded-full"><CheckCircle className="w-5 h-5 text-emerald-600" /></div> :
-                                                                item.status === 'negative' ? <div className="p-2 bg-red-50 rounded-full"><XCircle className="w-5 h-5 text-red-600" /></div> :
-                                                                    <div className="p-2 bg-slate-100 rounded-full"><AlertTriangle className="w-5 h-5 text-slate-500" /></div>}
+                                                        <div className="mt-0.5 lg:mt-1">
+                                                            {item.status === 'positive' ? <div className="p-1.5 lg:p-2 bg-emerald-50 rounded-full"><CheckCircle className="w-4 h-4 lg:w-5 lg:h-5 text-emerald-600" /></div> :
+                                                                item.status === 'negative' ? <div className="p-1.5 lg:p-2 bg-red-50 rounded-full"><XCircle className="w-4 h-4 lg:w-5 lg:h-5 text-red-600" /></div> :
+                                                                    <div className="p-1.5 lg:p-2 bg-slate-100 rounded-full"><AlertTriangle className="w-4 h-4 lg:w-5 lg:h-5 text-slate-500" /></div>}
                                                         </div>
                                                     </div>
 
-                                                    <p className="text-slate-600 text-sm leading-relaxed mb-4">{item.description}</p>
+                                                    <p className="text-slate-600 text-xs lg:text-sm leading-relaxed mb-3 lg:mb-4">{item.description}</p>
 
                                                     {/* Impact & Remedy for non-positive items */}
                                                     {item.status !== 'positive' && (
@@ -481,8 +565,8 @@ const VastuConsultant = () => {
                         )}
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

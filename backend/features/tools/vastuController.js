@@ -203,7 +203,7 @@ export const calculateVastu = async (req, res) => {
             }
         }
 
-        // 5. Surroundings Analysis
+        // 6. Surroundings Analysis
         if (surroundings && surroundings.length > 0) {
             surroundings.forEach(item => {
                 if (item.includes('Temple')) {
@@ -262,6 +262,102 @@ export const calculateVastu = async (req, res) => {
                     );
                 }
             });
+        }
+
+        // --- NEW FORMULAS (Internal Layout) ---
+        const { masterBedroom, kitchen, toilet, staircaseLocation, waterTank } = req.body;
+
+        // Formula 1: The Stability Check (South-West Rule)
+        // Rule: IF (Master Bedroom == SW) OR (Overhead Tank == SW) THEN Score +20 ELSE Score -20.
+        if (masterBedroom === 'South-West' || waterTank === 'South-West') {
+            score += 20;
+            addAnalysis(
+                "Stability (Check)",
+                "Master Bedroom or Tank in South-West",
+                "positive",
+                "South-West (Nairutya) represents Earth and Stability. Heavy items here are perfect.",
+                "Promotes stability in life, career, and relationships.",
+                null
+            );
+        } else {
+            score -= 20;
+            addAnalysis(
+                "Stability (Check)",
+                "Missing Stability in South-West",
+                "negative",
+                "South-West needs weight/Earth element for stability. Missing Master Bed or Tank here weakens stability.",
+                "May lead to instability in career or relationships.",
+                "Place a Lead Helix or Earth Crystal in the South-West corner. Keep this area heavy."
+            );
+        }
+
+        // Formula 2: The Fire Balance (South-East Rule)
+        // Rule: IF (Kitchen == SE) THEN Score +20 ELSE IF (Kitchen == NE) THEN Critical_Fail (Health Risk).
+        if (kitchen === 'South-East') {
+            score += 20;
+            addAnalysis(
+                "Fire Balance",
+                "Kitchen in South-East",
+                "positive",
+                "South-East (Agni) is the ideal zone for Fire activity (Kitchen).",
+                "Ensures good health for women and cash flow.",
+                null
+            );
+        } else if (kitchen === 'North-East') {
+            score -= 30; // Critical Fail Penalty
+            addAnalysis(
+                "Fire Balance",
+                "Kitchen in North-East (CRITICAL)",
+                "negative",
+                "Fire (Kitchen) in Water zone (North-East) is a major Vastu Dosha.",
+                "CRITICAL: Major health risks (especially neurological) and financial burn.",
+                "Immediate Correction Needed: Place Green Marble under the burner and install a Zinc Helix."
+            );
+        } else {
+            // Neutral/Other
+             addAnalysis(
+                "Fire Balance",
+                `Kitchen in ${kitchen}`,
+                "neutral",
+                "Kitchen is not in the ideal South-East zone.",
+                "May cause minor health or energy issues.",
+                "Balance with Color Therapy (Green/Red) or small Vastu remedies."
+            );
+        }
+
+        // Formula 3: The Disposal Rule (North-West/West)
+        // Rule: IF (Toilet == NW or W) THEN Score +15.
+        // Critical Fault: IF (Toilet == NE) THEN Critical_Fail (Wealth Drain).
+        if (['North-West', 'West'].includes(toilet)) {
+             score += 15;
+             addAnalysis(
+                "Disposal Zone",
+                "Toilet in North-West/West",
+                "positive",
+                "North-West (Vayu) and West (Varuna) are best for disposal/elimination seats.",
+                "Ensures waste energy is disposed of properly without affecting prosperity.",
+                null
+            );
+        } else if (['North-East', 'South-East'].includes(toilet)) {
+             score -= 25; // Critical Fault
+             addAnalysis(
+                "Disposal Zone",
+                `Toilet in ${toilet} (CRITICAL)`,
+                "negative",
+                `Toilet in ${toilet} (Sacred/Fire Zone) flushes away positive energy.`,
+                "CRITICAL: Wealth drain (NE) or Health issues (SE).",
+                "Remedy: Use Vastu Metal Tape (Aluminum for NE / Copper for SE) around the toilet seat."
+            );
+        } else {
+             score -= 10;
+             addAnalysis(
+                "Disposal Zone",
+                `Toilet in ${toilet}`,
+                "neutral",
+                "Toilet position is not optimized.",
+                "Can cause minor issues depending on zone.",
+                "Keep the toilet door closed and use sea salt in a bowl to absorb negativity."
+            );
         }
 
         // --- LAYOUT DETERMINATION ---
