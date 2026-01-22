@@ -7,40 +7,43 @@ import {
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { HelmetProvider } from "react-helmet-async";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import Properties from "./pages/Properties";
-import PropertyDetails from "./components/properties/propertydetail";
-import Aboutus from "./pages/About";
-import Contact from "./pages/Contact";
-import Login from "./components/login";
-import Signup from "./components/signup";
-import ForgotPassword from "./components/forgetpassword";
-import ResetPassword from "./components/resetpassword";
-import Footer from "./components/footer";
-import NotFoundPage from "./components/Notfound";
+import Navbar from "./components/layout/Navbar";
+import Home from "./features/home/HomePage";
+import Properties from "./features/properties/PropertiesIndex";
+import PropertyDetails from "./features/properties/PropertyDetails";
+import Aboutus from "./features/home/About";
+import Contact from "./features/contact/Contact";
+import Login from "./features/auth/Login";
+import Signup from "./features/auth/Signup";
+import ForgotPassword from "./features/auth/ForgetPassword";
+import ResetPassword from "./features/auth/ResetPassword";
+import Footer from "./components/layout/Footer";
+import NotFoundPage from "./components/common/NotFound";
 import { AuthProvider } from "./context/AuthContext";
-import AIPropertyHub from "./pages/Aiagent";
+import AIPropertyHub from "./features/ai-tools/AiAgent";
 import StructuredData from "./components/SEO/StructuredData";
-import Profile from "./pages/Profile";
+import Profile from "./features/users/UserProfile";
 import "react-toastify/dist/ReactToastify.css";
-import SavedProperties from "./pages/SavedProperties.jsx";
-import VendorAddService from "./pages/VendorAddProperty.jsx";
-import VendorProfile from "./pages/VendorProfile";
-import VendorRegister from "./pages/VendorRegister";
-import MobileBottomNav from "./components/MobileBottomNav";
+import SavedProperties from "./features/properties/SavedProperties.jsx";
+import VendorAddService from "./features/properties/AddProperty.jsx";
+import VendorProfile from "./features/users/VendorProfile";
+import VendorRegister from "./features/auth/VendorRegister";
+import MobileBottomNav from "./components/layout/MobileBottomNav";
 import { MobileMenuProvider } from "./context/MobileMenuContext";
-import Chat from "./components/Chat.jsx";
-import ServicesPage from "./pages/ServicesPage";
-import SalesItemsPage from "./pages/SalesItemsPage";
-import EverythingPage from "./pages/EverythingPage";
-import AdminLogin from "./components/admin/AdminLogin";
-import AdminDashboard from "./components/admin/AdminDashboard";
-import VendorContactRequests from "./pages/VendorContactRequests";
-import ChatList from "./pages/ChatList.jsx";
-import LoanAnalysisPage from "./pages/LoanAnalysisPage.jsx";
-import AIFeaturesPage from "./pages/AIFeaturesPage";
-import ComingSoonPage from "./pages/ComingSoonPage";
+import Chat from "./features/chat/Chat.jsx";
+import ServicesPage from "./features/services/ServicesPage";
+import SalesItemsPage from "./features/services/SalesItemsPage";
+import EverythingPage from "./features/home/EverythingPage";
+import AdminLogin from "./features/admin/components/AdminLogin";
+import AdminDashboard from "./features/admin/components/AdminDashboard";
+import VendorContactRequests from "./features/vendor/ContactRequests";
+import ChatList from "./features/chat/ChatList.jsx";
+import LoanAnalysisPage from "./features/ai-tools/LoanAnalysisPage.jsx";
+import AIFeaturesPage from "./features/ai-tools/AIFeaturesPage";
+import ComingSoonPage from "./components/common/ComingSoonPage";
+import UserProfile from "./features/users/PublicUserProfile";
+import ConstructionEstimator from "./features/ai-tools/ConstructionEstimator";
+import VastuConsultant from "./features/ai-tools/VastuConsultant";
 
 export const Backendurl = import.meta.env.VITE_API_BASE_URL;
 
@@ -114,6 +117,7 @@ const App = () => {
                   element={<VendorAddService />}
                 />
                 <Route path="/vendor/:vendorId" element={<VendorProfile />} />
+                <Route path="/user/:userId" element={<UserProfile />} />
                 <Route path="/saved" element={<SavedProperties />} />
 
                 <Route path="/chat/:vendorId" element={<Chat />} />
@@ -129,6 +133,8 @@ const App = () => {
                 <Route path="*" element={<NotFoundPage />} />
 
                 <Route path="/ai-features" element={<AIFeaturesPage />} />
+                <Route path="/construction-estimator" element={<ConstructionEstimator />} />
+                <Route path="/vastu-consultant" element={<VastuConsultant />} />
                 <Route path="/coming-soon" element={<ComingSoonPage />} />
 
               </Routes>

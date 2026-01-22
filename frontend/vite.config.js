@@ -5,7 +5,12 @@ import { defineConfig } from "vite"
 export default defineConfig({
   plugins: [react()],
   base: "/", 
-  server:{port:5173,
+  server: {
+    port: 5173,
+    watch: {
+      usePolling: true,
+      ignored: ['**/node_modules/**', '**/.git/**'],
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:4000',
