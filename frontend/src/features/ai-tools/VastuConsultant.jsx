@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Backendurl } from "../../App";
-import { Compass, ArrowLeft, CheckCircle, AlertTriangle, XCircle, Home, Map } from "lucide-react";
+import { Compass, ArrowLeft, CheckCircle, AlertTriangle, XCircle, Home, Map, DoorOpen, BedDouble, Utensils, Sparkles, Bath, TrendingUp, Users, LayoutDashboard, Sofa } from "lucide-react";
 
 const VastuConsultant = () => {
     const [formData, setFormData] = useState({
@@ -11,6 +11,11 @@ const VastuConsultant = () => {
         toilets: 2,
         puja: true,
         stairs: true,
+        // New Inputs
+        plotArea: "",
+        soilType: "unknown",
+        slopeDirection: "unknown",
+        surroundings: []
     });
 
     const [result, setResult] = useState(null);
@@ -20,10 +25,23 @@ const VastuConsultant = () => {
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-        }));
+
+        if (name === 'surroundings') {
+            // Handle surroundings checkbox array
+            const updatedSurroundings = checked
+                ? [...formData.surroundings, value]
+                : formData.surroundings.filter(item => item !== value);
+
+            setFormData(prev => ({
+                ...prev,
+                surroundings: updatedSurroundings
+            }));
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                [name]: type === "checkbox" ? checked : value,
+            }));
+        }
     };
 
     const calculateVastu = async (e) => {
@@ -142,6 +160,85 @@ const VastuConsultant = () => {
                                     </div>
                                 </div>
 
+                                {/* Plot Details: Area, Slope, Soil */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5">
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-1">Plot Area (sq.ft) <span className="text-red-500">*</span></label>
+                                        <input
+                                            type="number"
+                                            name="plotArea"
+                                            value={formData.plotArea}
+                                            onChange={handleChange}
+                                            placeholder="e.g. 1200"
+                                            required
+                                            className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-1">Slope Direction</label>
+                                        <select
+                                            name="slopeDirection"
+                                            value={formData.slopeDirection}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all outline-none"
+                                        >
+                                            <option value="unknown">Don't Know</option>
+                                            <option value="North">North (Down)</option>
+                                            <option value="East">East (Down)</option>
+                                            <option value="South">South (Down)</option>
+                                            <option value="West">West (Down)</option>
+                                            <option value="North-East">North-East (Down)</option>
+                                            <option value="South-West">South-West (Down)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-1">Soil Type</label>
+                                        <select
+                                            name="soilType"
+                                            value={formData.soilType}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all outline-none"
+                                        >
+                                            <option value="unknown">Don't Know</option>
+                                            <option value="White">White/Clay</option>
+                                            <option value="Red">Red Soil</option>
+                                            <option value="Yellow">Yellow Soil</option>
+                                            <option value="Black">Black/Cotton</option>
+                                            <option value="Rocky">Rocky</option>
+                                            <option value="Mixed">Mixed/Sandy</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {/* Surroundings Checklist */}
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">Surroundings (Select if applicable)</label>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        {[
+                                            'Temple nearby',
+                                            'Water Body in North/East',
+                                            'Water Body in South/West',
+                                            'High Tension Wire/Transformer',
+                                            'Tall Building in North/East',
+                                            'Tall Building in South/West',
+                                            'Graveyard/Hospital nearby',
+                                            'T-Junction (Veethi Shoola)'
+                                        ].map((item) => (
+                                            <label key={item} className="flex items-center space-x-3 cursor-pointer p-3 bg-slate-50 rounded-xl border border-slate-200 hover:bg-slate-100 transition-colors">
+                                                <input
+                                                    type="checkbox"
+                                                    name="surroundings"
+                                                    value={item}
+                                                    checked={formData.surroundings.includes(item)}
+                                                    onChange={handleChange}
+                                                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300"
+                                                />
+                                                <span className="text-sm text-slate-600">{item}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
                                 <div className="grid grid-cols-2 gap-4 lg:gap-5">
                                     <div>
                                         <label className="block text-sm font-medium text-slate-700 mb-1">Bedrooms</label>
@@ -232,37 +329,142 @@ const VastuConsultant = () => {
 
                         {result ? (
                             <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden flex-1 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <div className={`p-5 lg:p-8 text-white ${result.score >= 80 ? "bg-gradient-to-br from-emerald-500 to-green-600" :
-                                    result.score >= 50 ? "bg-gradient-to-br from-amber-500 to-orange-500" :
-                                        "bg-gradient-to-br from-red-500 to-rose-600"
-                                    }`}>
-                                    <p className="opacity-90 text-xs sm:text-sm font-medium uppercase tracking-wide mb-1">Vastu Compliance Score</p>
-                                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold">{result.score}/100</h2>
-                                    <div className="mt-3 flex flex-col gap-1">
-                                        {result.reasons.map((reason, idx) => (
-                                            <p key={idx} className="text-sm font-medium opacity-90">{reason}</p>
-                                        ))}
+                                {/* Result Header - Blue Theme */}
+                                <div className="p-6 lg:p-10 bg-gradient-to-br from-blue-600 to-indigo-700 text-white relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+                                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-400 opacity-10 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl"></div>
+
+                                    <div className="relative z-10 text-center">
+                                        <p className="inline-block px-3 py-1 rounded-full bg-white/10 text-blue-50 text-xs font-semibold tracking-wider uppercase mb-3 backdrop-blur-sm border border-white/20">
+                                            Vastu Compliance Score
+                                        </p>
+                                        <div className="flex items-center justify-center mb-2">
+                                            <span className="text-5xl sm:text-6xl font-bold tracking-tight">
+                                                {result.score}
+                                            </span>
+                                            <span className="text-2xl sm:text-3xl text-blue-200 font-medium ml-1">/100</span>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <div className="w-full max-w-xs mx-auto bg-blue-900/30 rounded-full h-3 backdrop-blur-sm overflow-hidden border border-white/10">
+                                                <div
+                                                    className={`h-full rounded-full transition-all duration-1000 ease-out ${result.score >= 80 ? "bg-emerald-400" :
+                                                        result.score >= 50 ? "bg-amber-400" :
+                                                            "bg-rose-400"
+                                                        }`}
+                                                    style={{ width: `${result.score}%` }}
+                                                ></div>
+                                            </div>
+                                            <p className="text-blue-100 text-sm sm:text-base font-medium">
+                                                {result.score >= 80 ? "Excellent! Your plot has great potential." :
+                                                    result.score >= 50 ? "Good. Some corrections are recommended." :
+                                                        "Critical corrections needed for better Vastu."}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="p-5 lg:p-8 space-y-6">
-                                    {/* Layout Plan */}
-                                    <div>
-                                        <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                            <Map className="w-5 h-5 text-blue-600" />
-                                            Suggested Zonal Layout
+                                <div className="p-5 lg:p-8 space-y-8 bg-slate-50/50">
+                                    {/* Detailed Analysis Cards */}
+                                    <div className="space-y-5">
+                                        <h4 className="text-lg font-bold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
+                                            <CheckCircle className="w-5 h-5 text-blue-600" />
+                                            Detailed Analysis
                                         </h4>
-                                        <div className="bg-slate-50 rounded-2xl p-4 lg:p-5 border border-slate-200 space-y-3">
-                                            {Object.entries(result.layout).map(([room, zone]) => (
-                                                <div key={room} className="flex justify-between items-start text-sm border-b border-slate-200 last:border-0 pb-2 last:pb-0 border-dashed">
-                                                    <span className="font-semibold text-slate-700 w-1/3">{room}</span>
-                                                    <span className="text-slate-600 flex-1 text-right">{zone}</span>
+                                        <div className="grid grid-cols-1 gap-4">
+                                            {result.detailedAnalysis && result.detailedAnalysis.map((item, idx) => (
+                                                <div key={idx} className={`
+                                                    rounded-2xl p-5 border shadow-sm transition-all hover:shadow-md bg-white
+                                                    ${item.status === 'positive' ? 'border-emerald-100 border-l-[6px] border-l-emerald-500' :
+                                                        item.status === 'negative' ? 'border-red-100 border-l-[6px] border-l-red-500' :
+                                                            'border-slate-100 border-l-[6px] border-l-slate-400'}
+                                                `}>
+                                                    <div className="flex justify-between items-start mb-3">
+                                                        <div className="flex-1 pr-4">
+                                                            <span className={`
+                                                                text-[10px] font-bold uppercase tracking-wider py-1 px-2 rounded-md mb-2 inline-block
+                                                                ${item.status === 'positive' ? 'bg-emerald-50 text-emerald-700' :
+                                                                    item.status === 'negative' ? 'bg-red-50 text-red-700' :
+                                                                        'bg-slate-100 text-slate-600'}
+                                                            `}>
+                                                                {item.category}
+                                                            </span>
+                                                            <h5 className="font-bold text-slate-800 text-lg leading-tight">{item.observation}</h5>
+                                                        </div>
+                                                        <div className="mt-1">
+                                                            {item.status === 'positive' ? <div className="p-2 bg-emerald-50 rounded-full"><CheckCircle className="w-5 h-5 text-emerald-600" /></div> :
+                                                                item.status === 'negative' ? <div className="p-2 bg-red-50 rounded-full"><XCircle className="w-5 h-5 text-red-600" /></div> :
+                                                                    <div className="p-2 bg-slate-100 rounded-full"><AlertTriangle className="w-5 h-5 text-slate-500" /></div>}
+                                                        </div>
+                                                    </div>
+
+                                                    <p className="text-slate-600 text-sm leading-relaxed mb-4">{item.description}</p>
+
+                                                    {/* Impact & Remedy for non-positive items */}
+                                                    {item.status !== 'positive' && (
+                                                        <div className="space-y-3 pt-4 border-t border-dashed border-slate-200">
+                                                            {item.impact && (
+                                                                <div className="flex gap-3 items-start group">
+                                                                    <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-2 flex-shrink-0 group-hover:scale-125 transition-transform"></div>
+                                                                    <div>
+                                                                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wide block mb-0.5">Impact</span>
+                                                                        <p className="text-sm text-slate-700 font-medium">{item.impact}</p>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                            {item.remedy && (
+                                                                <div className="flex gap-3 items-start bg-blue-50/50 p-3 rounded-xl border border-blue-100">
+                                                                    <div className="bg-white p-1 rounded-full shadow-sm">
+                                                                        <CheckCircle className="w-3.5 h-3.5 text-blue-600" />
+                                                                    </div>
+                                                                    <div>
+                                                                        <span className="text-xs font-bold text-blue-700 uppercase tracking-wide block mb-0.5">Recommended Remedy</span>
+                                                                        <p className="text-sm text-slate-800 font-medium">{item.remedy}</p>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
 
+                                    {/* Layout Plan */}
+                                    <div>
+                                        <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2 pb-2 border-b border-slate-200">
+                                            <Map className="w-5 h-5 text-blue-600" />
+                                            Suggested Zonal Layout
+                                        </h4>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            {Object.entries(result.layout).map(([room, zone]) => {
+                                                let Icon = LayoutDashboard;
+                                                const lowerRoom = room.toLowerCase();
+                                                if (lowerRoom.includes('bedroom')) Icon = BedDouble;
+                                                if (lowerRoom.includes('kitchen')) Icon = Utensils;
+                                                if (lowerRoom.includes('toilet') || lowerRoom.includes('bath')) Icon = Bath;
+                                                if (lowerRoom.includes('puja')) Icon = Sparkles;
+                                                if (lowerRoom.includes('stair')) Icon = TrendingUp;
+                                                if (lowerRoom.includes('entrance') || lowerRoom.includes('main')) Icon = DoorOpen;
+                                                if (lowerRoom.includes('guest')) Icon = Users;
+                                                if (lowerRoom.includes('living') || lowerRoom.includes('hall')) Icon = Sofa;
 
+                                                return (
+                                                    <div key={room} className="flex items-start p-3 bg-white rounded-xl border border-slate-100 shadow-sm hover:border-blue-200 hover:shadow-md transition-all group">
+                                                        <div className="p-2.5 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors mr-3 shrink-0">
+                                                            <Icon className="w-5 h-5" />
+                                                        </div>
+                                                        <div>
+                                                            <h5 className="font-bold text-slate-800 text-sm mb-1">{room}</h5>
+                                                            <p className="text-sm font-medium text-slate-500 leading-snug">
+                                                                {zone}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         ) : (
@@ -273,7 +475,7 @@ const VastuConsultant = () => {
                                 </div>
                                 <h3 className="text-lg lg:text-xl font-bold text-slate-800 mb-2">Vastu Analysis</h3>
                                 <p className="text-sm lg:text-base text-slate-500 max-w-xs mx-auto">
-                                    Fill in your plot details on the left and click "Generate Vastu Report" to see compliance scores and layout suggestions.
+                                    Fill in your plot details on the left and click "Generate Vastu Report" to see detailed remedial measures and layout suggestions.
                                 </p>
                             </div>
                         )}
