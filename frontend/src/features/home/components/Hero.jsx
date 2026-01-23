@@ -41,11 +41,11 @@ const services = [
   { title: "Interior Designing", img: interior },
   { title: "Legal Service", img: legal },
   { title: "Vastu", img: vastu },
-  { title: "Sanitary and Hardware", img: sanitaryHardware, className: "scale-150" },
   { title: "Home Loan", img: loan },
   { title: "Construction Materials", img: constructionMaterials },
   { title: "Furniture", img: furniture },
   { title: "Decoratives", img: decoratives },
+  { title: "Sanitary and Hardware", img: sanitaryHardware, className: "scale-150" },
   { title: "Others", img: others },
 ];
 
