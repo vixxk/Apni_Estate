@@ -6,7 +6,9 @@ import { useLocation } from "react-router-dom";
 import SearchBar from "../properties/components/Searchbar.jsx";
 import FilterSection from "../properties/components/Filtersection.jsx";
 import PropertyCard from "../properties/components/Propertycard.jsx";
+
 import { Backendurl } from "../../App.jsx";
+import LoadingSplash from "../../components/common/LoadingSplash.jsx";
 
 const ServicesPage = () => {
   const location = useLocation();
@@ -291,81 +293,12 @@ const ServicesPage = () => {
 
   if (propertyState.loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center flex flex-col items-center"
-        >
-          <div className="relative mb-6">
-            <motion.div
-              className="w-24 h-24 bg-gradient-to-r from-green-500 to-teal-600 rounded-2xl flex items-center justify-center relative shadow-lg shadow-green-500/30"
-              animate={{
-                rotate: [0, 0, 360, 360, 0],
-                scale: [1, 0.9, 0.9, 1, 1],
-                borderRadius: ["16%", "50%", "50%", "16%", "16%"],
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <Wrench className="w-12 h-12 text-white" />
-            </motion.div>
-
-            <motion.div
-              className="absolute w-3 h-3 bg-green-300 rounded-full right-4 bottom-10"
-              animate={{
-                x: [0, 30, 0, -30, 0],
-                y: [-30, 0, 30, 0, -30],
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            />
-
-            <motion.div
-              className="absolute w-2 h-2 bg-teal-400 rounded-full"
-              animate={{
-                x: [0, -30, 0, 30, 0],
-                y: [30, 0, -30, 0, 30],
-              }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
-            />
-
-            <div
-              className="absolute inset-0 bg-green-500/10 rounded-full animate-ping"
-              style={{ animationDuration: "3s" }}
-            ></div>
-          </div>
-
-          <h3 className="text-2xl font-bold text-slate-800 mb-3">
-            Loading Services
-          </h3>
-
-          <p className="text-gray-600 mb-5 max-w-xs text-center">
-            We're finding the best services for you...
-          </p>
-
-          <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
-            <motion.div
-              className="h-full bg-green-500 absolute top-0 left-0 right-0"
-              animate={{
-                x: ["-100%", "100%"],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            />
-          </div>
-
-          <div className="flex items-center mt-4 text-xs text-green-600">
-            <motion.div
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1.5 h-1.5 bg-green-600 rounded-full mr-2"
-            />
-            <span>Please wait while we curate services for you</span>
-          </div>
-        </motion.div>
-      </div>
+      <LoadingSplash
+        icon={Wrench}
+        title="Loading Services"
+        subtitle="We're finding the best services for you..."
+        theme="green"
+      />
     );
   }
 
