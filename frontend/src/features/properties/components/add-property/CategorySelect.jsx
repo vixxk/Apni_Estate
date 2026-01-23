@@ -11,6 +11,7 @@ import {
     Package,
     Sofa,
     Sparkles,
+    Wrench,
 } from "lucide-react";
 
 const CategorySelect = ({ form, setForm }) => {
@@ -21,7 +22,7 @@ const CategorySelect = ({ form, setForm }) => {
         { value: "interior", label: "Interior Designing", icon: Palette },
         { value: "legal service", label: "Legal Service", icon: Scale },
         { value: "vastu", label: "Vastu", icon: Compass },
-        { value: "construction consulting", label: "Construction Consulting", icon: Building2 },
+        { value: "sanitary and hardware", label: "Sanitary and Hardware", icon: Wrench },
         { value: "home loan", label: "Home Loan", icon: CreditCard },
         { value: "construction materials", label: "Construction Materials", icon: Package },
         { value: "furniture", label: "Furniture", icon: Sofa },
@@ -49,8 +50,8 @@ const CategorySelect = ({ form, setForm }) => {
                             type="button"
                             onClick={() => setForm({ ...form, type: cat.value })}
                             className={`p-2 md:p-4 rounded-lg md:rounded-xl border-2 transition-all duration-300 ${form.type === cat.value
-                                    ? "border-indigo-600 bg-indigo-50 shadow-md scale-105"
-                                    : "border-gray-200 hover:border-indigo-300 hover:shadow-sm"
+                                ? "border-indigo-600 bg-indigo-50 shadow-md scale-105"
+                                : "border-gray-200 hover:border-indigo-300 hover:shadow-sm"
                                 }`}
                         >
                             <Icon

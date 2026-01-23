@@ -19,7 +19,7 @@ const EverythingPage = () => {
     "construction services",
     "legal service",
     "vastu",
-    "construction consulting",
+    "sanitary and hardware",
     "home loan",
     "interior designing",
     "construction materials",
@@ -335,7 +335,7 @@ const EverythingPage = () => {
     // Properties
     "House", "Apartment", "Villa", "Plot", "Commercial",
     // Services
-    "Construction Services", "Legal Service", "Vastu", "Construction Consulting", "Home Loan", "Interior Designing",
+    "Construction Services", "Legal Service", "Vastu", "Sanitary and Hardware", "Home Loan", "Interior Designing",
     // Sales
     "Construction Materials", "Furniture", "Decoratives",
     // Other

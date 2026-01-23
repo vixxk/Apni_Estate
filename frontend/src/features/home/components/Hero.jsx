@@ -16,6 +16,7 @@ import { useMobileMenu } from "../../../context/MobileMenuContext";
 
 /* ================= IMAGE IMPORTS ================= */
 import constructionServices from "../../../assets/construction.png";
+import sanitaryHardware from "../../../assets/sanitary_hardware.jpeg";
 import interior from "../../../assets/interior.png";
 import legal from "../../../assets/legal.png";
 import vastu from "../../../assets/vastu.png";
@@ -40,7 +41,7 @@ const services = [
   { title: "Interior Designing", img: interior },
   { title: "Legal Service", img: legal },
   { title: "Vastu", img: vastu },
-  { title: "Construction Consulting", img: consulting },
+  { title: "Sanitary and Hardware", img: sanitaryHardware, className: "scale-150" },
   { title: "Home Loan", img: loan },
   { title: "Construction Materials", img: constructionMaterials },
   { title: "Furniture", img: furniture },
@@ -189,7 +190,7 @@ const Hero = () => {
       title === "construction services" ||
       title === "legal service" ||
       title === "vastu" ||
-      title === "construction consulting" ||
+      title === "sanitary and hardware" ||
       title === "home loan"
     ) {
       navigate("/services", {
@@ -344,7 +345,7 @@ const Hero = () => {
                         <img
                           src={service.img}
                           alt={service.title}
-                          className="w-full h-full object-cover"
+                          className={`w-full h-full object-cover ${service.className || ""}`}
                         />
                       </div>
 
