@@ -360,7 +360,7 @@ const VendorProfile = () => {
               </div>
 
               <div className="flex-1 text-center lg:text-left lg:mt-4">
-                <h1 className="text-2xl md:text-3xl font-bold text-blue-700 md:text-gray-900 mb-2">
+                <h1 className="text-2xl md:text-3xl font-bold text-blue-700 mb-2">
                   {vendor.name}
                 </h1>
                 <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-blue-100 text-blue-700 rounded-full font-semibold text-xs md:text-sm mb-3 md:mb-4">

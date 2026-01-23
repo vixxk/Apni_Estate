@@ -3,7 +3,7 @@ import { Calendar, Clock, Loader, X, Info, CheckCircle, Users, MapPin } from 'lu
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { Backendurl } from '../../App';
+import { Backendurl } from '../../../App';
 
 const ScheduleViewing = ({ propertyId, propertyTitle, propertyLocation, propertyImage, onClose }) => {
   const [formData, setFormData] = useState({
@@ -181,8 +181,8 @@ const ScheduleViewing = ({ propertyId, propertyTitle, propertyLocation, property
                   >
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center border-2 mb-1 ${step >= 1
-                          ? 'border-blue-600 bg-blue-50'
-                          : 'border-gray-300'
+                        ? 'border-blue-600 bg-blue-50'
+                        : 'border-gray-300'
                         }`}
                     >
                       <Calendar className="w-4 h-4" />
@@ -201,8 +201,8 @@ const ScheduleViewing = ({ propertyId, propertyTitle, propertyLocation, property
                   >
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center border-2 mb-1 ${step >= 2
-                          ? 'border-blue-600 bg-blue-50'
-                          : 'border-gray-300'
+                        ? 'border-blue-600 bg-blue-50'
+                        : 'border-gray-300'
                         }`}
                     >
                       <Info className="w-4 h-4" />
