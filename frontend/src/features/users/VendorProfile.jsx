@@ -359,8 +359,8 @@ const VendorProfile = () => {
                 <div className="absolute -bottom-1 md:-bottom-2 -right-1 md:-right-2 bg-green-500 w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl border-4 border-white"></div>
               </div>
 
-              <div className="flex-1 text-center lg:text-left lg:mt-4">
-                <h1 className="text-2xl md:text-3xl font-bold text-blue-700 mb-2">
+              <div className="flex-1 text-center lg:text-left">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 lg:text-white mb-2">
                   {vendor.name}
                 </h1>
                 <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-blue-100 text-blue-700 rounded-full font-semibold text-xs md:text-sm mb-3 md:mb-4">
