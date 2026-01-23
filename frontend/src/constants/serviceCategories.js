@@ -6,7 +6,7 @@ export const SERVICE_CATEGORIES = [
   "Interior",
   "Legal Service",
   "Vastu",
-  "Sanitary and Hardware",
   "Home Loan",
   "Construction Materials",
+  "Sanitary and Hardware",
 ];
