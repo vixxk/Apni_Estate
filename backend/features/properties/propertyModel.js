@@ -23,7 +23,7 @@ const propertySchema = new mongoose.Schema({
     enum: [
       'apartment', 'house', 'villa', 'plot', 'commercial', 'office',
       'construction services', 'interior', 'legal service', 'vastu',
-      'construction consulting', 'home loan', 'construction materials','furniture','decoratives',
+      'sanitary and hardware', 'home loan', 'construction materials','furniture','decoratives',
       'houses', 'apartments', 'shops', 'commercial plots', 'farm house','others', 'flats', 'villas', 'plots',
       'buy','rent', 'sell', 'lease'
     ],

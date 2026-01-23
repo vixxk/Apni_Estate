@@ -18,7 +18,7 @@ const ServicesPage = () => {
     "construction services",
     "legal service",
     "vastu",
-    "construction consulting",
+    "sanitary and hardware",
     "home loan"
   ];
 
