@@ -25,7 +25,7 @@ const EverythingPage = () => {
     "construction materials",
     "furniture",
     "decoratives",
-    "others"
+    "manpower"
   ];
 
   const [viewState, setViewState] = useState({
@@ -338,8 +338,8 @@ const EverythingPage = () => {
     "Construction Services", "Legal Service", "Vastu", "Sanitary and Hardware", "Home Loan", "Interior Designing",
     // Sales
     "Construction Materials", "Furniture", "Decoratives",
-    // Other
-    "Others"
+    // Manpower
+    "Manpower", "Plumber", "Electrician", "Construction Worker", "Technician", "Painter"
   ];
 
   if (propertyState.loading) {

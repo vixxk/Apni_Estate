@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 const defaultPropertyTypes = ["House", "Apartment", "Villa", "Plot", "Commercial"];
 const defaultAvailabilityTypes = ["Rent", "Buy"];
 
-const priceRanges = [
+const defaultPriceRanges = [
   { min: 0, max: 5000000, label: "Under ₹50L" },
   { min: 5000000, max: 10000000, label: "₹50L - ₹1Cr" },
   { min: 10000000, max: 20000000, label: "₹1Cr - ₹2Cr" },
@@ -17,7 +17,9 @@ const FilterSection = ({
   setFilters,
   onApplyFilters,
   typeOptions = defaultPropertyTypes,
-  availabilityOptions = defaultAvailabilityTypes
+  availabilityOptions = defaultAvailabilityTypes,
+  priceRanges = defaultPriceRanges,
+  typeLabel = "Type / Category"
 }) => {
   const [localFilters, setLocalFilters] = useState(filters);
 
@@ -85,7 +87,7 @@ const FilterSection = ({
         <div className="filter-group">
           <label className="filter-label text-sm sm:text-base mb-2 block font-medium text-gray-700">
             <Home className="w-4 h-4 mr-2 inline" />
-            Type / Category
+            {typeLabel}
           </label>
           <div className="grid grid-cols-2 gap-2">
             {typeOptions.map((type) => {

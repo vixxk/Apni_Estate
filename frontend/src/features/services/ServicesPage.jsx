@@ -361,6 +361,13 @@ const ServicesPage = () => {
                   onApplyFilters={handleFilterChange}
                   typeOptions={SERVICE_CATEGORIES}
                   availabilityOptions={[]}
+                  typeLabel="Service Category"
+                  priceRanges={[
+                    { min: 0, max: 1000, label: "Under ₹1000" },
+                    { min: 1000, max: 5000, label: "₹1000 - ₹5000" },
+                    { min: 5000, max: 10000, label: "₹5000 - ₹10000" },
+                    { min: 10000, max: Number.MAX_SAFE_INTEGER, label: "Above ₹10000" }
+                  ]}
                 />
               </motion.aside>
             )}

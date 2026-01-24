@@ -28,7 +28,8 @@ import sell from "../../../assets/sell.png";
 import rent from "../../../assets/rent.png";
 import furniture from "../../../assets/furniture.png";
 import decoratives from "../../../assets/decoratives.png";
-import others from "../../../assets/others.png";
+
+import manpower from "../../../assets/manpower.jpeg";
 import axios from "axios";
 import { Backendurl } from "../../../App";
 
@@ -46,7 +47,7 @@ const services = [
   { title: "Furniture", img: furniture },
   { title: "Decoratives", img: decoratives },
   { title: "Sanitary and Hardware", img: sanitaryHardware, className: "scale-150" },
-  { title: "Others", img: others },
+  { title: "Manpower", img: manpower },
 ];
 
 const stats = [
@@ -208,8 +209,8 @@ const Hero = () => {
       navigate("/sales-items", {
         state: { filterType: title },
       });
-    } else if (title === "others") {
-      navigate("/everything");
+    } else if (title === "manpower") {
+      navigate("/manpower");
     } else {
       navigate("/properties");
     }

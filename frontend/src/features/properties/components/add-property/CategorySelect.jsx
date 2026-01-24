@@ -12,6 +12,7 @@ import {
     Sofa,
     Sparkles,
     Wrench,
+    Users,
 } from "lucide-react";
 
 const CategorySelect = ({ form, setForm }) => {
@@ -27,7 +28,8 @@ const CategorySelect = ({ form, setForm }) => {
         { value: "construction materials", label: "Construction Materials", icon: Package },
         { value: "furniture", label: "Furniture", icon: Sofa },
         { value: "decoratives", label: "Decoratives", icon: Sparkles },
-        { value: "others", label: "Others", icon: Building2 },
+
+        { value: "manpower", label: "Manpower", icon: Users },
     ];
 
     return (

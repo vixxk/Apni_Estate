@@ -116,7 +116,7 @@ const PropertyReviewCard = ({ property, onApprove, onReject, onDelete }) => {
                     {getStatusBadge()}
                   </div>
                   <p className="text-xs sm:text-sm lg:text-base text-gray-600 line-clamp-2">
-  Technology optimized per workload                  {property.description}
+                    {property.description}
                   </p>
                 </div>
               </div>

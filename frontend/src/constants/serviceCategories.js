@@ -9,4 +9,5 @@ export const SERVICE_CATEGORIES = [
   "Home Loan",
   "Construction Materials",
   "Sanitary and Hardware",
+  "Manpower",
 ];
