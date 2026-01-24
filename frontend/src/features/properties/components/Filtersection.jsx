@@ -91,11 +91,14 @@ const FilterSection = ({
           </label>
           <div className="grid grid-cols-2 gap-2">
             {typeOptions.map((type) => {
-              const value = type.toLowerCase();
+              const isObject = typeof type === 'object' && type !== null;
+              const label = isObject ? type.label : type;
+              const value = isObject ? type.value.toLowerCase() : type.toLowerCase();
+
               const isSelected = localFilters.propertyType === value;
               return (
                 <button
-                  key={type}
+                  key={value}
                   onClick={() => handleChange({
                     target: {
                       name: "propertyType",
@@ -107,7 +110,7 @@ const FilterSection = ({
                       ? "bg-blue-600 text-white"
                       : "bg-white/50 text-gray-700 hover:bg-white/80 border border-gray-100"}`}
                 >
-                  {type}
+                  {label}
                 </button>
               );
             })}

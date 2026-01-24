@@ -1,10 +1,12 @@
-import React from "react";
 import {
     Wrench,
     Zap,
     HardHat,
     Settings,
     Paintbrush,
+    Hammer,
+    BrickWall,
+    Users
 } from "lucide-react";
 
 const ManpowerTypeSelect = ({ form, setForm }) => {
@@ -18,13 +20,14 @@ const ManpowerTypeSelect = ({ form, setForm }) => {
                     Select Manpower Type
                 </h2>
             </div>
-            <div className="grid grid-cols-3 gap-2 md:gap-4">
+            <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-3">
                 {[
+                    { value: "carpenter", label: "Carpenter", icon: Hammer },
+                    { value: "painter", label: "Painter", icon: Paintbrush },
                     { value: "plumber", label: "Plumber", icon: Wrench },
                     { value: "electrician", label: "Electrician", icon: Zap },
-                    { value: "construction worker", label: "Construction Worker", icon: HardHat },
-                    { value: "technician", label: "Technician", icon: Settings },
-                    { value: "painter", label: "Painter", icon: Paintbrush },
+                    { value: "mason", label: "Mason (Construction Worker)", icon: BrickWall },
+                    { value: "general labour", label: "General Labour", icon: Users },
                 ].map((type) => {
                     const Icon = type.icon;
                     return (
@@ -32,26 +35,26 @@ const ManpowerTypeSelect = ({ form, setForm }) => {
                             key={type.value}
                             type="button"
                             onClick={() => setForm({ ...form, propertySubType: type.value })}
-                            className={`p-1.5 md:p-4 rounded-xl border-2 transition-all duration-300 flex flex-col items-center justify-center gap-1 md:gap-2 ${form.propertySubType === type.value
+                            className={`p-2 md:p-4 rounded-lg md:rounded-xl border-2 transition-all duration-300 flex flex-col items-center justify-center ${form.propertySubType === type.value
                                 ? "border-indigo-600 bg-indigo-50 shadow-md scale-105"
                                 : "border-gray-200 hover:border-indigo-300 hover:shadow-sm"
                                 }`}
                         >
                             <Icon
-                                size={18}
-                                className={`md:w-6 md:h-6 ${form.propertySubType === type.value
+                                size={20}
+                                className={`mx-auto mb-1 md:mb-2 ${form.propertySubType === type.value
                                     ? "text-indigo-600"
                                     : "text-gray-400"
                                     }`}
                             />
-                            <span
-                                className={`text-[10px] md:text-sm font-semibold truncate w-full text-center ${form.propertySubType === type.value
+                            <p
+                                className={`text-[10px] md:text-xs font-semibold text-center leading-tight ${form.propertySubType === type.value
                                     ? "text-indigo-600"
                                     : "text-gray-700"
                                     }`}
                             >
                                 {type.label}
-                            </span>
+                            </p>
                         </button>
                     );
                 })}

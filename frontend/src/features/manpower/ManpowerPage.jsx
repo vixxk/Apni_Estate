@@ -15,11 +15,12 @@ const ManpowerPage = () => {
     const filterType = location.state?.filterType;
 
     const MANPOWER_CATEGORIES = [
+        "Carpenter",
+        "Painter",
         "Plumber",
         "Electrician",
-        "Construction Worker",
-        "Technician",
-        "Painter"
+        { label: "Mason (Construction Worker)", value: "Mason" },
+        "General Labour"
     ];
 
     const [viewState, setViewState] = useState({

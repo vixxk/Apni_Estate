@@ -26,7 +26,7 @@ const propertySchema = new mongoose.Schema({
       'sanitary and hardware', 'home loan', 'construction materials','furniture','decoratives',
       'houses', 'apartments', 'shops', 'commercial plots', 'farm house','others', 'flats', 'villas', 'plots',
       'buy','rent', 'sell', 'lease',
-      'manpower', 'plumber', 'electrician', 'construction worker', 'technician', 'painter'
+      'manpower', 'plumber', 'electrician', 'painter', 'carpenter', 'mason', 'general labour', 'technician', 'construction worker'
     ],
     lowercase: true
   },

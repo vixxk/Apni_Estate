@@ -339,7 +339,7 @@ const EverythingPage = () => {
     // Sales
     "Construction Materials", "Furniture", "Decoratives",
     // Manpower
-    "Manpower", "Plumber", "Electrician", "Construction Worker", "Technician", "Painter"
+    "Manpower", "Carpenter", "Painter", "Plumber", "Electrician", "Mason", "General Labour"
   ];
 
   if (propertyState.loading) {
