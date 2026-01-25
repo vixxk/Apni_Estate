@@ -28,7 +28,8 @@ import sell from "../../../assets/sell.png";
 import rent from "../../../assets/rent.png";
 import furniture from "../../../assets/furniture.png";
 import decoratives from "../../../assets/decoratives.png";
-import others from "../../../assets/others.png";
+
+import manpower from "../../../assets/manpower.jpeg";
 import axios from "axios";
 import { Backendurl } from "../../../App";
 
@@ -45,8 +46,8 @@ const services = [
   { title: "Construction Materials", img: constructionMaterials },
   { title: "Furniture", img: furniture },
   { title: "Decoratives", img: decoratives },
-  { title: "Sanitary and Hardware", img: sanitaryHardware, className: "scale-150" },
-  { title: "Others", img: others },
+  { title: "Hardware & Sanitary", img: sanitaryHardware, className: "scale-150" },
+  { title: "Manpower", img: manpower },
 ];
 
 const stats = [
@@ -190,11 +191,11 @@ const Hero = () => {
       title === "construction services" ||
       title === "legal service" ||
       title === "vastu" ||
-      title === "sanitary and hardware" ||
+      title === "hardware & sanitary" ||
       title === "home loan"
     ) {
       navigate("/services", {
-        state: { filterType: title },
+        state: { filterType: title === "hardware & sanitary" ? "sanitary and hardware" : title },
       });
     } else if (title === "interior designing") {
       navigate("/sales-items", {
@@ -208,8 +209,8 @@ const Hero = () => {
       navigate("/sales-items", {
         state: { filterType: title },
       });
-    } else if (title === "others") {
-      navigate("/everything");
+    } else if (title === "manpower") {
+      navigate("/manpower");
     } else {
       navigate("/properties");
     }

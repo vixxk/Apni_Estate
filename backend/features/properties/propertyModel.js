@@ -25,14 +25,15 @@ const propertySchema = new mongoose.Schema({
       'construction services', 'interior', 'legal service', 'vastu',
       'sanitary and hardware', 'home loan', 'construction materials','furniture','decoratives',
       'houses', 'apartments', 'shops', 'commercial plots', 'farm house','others', 'flats', 'villas', 'plots',
-      'buy','rent', 'sell', 'lease'
+      'buy','rent', 'sell', 'lease',
+      'manpower', 'plumber', 'electrician', 'painter', 'carpenter', 'mason', 'general labour', 'technician', 'construction worker'
     ],
     lowercase: true
   },
   category: {
     type: String,
     required: [true, 'Property category is required'],
-    enum: ['rent', 'sell', 'buy', 'lease','none'],
+    enum: ['rent', 'sell', 'buy', 'lease', 'none', 'manpower'],
     lowercase: true
   },
   location: {

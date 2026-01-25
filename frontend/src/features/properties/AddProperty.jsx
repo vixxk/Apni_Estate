@@ -10,6 +10,7 @@ import {
 
 import CategorySelect from "./components/add-property/CategorySelect";
 import PropertyTypeSelect from "./components/add-property/PropertyTypeSelect";
+import ManpowerTypeSelect from "./components/add-property/ManpowerTypeSelect";
 import BasicInfoForm from "./components/add-property/BasicInfoForm";
 import LocationForm from "./components/add-property/LocationForm";
 import FeaturesForm from "./components/add-property/FeaturesForm";
@@ -258,7 +259,10 @@ const VendorAddProperty = () => {
 
       if (["sell", "rent"].includes(finalType)) {
         finalCategory = finalType;
-        finalType = form.propertySubType || "others";
+        finalType = form.propertySubType || "others"; // This seems correct as a fallback, but for Manpower we want one of the 5 specific types
+      } else if (finalType === "manpower") {
+        finalCategory = "manpower";
+        finalType = form.propertySubType;
       } else if (finalType.includes("construction") || finalType === "contractor") {
       }
 
@@ -506,6 +510,10 @@ const VendorAddProperty = () => {
             {/* Property Type Selection (Only for Sell/Rent) */}
             {isRealEstateListing && (
               <PropertyTypeSelect form={form} setForm={setForm} />
+            )}
+
+            {form.type === "manpower" && (
+              <ManpowerTypeSelect form={form} setForm={setForm} />
             )}
 
             {/* Basic Information */}

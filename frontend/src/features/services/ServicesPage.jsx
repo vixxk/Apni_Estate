@@ -18,7 +18,7 @@ const ServicesPage = () => {
     "construction services",
     "legal service",
     "vastu",
-    "sanitary and hardware",
+    { value: "sanitary and hardware", label: "Hardware & Sanitary" },
     "home loan"
   ];
 
@@ -201,9 +201,13 @@ const ServicesPage = () => {
       .filter((property) => {
         // FILTER ONLY SERVICE CATEGORIES
         const categoryMatch = SERVICE_CATEGORIES.some(
-          (cat) =>
-            property.category?.toLowerCase() === cat.toLowerCase() ||
-            property.type?.toLowerCase() === cat.toLowerCase()
+          (cat) => {
+            const val = typeof cat === 'string' ? cat : cat.value;
+            return (
+              property.category?.toLowerCase() === val.toLowerCase() ||
+              property.type?.toLowerCase() === val.toLowerCase()
+            );
+          }
         );
         if (!categoryMatch) return false;
 
@@ -361,6 +365,13 @@ const ServicesPage = () => {
                   onApplyFilters={handleFilterChange}
                   typeOptions={SERVICE_CATEGORIES}
                   availabilityOptions={[]}
+                  typeLabel="Service Category"
+                  priceRanges={[
+                    { min: 0, max: 1000, label: "Under ₹1000" },
+                    { min: 1000, max: 5000, label: "₹1000 - ₹5000" },
+                    { min: 5000, max: 10000, label: "₹5000 - ₹10000" },
+                    { min: 10000, max: Number.MAX_SAFE_INTEGER, label: "Above ₹10000" }
+                  ]}
                 />
               </motion.aside>
             )}
