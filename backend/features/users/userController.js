@@ -57,8 +57,8 @@ export const exportUsers = asyncHandler(async (req, res) => {
       email: user.email,
       phone: user.phone || 'N/A',
       role: user.role,
-      date: d.toLocaleDateString(),
-      time: d.toLocaleTimeString(),
+      date: d.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' }),
+      time: d.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' }),
     });
   });
 
