@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import { connectDB } from './config/mongodb.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
+import uploadRoutes from './features/upload/uploadRoutes.js';
 import userRoutes from './features/users/userRoutes.js';
 import propertyRoutes from './features/properties/propertyRoutes.js';
 import adminRoutes from './features/admin/adminRoutes.js';
@@ -23,7 +24,7 @@ import sponsorRoutes from './features/sponsors/sponsorRoutes.js';
 import estimatorRoutes from './features/tools/estimatorRoutes.js';
 import loanAnalysisRoute from './features/tools/loanRoutes.js';
 import vastuRoutes from './features/tools/vastuRoutes.js';
-import uploadRoutes from './features/upload/uploadRoutes.js';
+import telecallerRoutes from './features/telecaller/telecallerRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -64,6 +65,7 @@ app.use('/api/sponsors', sponsorRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/estimator', estimatorRoutes);
 app.use('/api/vastu', vastuRoutes);
+app.use('/api/telecallers', telecallerRoutes);
 
 app.use('/api/upload/property', uploadRoutes);
 app.use('/api/upload/service', serviceUploadRoutes);

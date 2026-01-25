@@ -49,6 +49,21 @@ const TabNavigation = ({ activeTab, setActiveTab }) => {
                     />
                 )}
             </button>
+            <button
+                onClick={() => setActiveTab("telecallers")}
+                className={`pb-2 px-1 text-sm font-medium transition-all relative ${activeTab === "telecallers"
+                    ? "text-purple-400"
+                    : "text-white/60 hover:text-white"
+                    }`}
+            >
+                Telecallers
+                {activeTab === "telecallers" && (
+                    <motion.div
+                        layoutId="activeTab"
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-400 rounded-full"
+                    />
+                )}
+            </button>
         </div>
     );
 };

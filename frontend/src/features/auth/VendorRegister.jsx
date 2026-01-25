@@ -88,7 +88,8 @@ const VendorRegister = () => {
     email: '',
     password: '',
     phone: '',
-    role: 'vendor'
+    role: 'vendor',
+    promoCode: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -97,7 +98,8 @@ const VendorRegister = () => {
     name: false,
     email: false,
     password: false,
-    phone: false
+    phone: false,
+    promoCode: false
   });
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [validationErrors, setValidationErrors] = useState({});
@@ -184,28 +186,41 @@ const VendorRegister = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Start countdown and redirect after 5 seconds regardless of response
-    let seconds = 5;
-    setCountdown(seconds);
+    try {
+      const { data } = await axios.post(
+        `${Backendurl}/api/users/register`,
+        { ...formData, role: 'vendor' }
+      );
 
-    const countdownInterval = setInterval(() => {
-      seconds--;
-      setCountdown(seconds);
+      if (data.success) {
+        toast.success(data.message || "Registration successful!");
+        // Start countdown and redirect
+        let seconds = 5;
+        setCountdown(seconds);
 
-      if (seconds === 0) {
-        clearInterval(countdownInterval);
-        navigate('/login');
+        const countdownInterval = setInterval(() => {
+          seconds--;
+          setCountdown(seconds);
+
+          if (seconds === 0) {
+            clearInterval(countdownInterval);
+            navigate('/login');
+          }
+        }, 1000);
       }
-    }, 1000);
-
-    // Make the API call but don't wait for it or handle its response
-    axios.post(
-      `${Backendurl}/api/users/register`,
-      { ...formData, role: 'vendor' }
-    ).catch((error) => {
-      // Silent error handling - don't show error to user
+    } catch (error) {
       console.error('Registration request failed:', error);
-    });
+      const message = error.response?.data?.message || "Registration failed";
+
+      // Specifically handle promo code error to show it near the field if possible, or just toast
+      if (message.includes("Promo Code")) {
+        setValidationErrors(prev => ({ ...prev, promoCode: message }));
+      }
+
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
 
@@ -543,6 +558,57 @@ const VendorRegister = () => {
               </motion.div>
 
 
+
+              {/* Promo Code Field */}
+              <motion.div variants={inputVariants}>
+                <label htmlFor="promoCode" className="block text-sm font-medium text-gray-700 mb-2">
+                  Promo Code (Optional)
+                </label>
+                <div className="relative group">
+                  <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 ${fieldFocus.promoCode ? 'text-indigo-500' : 'text-gray-400'
+                    }`}>
+                    <Award className="h-5 w-5" />
+                  </div>
+                  <input
+                    type="text"
+                    name="promoCode"
+                    id="promoCode"
+                    value={formData.promoCode}
+                    onChange={handleChange}
+                    onFocus={() => handleFocus('promoCode')}
+                    onBlur={() => handleBlur('promoCode')}
+                    disabled={loading}
+                    className={`w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50/50 border-2 transition-all duration-200 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${fieldFocus.promoCode
+                      ? 'border-indigo-500 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      : 'border-gray-200 hover:border-gray-300 focus:border-indigo-500 focus:ring-indigo-500/20'
+                      } focus:ring-4 focus:outline-none`}
+                    placeholder="Enter Referral Code"
+                  />
+                  {formData.promoCode && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                    >
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                    </motion.div>
+                  )}
+                </div>
+                <AnimatePresence>
+                  {validationErrors.promoCode && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="mt-1 text-sm text-red-600"
+                    >
+                      {validationErrors.promoCode}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+
+
               {/* Password Field */}
               <motion.div variants={inputVariants}>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
@@ -571,16 +637,18 @@ const VendorRegister = () => {
                       } focus:ring-4 focus:outline-none`}
                     placeholder="Create a strong password"
                   />
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    disabled={loading}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100 disabled:opacity-50"
-                  >
-                    {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
-                  </motion.button>
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      disabled={loading}
+                      className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100 disabled:opacity-50"
+                    >
+                      {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                    </motion.button>
+                  </div>
                 </div>
 
                 {/* Password Strength Indicator */}

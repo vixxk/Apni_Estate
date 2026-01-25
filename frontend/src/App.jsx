@@ -36,6 +36,7 @@ import SalesItemsPage from "./features/services/SalesItemsPage";
 import EverythingPage from "./features/home/EverythingPage";
 import AdminLogin from "./features/admin/components/AdminLogin";
 import AdminDashboard from "./features/admin/components/AdminDashboard";
+import TelecallerManager from "./features/admin/components/TelecallerManager";
 import VendorContactRequests from "./features/vendor/ContactRequests";
 import ChatList from "./features/chat/ChatList.jsx";
 import LoanAnalysisPage from "./features/ai-tools/LoanAnalysisPage.jsx";
@@ -126,6 +127,7 @@ const App = () => {
 
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/telecallers" element={<TelecallerManager />} />
 
                 <Route path="/vendor/contact-requests" element={<VendorContactRequests />} />
 
