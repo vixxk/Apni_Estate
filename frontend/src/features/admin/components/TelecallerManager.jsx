@@ -12,7 +12,8 @@ import {
     Mail,
     CheckCircle,
     XCircle,
-    Calendar
+    Calendar,
+    Edit
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -20,6 +21,8 @@ const TelecallerManager = () => {
     const [telecallers, setTelecallers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAddModal, setShowAddModal] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editForm, setEditForm] = useState({ name: "", phone: "", email: "" });
 
     // Export Report State
     const [showExportModal, setShowExportModal] = useState(false);
@@ -163,6 +166,34 @@ const TelecallerManager = () => {
         } finally {
             setIsDownloading(false);
         }
+    };
+
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        try {
+            const { data } = await axios.put(`${Backendurl}/api/telecallers/${selectedTelecaller._id}`, editForm, config);
+            if (data.success) {
+                toast.success("Telecaller updated successfully");
+
+                // Update local state
+                setTelecallers(prev => prev.map(t =>
+                    t._id === selectedTelecaller._id ? data.data : t
+                ));
+                setSelectedTelecaller(data.data);
+                setIsEditing(false);
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to update telecaller");
+        }
+    };
+
+    const startEditing = () => {
+        setEditForm({
+            name: selectedTelecaller.name,
+            phone: selectedTelecaller.phone,
+            email: selectedTelecaller.email || ""
+        });
+        setIsEditing(true);
     };
 
     const filteredTelecallers = telecallers.filter(t =>
@@ -322,79 +353,163 @@ const TelecallerManager = () => {
                             className="bg-[#0f172a] rounded-2xl shadow-xl w-full max-w-sm overflow-hidden border border-white/10"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
+                            <div className="p-6 border-b border-white/10 flex justify-between items-start bg-white/5">
                                 <div>
-                                    <h3 className="text-xl font-bold text-white">{selectedTelecaller.name}</h3>
-                                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 mt-1 rounded-full text-xs font-medium ${selectedTelecaller.active
-                                        ? 'bg-green-500/10 text-green-400'
-                                        : 'bg-slate-500/10 text-slate-400'
-                                        }`}>
-                                        <span className={`w-1.5 h-1.5 rounded-full ${selectedTelecaller.active ? 'bg-green-400' : 'bg-slate-400'}`} />
-                                        {selectedTelecaller.active ? "Active" : "Inactive"}
-                                    </span>
+                                    {isEditing ? (
+                                        <h3 className="text-xl font-bold text-white mb-2">Edit Profile</h3>
+                                    ) : (
+                                        <>
+                                            <h3 className="text-xl font-bold text-white">{selectedTelecaller.name}</h3>
+                                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 mt-1 rounded-full text-xs font-medium ${selectedTelecaller.active
+                                                ? 'bg-green-500/10 text-green-400'
+                                                : 'bg-slate-500/10 text-slate-400'
+                                                }`}>
+                                                <span className={`w-1.5 h-1.5 rounded-full ${selectedTelecaller.active ? 'bg-green-400' : 'bg-slate-400'}`} />
+                                                {selectedTelecaller.active ? "Active" : "Inactive"}
+                                            </span>
+                                        </>
+                                    )}
                                 </div>
-                                <button
-                                    onClick={() => setSelectedTelecaller(null)}
-                                    className="p-2 -mr-2 text-indigo-200/60 hover:text-white rounded-full hover:bg-white/10"
-                                >
-                                    <XCircle className="w-6 h-6" />
-                                </button>
+                                <div className="flex gap-2">
+                                    {!isEditing && (
+                                        <button
+                                            onClick={startEditing}
+                                            className="p-2 text-indigo-200/60 hover:text-white rounded-full hover:bg-white/10"
+                                            title="Edit Profile"
+                                        >
+                                            <Edit className="w-5 h-5" />
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={() => {
+                                            setSelectedTelecaller(null);
+                                            setIsEditing(false);
+                                        }}
+                                        className="p-2 -mr-2 text-indigo-200/60 hover:text-white rounded-full hover:bg-white/10"
+                                    >
+                                        <XCircle className="w-6 h-6" />
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="p-6 space-y-6">
-                                {/* Stats Row */}
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-indigo-500/10 p-4 rounded-xl border border-indigo-500/20 text-center">
-                                        <p className="text-xs text-indigo-300 font-medium uppercase tracking-wide">Referral ID</p>
-                                        <p className="text-2xl font-bold text-indigo-400 mt-1">{selectedTelecaller.referralId}</p>
-                                    </div>
-                                    <div className="bg-purple-500/10 p-4 rounded-xl border border-purple-500/20 text-center">
-                                        <p className="text-xs text-purple-300 font-medium uppercase tracking-wide">Onboardings</p>
-                                        <p className="text-2xl font-bold text-purple-400 mt-1">{selectedTelecaller.onboardings?.length || 0}</p>
-                                    </div>
-                                </div>
-
-                                {/* Contact Info */}
-                                <div className="space-y-4">
-                                    <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10">
-                                        <div className="p-2 bg-white/10 rounded-lg shadow-sm">
-                                            <Phone className="w-5 h-5 text-indigo-300" />
+                                {/* Content */}
+                                {isEditing ? (
+                                    <form onSubmit={handleUpdate} className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-medium text-indigo-200/70 mb-1">Full Name</label>
+                                            <div className="relative">
+                                                <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-300" />
+                                                <input
+                                                    type="text"
+                                                    className="w-full pl-9 pr-4 py-2 bg-black/20 border border-white/10 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm text-white placeholder-white/20"
+                                                    value={editForm.name}
+                                                    onChange={e => setEditForm({ ...editForm, name: e.target.value })}
+                                                    required
+                                                />
+                                            </div>
                                         </div>
                                         <div>
-                                            <p className="text-xs text-indigo-200/60">Phone Number</p>
-                                            <p className="text-sm font-medium text-white">{selectedTelecaller.phone}</p>
+                                            <label className="block text-xs font-medium text-indigo-200/70 mb-1">Phone Number</label>
+                                            <div className="relative">
+                                                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-300" />
+                                                <input
+                                                    type="tel"
+                                                    className="w-full pl-9 pr-4 py-2 bg-black/20 border border-white/10 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm text-white placeholder-white/20"
+                                                    value={editForm.phone}
+                                                    onChange={e => setEditForm({ ...editForm, phone: e.target.value })}
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-medium text-indigo-200/70 mb-1">Email Address</label>
+                                            <div className="relative">
+                                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-300" />
+                                                <input
+                                                    type="email"
+                                                    className="w-full pl-9 pr-4 py-2 bg-black/20 border border-white/10 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm text-white placeholder-white/20"
+                                                    value={editForm.email}
+                                                    onChange={e => setEditForm({ ...editForm, email: e.target.value })}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="pt-2 flex gap-3">
+                                            <button
+                                                type="button"
+                                                onClick={() => setIsEditing(false)}
+                                                className="flex-1 py-2.5 text-sm font-medium text-indigo-200 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                type="submit"
+                                                className="flex-1 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
+                                            >
+                                                Save Changes
+                                            </button>
+                                        </div>
+                                    </form>
+                                ) : (
+                                    <div className="space-y-6">
+                                        {/* Stats Row */}
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="bg-indigo-500/10 p-4 rounded-xl border border-indigo-500/20 text-center">
+                                                <p className="text-xs text-indigo-300 font-medium uppercase tracking-wide">Referral ID</p>
+                                                <p className="text-2xl font-bold text-indigo-400 mt-1">{selectedTelecaller.referralId}</p>
+                                            </div>
+                                            <div className="bg-purple-500/10 p-4 rounded-xl border border-purple-500/20 text-center">
+                                                <p className="text-xs text-purple-300 font-medium uppercase tracking-wide">Onboardings</p>
+                                                <p className="text-2xl font-bold text-purple-400 mt-1">{selectedTelecaller.onboardings?.length || 0}</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Contact Info */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10">
+                                                <div className="p-2 bg-white/10 rounded-lg shadow-sm">
+                                                    <Phone className="w-5 h-5 text-indigo-300" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-indigo-200/60">Phone Number</p>
+                                                    <p className="text-sm font-medium text-white">{selectedTelecaller.phone}</p>
+                                                </div>
+                                            </div>
+                                            {selectedTelecaller.email && (
+                                                <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10">
+                                                    <div className="p-2 bg-white/10 rounded-lg shadow-sm">
+                                                        <Mail className="w-5 h-5 text-indigo-300" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs text-indigo-200/60">Email Address</p>
+                                                        <p className="text-sm font-medium text-white break-all">{selectedTelecaller.email}</p>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
-                                    {selectedTelecaller.email && (
-                                        <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10">
-                                            <div className="p-2 bg-white/10 rounded-lg shadow-sm">
-                                                <Mail className="w-5 h-5 text-indigo-300" />
-                                            </div>
-                                            <div>
-                                                <p className="text-xs text-indigo-200/60">Email Address</p>
-                                                <p className="text-sm font-medium text-white break-all">{selectedTelecaller.email}</p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
+                                )}
 
                                 {/* Action Button */}
-                                <button
-                                    onClick={() => toggleStatus(selectedTelecaller._id, selectedTelecaller.active)}
-                                    className={`w-full py-3 rounded-xl font-semibold transition-all shadow-lg flex items-center justify-center gap-2 ${selectedTelecaller.active
-                                        ? "bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
-                                        : "bg-green-600 text-white hover:bg-green-700 shadow-green-500/25"
-                                        }`}
-                                >
-                                    {selectedTelecaller.active ? (
-                                        <>Deactivate Account</>
-                                    ) : (
-                                        <>
-                                            <CheckCircle className="w-5 h-5" />
-                                            Activate Account
-                                        </>
-                                    )}
-                                </button>
+                                {/* Action Button - Only show when not editing */}
+                                {!isEditing && (
+                                    <button
+                                        onClick={() => toggleStatus(selectedTelecaller._id, selectedTelecaller.active)}
+                                        className={`w-full py-3 rounded-xl font-semibold transition-all shadow-lg flex items-center justify-center gap-2 ${selectedTelecaller.active
+                                            ? "bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
+                                            : "bg-green-600 text-white hover:bg-green-700 shadow-green-500/25"
+                                            }`}
+                                    >
+                                        {selectedTelecaller.active ? (
+                                            <>Deactivate Account</>
+                                        ) : (
+                                            <>
+                                                <CheckCircle className="w-5 h-5" />
+                                                Activate Account
+                                            </>
+                                        )}
+                                    </button>
+                                )}
                             </div>
                         </motion.div>
                     </div>

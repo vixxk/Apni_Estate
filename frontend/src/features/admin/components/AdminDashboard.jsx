@@ -24,6 +24,7 @@ import PropertyReviewCard from "./PropertyReviewCard";
 import SponsorManager from "./SponsorManager";
 import TestimonialManager from "./TestimonialManager";
 import TelecallerManager from "./TelecallerManager";
+import DataExportManager from "./DataExportManager";
 
 // Dashboard Components
 import LoadingState from "./dashboard/LoadingState";
@@ -376,6 +377,14 @@ const AdminDashboard = () => {
             exit={{ opacity: 0, x: -20 }}
           >
             <TelecallerManager />
+          </motion.div>
+        ) : activeTab === "reports" ? (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+          >
+            <DataExportManager adminEmail={adminEmail} adminPassword={adminPassword} />
           </motion.div>
         ) : (
           <motion.div

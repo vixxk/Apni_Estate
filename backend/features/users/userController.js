@@ -1,7 +1,87 @@
+import ExcelJS from 'exceljs';
 import User from './userModel.js';
 import Property from '../properties/propertyModel.js';
 import { uploadToImageKit } from '../../config/imagekit.js';
 import { asyncHandler } from '../../middleware/asyncHandler.js';
+
+// ... existing code ...
+
+// @desc    Export User/Vendor Data
+// @route   GET /api/users/export
+// @access  Private/Admin
+export const exportUsers = asyncHandler(async (req, res) => {
+  const { role, filterType, date } = req.query; // role: 'user', 'vendor', 'all'
+
+  let query = {};
+
+  // Role Filtering
+  if (role && role !== 'all') {
+    query.role = role;
+  } else {
+      // If 'all', we might want to exclude 'admin' or just include user and vendor
+      query.role = { $in: ['user', 'vendor'] };
+  }
+
+  // Date Filtering
+  if (filterType === 'daily' && date) {
+    const start = new Date(date);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(date);
+    end.setHours(23, 59, 59, 999);
+    query.createdAt = { $gte: start, $lte: end };
+  } else if (filterType === 'monthly' && date) {
+    const [year, month] = date.split('-');
+    const start = new Date(year, month - 1, 1);
+    const end = new Date(year, month, 0, 23, 59, 59, 999);
+    query.createdAt = { $gte: start, $lte: end };
+  }
+
+  const users = await User.find(query).sort({ createdAt: -1 });
+
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet('Users Data');
+
+  sheet.columns = [
+    { header: 'Name', key: 'name', width: 25 },
+    { header: 'Email', key: 'email', width: 25 },
+    { header: 'Phone', key: 'phone', width: 15 },
+    { header: 'Role', key: 'role', width: 10 },
+    { header: 'Join Date', key: 'date', width: 15 },
+    { header: 'Join Time', key: 'time', width: 15 },
+  ];
+
+  users.forEach(user => {
+    const d = new Date(user.createdAt);
+    sheet.addRow({
+      name: user.name,
+      email: user.email,
+      phone: user.phone || 'N/A',
+      role: user.role,
+      date: d.toLocaleDateString(),
+      time: d.toLocaleTimeString(),
+    });
+  });
+
+  res.setHeader(
+    'Content-Type',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  );
+  let fileNamePrefix = 'users_report';
+  if (role === 'vendor') {
+    fileNamePrefix = 'vendors_report';
+  } else if (role === 'all' || !role) {
+    fileNamePrefix = 'users_and_vendors_report';
+  }
+
+  res.setHeader(
+    'Content-Disposition',
+    'attachment; filename=' + `${fileNamePrefix}_${filterType || 'all'}.xlsx`
+  );
+
+  await workbook.xlsx.write(res);
+  res.end();
+});
+
 
 // @desc    Get current user (basic)
 // @route   GET /api/users/me

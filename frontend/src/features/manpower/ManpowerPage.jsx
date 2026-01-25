@@ -353,7 +353,6 @@ const ManpowerPage = () => {
                                     availabilityOptions={[]}
                                     typeLabel="Role / Profession"
                                     priceRanges={[
-                                        { min: 0, max: 500, label: "Under ₹500" },
                                         { min: 500, max: 1000, label: "₹500 - ₹1000" },
                                         { min: 1000, max: 5000, label: "₹1000 - ₹5000" },
                                         { min: 5000, max: Number.MAX_SAFE_INTEGER, label: "Above ₹5000" }

@@ -92,6 +92,32 @@ export const getTelecallerStats = asyncHandler(async (req, res) => {
 // @desc    Download Excel Report
 // @route   GET /api/telecallers/export
 // @access  Private/Admin
+
+// @desc    Update telecaller profile
+// @route   PUT /api/telecallers/:id
+// @access  Private/Admin
+export const updateTelecaller = asyncHandler(async (req, res) => {
+  const { name, phone, email } = req.body;
+  
+  const telecaller = await Telecaller.findById(req.params.id);
+
+  if (!telecaller) {
+    res.status(404);
+    throw new Error('Telecaller not found');
+  }
+
+  telecaller.name = name || telecaller.name;
+  telecaller.phone = phone || telecaller.phone;
+  telecaller.email = email || telecaller.email;
+
+  const updatedTelecaller = await telecaller.save();
+
+  res.json({
+    success: true,
+    data: updatedTelecaller,
+  });
+});
+
 // @desc    Download Excel Report
 // @route   GET /api/telecallers/export
 // @access  Private/Admin
@@ -211,3 +237,4 @@ export const downloadReport = asyncHandler(async (req, res) => {
   await workbook.xlsx.write(res);
   res.end();
 });
+

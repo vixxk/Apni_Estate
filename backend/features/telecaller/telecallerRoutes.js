@@ -4,9 +4,11 @@ import {
   createTelecaller,
   getAllTelecallers,
   updateTelecallerStatus,
+  updateTelecaller,
   getTelecallerStats,
   downloadReport,
 } from './telecallerController.js';
+
 
 const router = express.Router();
 
@@ -17,7 +19,12 @@ router.route('/')
   .post(createTelecaller)
   .get(getAllTelecallers);
 
+
+router.route('/:id')
+  .put(updateTelecaller);
+
 router.put('/:id/status', updateTelecallerStatus);
+
 router.get('/stats', getTelecallerStats);
 router.get('/export', downloadReport);
 
