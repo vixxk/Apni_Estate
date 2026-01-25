@@ -126,8 +126,11 @@ const TelecallerManager = () => {
         }
     };
 
+    const [isDownloading, setIsDownloading] = useState(false);
+
     const downloadReport = async () => {
         try {
+            setIsDownloading(true);
             let query = `filterType=${exportType}`;
             if (exportType !== 'all' && selectedDate) {
                 query += `&date=${selectedDate}`;
@@ -157,6 +160,8 @@ const TelecallerManager = () => {
             toast.success("Report downloaded successfully");
         } catch {
             toast.error("Failed to download report");
+        } finally {
+            setIsDownloading(false);
         }
     };
 
@@ -566,11 +571,20 @@ const TelecallerManager = () => {
                                     </button>
                                     <button
                                         onClick={downloadReport}
-                                        disabled={exportType !== 'all' && !selectedDate}
+                                        disabled={(exportType !== 'all' && !selectedDate) || isDownloading}
                                         className="flex-1 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                     >
-                                        <Download className="w-4 h-4" />
-                                        Download
+                                        {isDownloading ? (
+                                            <>
+                                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                <span>Downloading...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Download className="w-4 h-4" />
+                                                <span>Download</span>
+                                            </>
+                                        )}
                                     </button>
                                 </div>
                             </div>

@@ -167,24 +167,35 @@ export const downloadReport = asyncHandler(async (req, res) => {
   // However, fetching all time count while filtering requires a separate query or aggregation. 
   // To keep it simple and likely what's expected: show count for the filtered period.
   
+  // Determine period label for the header
+  let periodLabel = 'All Time';
+  if (filterType === 'daily' && date) {
+      const d = new Date(date);
+      periodLabel = d.toLocaleDateString();
+  } else if (filterType === 'monthly' && date) {
+      const [year, month] = date.split('-');
+      const d = new Date(year, month - 1);
+      periodLabel = d.toLocaleString('default', { month: 'short', year: 'numeric' });
+  }
+
   const sheet2 = workbook.addWorksheet('Telecaller Summary');
   sheet2.columns = [
     { header: 'Promo Code', key: 'id', width: 15 },
+    { header: `Onboardings (${periodLabel})`, key: 'periodTotal', width: 30 },
     { header: 'Telecaller Name', key: 'name', width: 20 },
     { header: 'Phone', key: 'phone', width: 15 },
     { header: 'Email', key: 'email', width: 20 },
     { header: 'Status', key: 'status', width: 10 },
-    { header: 'Onboardings (Selected Period)', key: 'periodTotal', width: 25 },
   ];
 
   telecallers.forEach(tc => {
       sheet2.addRow({
           id: tc.referralId,
+          periodTotal: tc.onboardings ? tc.onboardings.length : 0,
           name: tc.name,
           phone: tc.phone,
           email: tc.email || '-',
-          status: tc.active ? 'Active' : 'Inactive',
-          periodTotal: tc.onboardings ? tc.onboardings.length : 0
+          status: tc.active ? 'Active' : 'Inactive'
       });
   });
 
