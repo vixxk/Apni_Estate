@@ -46,7 +46,7 @@ const services = [
   { title: "Construction Materials", img: constructionMaterials },
   { title: "Furniture", img: furniture },
   { title: "Decoratives", img: decoratives },
-  { title: "Sanitary and Hardware", img: sanitaryHardware, className: "scale-150" },
+  { title: "Hardware & Sanitary", img: sanitaryHardware, className: "scale-150" },
   { title: "Manpower", img: manpower },
 ];
 
@@ -191,11 +191,11 @@ const Hero = () => {
       title === "construction services" ||
       title === "legal service" ||
       title === "vastu" ||
-      title === "sanitary and hardware" ||
+      title === "hardware & sanitary" ||
       title === "home loan"
     ) {
       navigate("/services", {
-        state: { filterType: title },
+        state: { filterType: title === "hardware & sanitary" ? "sanitary and hardware" : title },
       });
     } else if (title === "interior designing") {
       navigate("/sales-items", {

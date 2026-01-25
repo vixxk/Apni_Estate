@@ -335,7 +335,7 @@ const EverythingPage = () => {
     // Properties
     "House", "Apartment", "Villa", "Plot", "Commercial",
     // Services
-    "Construction Services", "Legal Service", "Vastu", "Sanitary and Hardware", "Home Loan", "Interior Designing",
+    "Construction Services", "Legal Service", "Vastu", { value: "sanitary and hardware", label: "Hardware & Sanitary" }, "Home Loan", "Interior Designing",
     // Sales
     "Construction Materials", "Furniture", "Decoratives",
     // Manpower

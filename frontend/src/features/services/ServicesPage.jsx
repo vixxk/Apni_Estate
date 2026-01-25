@@ -18,7 +18,7 @@ const ServicesPage = () => {
     "construction services",
     "legal service",
     "vastu",
-    "sanitary and hardware",
+    { value: "sanitary and hardware", label: "Hardware & Sanitary" },
     "home loan"
   ];
 
@@ -201,9 +201,13 @@ const ServicesPage = () => {
       .filter((property) => {
         // FILTER ONLY SERVICE CATEGORIES
         const categoryMatch = SERVICE_CATEGORIES.some(
-          (cat) =>
-            property.category?.toLowerCase() === cat.toLowerCase() ||
-            property.type?.toLowerCase() === cat.toLowerCase()
+          (cat) => {
+            const val = typeof cat === 'string' ? cat : cat.value;
+            return (
+              property.category?.toLowerCase() === val.toLowerCase() ||
+              property.type?.toLowerCase() === val.toLowerCase()
+            );
+          }
         );
         if (!categoryMatch) return false;
 

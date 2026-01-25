@@ -23,7 +23,7 @@ const CategorySelect = ({ form, setForm }) => {
         { value: "interior", label: "Interior Designing", icon: Palette },
         { value: "legal service", label: "Legal Service", icon: Scale },
         { value: "vastu", label: "Vastu", icon: Compass },
-        { value: "sanitary and hardware", label: "Sanitary and Hardware", icon: Wrench },
+        { value: "sanitary and hardware", label: "Hardware & Sanitary", icon: Wrench },
         { value: "home loan", label: "Home Loan", icon: CreditCard },
         { value: "construction materials", label: "Construction Materials", icon: Package },
         { value: "furniture", label: "Furniture", icon: Sofa },
