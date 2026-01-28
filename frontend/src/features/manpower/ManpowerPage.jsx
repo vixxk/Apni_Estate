@@ -261,11 +261,17 @@ const ManpowerPage = () => {
             });
     }, [propertyState.properties, filters]);
 
+    const resultsRef = useRef(null);
+
     const handleFilterChange = (newFilters) => {
         setFilters((prev) => ({
             ...prev,
             ...newFilters,
         }));
+        setViewState((prev) => ({ ...prev, showFilters: false }));
+        if (resultsRef.current) {
+            resultsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
     };
 
     const handleFavouritesChange = (propertyId, action) => {
@@ -314,6 +320,7 @@ const ManpowerPage = () => {
 
     return (
         <motion.div
+            ref={resultsRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="min-h-screen bg-gray-50"
@@ -352,11 +359,7 @@ const ManpowerPage = () => {
                                     typeOptions={MANPOWER_CATEGORIES}
                                     availabilityOptions={[]}
                                     typeLabel="Role / Profession"
-                                    priceRanges={[
-                                        { min: 500, max: 1000, label: "₹500 - ₹1000" },
-                                        { min: 1000, max: 5000, label: "₹1000 - ₹5000" },
-                                        { min: 5000, max: Number.MAX_SAFE_INTEGER, label: "Above ₹5000" }
-                                    ]}
+                                    priceRanges={[]}
                                 />
                             </motion.aside>
                         )}

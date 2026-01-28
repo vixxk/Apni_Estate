@@ -151,26 +151,28 @@ const FilterSection = ({
         )}
 
         {/* Price Range */}
-        <div className="filter-group">
-          <label className="filter-label text-sm sm:text-base mb-2 block font-medium text-gray-700">
-            <IndianRupee className="w-4 h-4 mr-2 inline" />
-            Price Range
-          </label>
-          <div className="grid grid-cols-2 gap-2">
-            {priceRanges.map(({ min, max, label }) => (
-              <button
-                key={label}
-                onClick={() => handlePriceRangeChange(min, max)}
-                className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
-                  ${localFilters.priceRange[0] === min && localFilters.priceRange[1] === max
-                    ? "bg-blue-600 text-white"
-                    : "bg-white/50 text-gray-700 hover:bg-white/80 border border-gray-100"}`}
-              >
-                {label}
-              </button>
-            ))}
+        {priceRanges && priceRanges.length > 0 && (
+          <div className="filter-group">
+            <label className="filter-label text-sm sm:text-base mb-2 block font-medium text-gray-700">
+              <IndianRupee className="w-4 h-4 mr-2 inline" />
+              Price Range
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {priceRanges.map(({ min, max, label }) => (
+                <button
+                  key={label}
+                  onClick={() => handlePriceRangeChange(min, max)}
+                  className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
+                    ${localFilters.priceRange[0] === min && localFilters.priceRange[1] === max
+                      ? "bg-blue-600 text-white"
+                      : "bg-white/50 text-gray-700 hover:bg-white/80 border border-gray-100"}`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="flex space-x-4 mt-6 sm:mt-8 pt-2 sm:pt-4 border-t border-gray-100">
           <button

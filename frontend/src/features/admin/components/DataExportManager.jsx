@@ -16,29 +16,10 @@ const DataExportManager = ({ adminEmail, adminPassword }) => {
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Assuming standard Bearer token for 'protect' middleware which usually expects token
-            // But AdminDashboard uses specific email/password headers? 
-            // TelecallerManager used email/password headers. 
-            // UserRoutes uses 'protect' middleware which typically looks for Bearer token.
-            // Let's verify what 'protect' does. If it's standard JWT, we need the token.
-            // If it's custom admin check, we might need email/pass. 
-            // Given I used 'protect' in userRoutes, I should use the token.
-            // However, AdminDashboard seems to use email/password in headers for some admin routes.
-            // I will assume standard Bearer token is needed for 'protect' middleware.
-            // Let's grab the token from localStorage if available.
         },
     };
 
-    // Wait, let's double check AdminDashboard auth.
-    // AdminDashboard uses email/password headers for its calls.
-    // TelecallerManager uses email/password headers.
-    // But userRoutes uses 'protect' middleware.
-    // Let's check 'protect' middleware implementation to be sure.
 
-    // For now, I will create the component assuming I can get the token.
-    // Actually, to be safe and consistent with the "Admin" part of the dashboard which seems to rely on email/password headers,
-    // I might need to make sure the backend route supports it or use a different middleware.
-    // But I entered 'exportUsers' to 'userRoutes' which uses 'protect'. 
-    // 'protect' usually means JWT.
 
     const token = localStorage.getItem("userToken"); // Common key
 
