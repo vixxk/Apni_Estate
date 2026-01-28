@@ -29,7 +29,8 @@ import telecallerRoutes from './features/telecaller/telecallerRoutes.js';
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// __dirname support (ESM)
+
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -43,7 +44,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Health check
+
 app.get('/', (req, res) => {
   res.json({
     message: 'ApniEstate Backend API is running!',

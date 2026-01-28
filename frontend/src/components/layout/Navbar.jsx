@@ -12,7 +12,7 @@ import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 import { Backendurl } from "../../App";
 
-// Animation Variants
+
 const navVariants = {
   hidden: { opacity: 0, y: -20 },
   visible: {
@@ -52,7 +52,7 @@ const Navbar = () => {
 
   const isVendor = user?.role === "vendor";
 
-  // Fetch pending requests count for vendors
+
   useEffect(() => {
     const fetchPendingCount = async () => {
       if (!isAuthenticated || !isVendor) {
@@ -83,7 +83,7 @@ const Navbar = () => {
 
     fetchPendingCount();
 
-    // Poll for updates every 30 seconds
+
     const interval = setInterval(fetchPendingCount, 30000);
 
     return () => clearInterval(interval);
@@ -141,7 +141,7 @@ const Navbar = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
+
             <Link to="/" className="flex items-center space-x-3 group">
               <motion.div
                 variants={logoVariants}
@@ -165,7 +165,7 @@ const Navbar = () => {
               </div>
             </Link>
 
-            {/* Desktop Navigation */}
+
             <div className="hidden md:flex items-center space-x-8">
               <NavLinks
                 currentPath={location.pathname}
@@ -173,7 +173,7 @@ const Navbar = () => {
               />
 
               <div className="flex items-center space-x-4">
-                {/* Bell icon - only visible if authenticated AND vendor */}
+
                 {isAuthenticated && isVendor && (
                   <NotificationBadge
                     onClick={handleNotificationClick}
@@ -220,9 +220,9 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* Mobile: Bell icon (only for authenticated vendors) + Hamburger */}
+
             <div className="md:hidden flex items-center space-x-2">
-              {/* Bell icon - Mobile (only for authenticated vendors) */}
+
               {isAuthenticated && isVendor && (
                 <NotificationBadge
                   onClick={handleNotificationClick}
@@ -230,7 +230,7 @@ const Navbar = () => {
                 />
               )}
 
-              {/* Hamburger Menu Button */}
+
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={toggleMobileMenu}

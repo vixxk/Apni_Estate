@@ -2,12 +2,12 @@ import jwt from "jsonwebtoken";
 import User from '../features/users/userModel.js';
 import { appConfig as config } from "../config/config.js";
 
-// Protect routes - require authentication
+
 export const protect = async (req, res, next) => {
   try {
     let token;
 
-    // Check if token exists in Authorization header
+
     if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer")
@@ -25,7 +25,7 @@ export const protect = async (req, res, next) => {
     try {
       const decoded = jwt.verify(token, config.JWT_SECRET);
 
-      // Get user from token
+
       req.user = await User.findById(decoded.id).select("-password");
 
       if (!req.user) {
@@ -50,7 +50,7 @@ export const protect = async (req, res, next) => {
   }
 };
 
-// Authorize specific roles
+
 export const authorize = (...roles) => {
   return (req, res, next) => {
     if (!req.user) {
@@ -71,7 +71,7 @@ export const authorize = (...roles) => {
   };
 };
 
-// Optional authentication - doesn't fail if no token
+
 export const optionalAuth = async (req, res, next) => {
   try {
     let token;
@@ -88,7 +88,7 @@ export const optionalAuth = async (req, res, next) => {
         const decoded = jwt.verify(token, config.JWT_SECRET);
         req.user = await User.findById(decoded.id).select("-password");
       } catch (error) {
-        // Silently fail - user is not authenticated but route continues
+
         req.user = null;
       }
     }
@@ -99,7 +99,7 @@ export const optionalAuth = async (req, res, next) => {
   }
 };
 
-// Admin authentication middleware
+
 export const adminProtect = async (req, res, next) => {
   try {
     const { email, password } = req.headers;
@@ -111,7 +111,7 @@ export const adminProtect = async (req, res, next) => {
       });
     }
 
-    // Check against environment variables
+
     if (
       email === process.env.ADMIN_EMAIL &&
       password === process.env.ADMIN_PASSWORD

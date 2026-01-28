@@ -47,7 +47,7 @@ import ConstructionEstimator from "./features/ai-tools/ConstructionEstimator";
 import VastuConsultant from "./features/ai-tools/VastuConsultant";
 import ManpowerPage from "./features/manpower/ManpowerPage";
 
-export const Backendurl = import.meta.env.VITE_API_BASE_URL;
+export const Backendurl = import.meta.env.VITE_API_URL;
 
 const AppLayout = ({ children }) => {
   const location = useLocation();

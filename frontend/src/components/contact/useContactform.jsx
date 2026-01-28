@@ -49,14 +49,11 @@ export default function useContactForm() {
       try {
         const response = await axios.post(`${Backendurl}/api/forms`, formData);
         toast.success('Form submitted successfully!');
-        // Reset form
         setFormData({ name: '', email: '', phone: '', message: '' });
       } catch (error) {
         toast.error('Error submitting form. Please try again.');
         console.error('Error submitting form:', error);
       }
-    } else {
-      console.log('Validation errors:', errors); // Debugging log
     }
   };
 

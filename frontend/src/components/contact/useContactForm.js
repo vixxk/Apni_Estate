@@ -66,7 +66,7 @@ const useContactForm = () => {
     setErrors({});
     
     try {
-      // ✅ FIXED: Changed from /api/forms/submit to /api/forms
+
       const response = await axios.post('/api/forms', {
         name: formData.name,
         email: formData.email,
