@@ -37,7 +37,26 @@ const __dirname = path.dirname(__filename);
 connectDB();
 
 app.use(helmet());
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://ae-dev-fe.onrender.com',
+  'https://apniestate.com',
+  'https://apniestate-fe.onrender.com'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(null, false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
