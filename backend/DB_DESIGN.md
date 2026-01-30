@@ -6,14 +6,7 @@ ApniEstate uses MongoDB with Mongoose for a flexible, document-oriented data mod
 
 The system is centered around three primary entities: **Users**, **Properties**, and **Services**.
 
-```mermaid
-erDiagram
-    USER ||--o{ PROPERTY : owns
-    USER ||--o{ SERVICE : provides
-    USER ||--o{ APPOINTMENT : books
-    PROPERTY ||--o{ APPOINTMENT : has
-    USER ||--o{ CONTACT-REQUEST : sends
-```
+
 
 ### 👤 Users Collection
 Stores account information, roles, and preferences.

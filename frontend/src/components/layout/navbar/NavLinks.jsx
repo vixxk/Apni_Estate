@@ -6,7 +6,8 @@ import {
     Users,
     BotMessageSquare,
     Search,
-    MessageCircle,
+    Phone,
+    MessageSquare,
     ChevronDown,
 } from "lucide-react";
 import PropTypes from "prop-types";
@@ -50,7 +51,7 @@ const NavLinks = ({ currentPath, isAuthenticated }) => {
         {
             name: "Contact",
             path: "/contact",
-            icon: MessageCircle,
+            icon: Phone,
             color: "from-orange-500 to-red-500",
         },
         ...(isAuthenticated
@@ -58,7 +59,7 @@ const NavLinks = ({ currentPath, isAuthenticated }) => {
                 {
                     name: "Chat",
                     path: "/messages",
-                    icon: MessageCircle,
+                    icon: MessageSquare,
                     color: "from-indigo-500 to-blue-500",
                 },
             ]

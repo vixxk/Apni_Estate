@@ -1,4 +1,4 @@
-![ApniEstate Banner](...)
+<!-- ![ApniEstate Banner](...) -->
 
 # ApniEstate Backend API
 

@@ -67,7 +67,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center px-4 py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-slate-100 via-blue-50 to-indigo-200 flex items-center justify-center px-4 py-12 relative overflow-hidden">
       {/* Background decorative elements - Static/Stable */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200/20 rounded-full blur-3xl opacity-60" />
@@ -76,19 +76,19 @@ const ForgotPassword = () => {
       </div>
 
       <div className="w-full max-w-md relative z-10">
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 relative overflow-hidden">
+        <div className="bg-white/70 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_22px_70px_4px_rgba(0,0,0,0.1)] border border-white/40 relative overflow-hidden">
           <div className="p-8">
 
             {/* Success State Overlay code ... (omitted, unchanged) */}
 
             {/* Logo & Title */}
-            <div className="text-center mb-8">
-              <Link to="/" className="inline-block mb-6 hover:scale-105 transition-transform duration-300">
-                <div className="flex items-center justify-center gap-2">
-                  <div className="p-3 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl shadow-lg shadow-blue-600/20">
-                    <Lock className="w-6 h-6 text-white" />
+            <div className="text-center mb-10">
+              <Link to="/" className="inline-block mb-8 hover:scale-105 transition-transform duration-300">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="p-4 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl shadow-2xl shadow-blue-600/20">
+                    <Lock className="w-8 h-8 text-white" />
                   </div>
-                  <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+                  <h1 className="text-4xl font-bold text-slate-900 tracking-tight">
                     ApniEstate
                   </h1>
                 </div>
@@ -116,7 +116,7 @@ const ForgotPassword = () => {
                 <div className="relative group">
                   <div className="relative">
                     <Mail
-                      className={`absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-colors duration-300 ${emailFocused ? "text-blue-600" : "text-gray-400"
+                      className={`absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-colors duration-300 z-10 flex items-center justify-center ${emailFocused ? "text-blue-600" : "text-slate-400"
                         }`}
                     />
                     <input
@@ -128,7 +128,7 @@ const ForgotPassword = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       onFocus={() => setEmailFocused(true)}
                       onBlur={() => setEmailFocused(false)}
-                      className="w-full pl-12 pr-4 py-3.5 rounded-lg bg-gray-50 border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-gray-900 placeholder-gray-400 outline-none"
+                      className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/50 border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 text-slate-800 placeholder-slate-400 outline-none backdrop-blur-sm shadow-sm"
                       placeholder="Enter your email address"
                     />
                   </div>
@@ -138,9 +138,9 @@ const ForgotPassword = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3.5 rounded-lg flex items-center justify-center space-x-2 font-semibold shadow-md hover:shadow-lg transition-all duration-200 ${loading
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200 shadow-none"
-                    : "bg-blue-600 text-white hover:bg-blue-700"
+                className={`w-full py-4 rounded-2xl flex items-center justify-center space-x-2 font-bold shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${loading
+                  ? "bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200 shadow-none"
+                  : "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-blue-500/25"
                   }`}
               >
                 {loading ? (

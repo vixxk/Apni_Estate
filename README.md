@@ -1,3 +1,5 @@
+![ApniEstate Banner](https://raw.githubusercontent.com/Apniestate2026/ApniEstate/main/frontend/public/banner.png)
+
 # ApniEstate - Premium Real Estate Platform
 
 ApniEstate is a Real Estate Marketplace that connects property buyers, sellers, and service providers into a single, seamless ecosystem. The platform offers a modern experience for property listings and professional services like Vastu consultancy and loan analysis.
@@ -9,13 +11,7 @@ ApniEstate is built as a decoupled full-stack application:
 -   **Frontend**: A modern, responsive React application built with Vite, Tailwind CSS, and Framer Motion for high-end aesthetics.
 -   **Backend**: A robust Node.js/Express API leveraging MongoDB for data persistence and ImageKit for cloud-based media management.
 
-```mermaid
-    User((User)) <--> Frontend[React Frontend]
-    Frontend <--> Backend[Express API]
-    Backend <--> DB[(MongoDB)]
-    Backend <--> ImageKit[Media Storage]
-    Backend <--> Mailer[Nodemailer]
-```
+
 
 ## 🚀 Quick Start
 

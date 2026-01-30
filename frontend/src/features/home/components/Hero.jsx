@@ -29,7 +29,7 @@ import rent from "../../../assets/rent.png";
 import furniture from "../../../assets/furniture.png";
 import decoratives from "../../../assets/decoratives.png";
 
-import manpower from "../../../assets/manpower.jpeg";
+const manpower = "/manpower.jpeg";
 import axios from "axios";
 import { Backendurl } from "../../../App";
 

@@ -158,7 +158,7 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center px-4 py-8 md:py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-slate-100 via-blue-50 to-indigo-200 flex items-center justify-center px-4 py-8 md:py-12 relative overflow-hidden">
       {/* Animated Background Elements - Static/Stable */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
@@ -190,7 +190,7 @@ const ResetPassword = () => {
       >
         <motion.div
           variants={cardVariants}
-          className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 relative overflow-hidden"
+          className="bg-white/70 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_22px_70px_4px_rgba(0,0,0,0.1)] border border-white/40 p-10 md:p-12 relative overflow-hidden"
         >
           {/* Decorative Elements */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-indigo-400/10 rounded-full -translate-y-16 translate-x-16" />
@@ -232,8 +232,8 @@ const ResetPassword = () => {
               </motion.div>
             </Link>
 
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/25">
-              <Key className="w-8 h-8 text-white" />
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-blue-600/30 transform transition-transform group-hover:rotate-6">
+              <Key className="w-10 h-10 text-white" />
             </div>
 
             <h2 className="text-2xl font-bold text-gray-800 mb-2">Reset Password</h2>
@@ -252,8 +252,8 @@ const ResetPassword = () => {
               </label>
               <div className="relative group">
                 <motion.div
-                  animate={passwordFocused ? { scale: 1.1, color: "#3B82F6" } : { scale: 1, color: "#9CA3AF" }}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 z-10"
+                  animate={passwordFocused ? { scale: 1.1, color: "#2563EB" } : { scale: 1, color: "#94A3B8" }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center"
                 >
                   <Lock className="h-5 w-5" />
                 </motion.div>
@@ -266,7 +266,7 @@ const ResetPassword = () => {
                   onChange={handlePasswordChange}
                   onFocus={() => setPasswordFocused(true)}
                   onBlur={() => setPasswordFocused(false)}
-                  className="w-full pl-11 pr-12 py-3.5 rounded-xl bg-gray-50/50 border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 text-gray-800 placeholder-gray-400 group-hover:border-gray-300"
+                  className="w-full pl-12 pr-12 py-4 rounded-2xl bg-white/50 border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 text-slate-800 placeholder-slate-400 group-hover:border-slate-300 outline-none backdrop-blur-sm shadow-sm"
                   placeholder="Enter new password"
                 />
                 <motion.button
@@ -274,7 +274,7 @@ const ResetPassword = () => {
                   whileTap={{ scale: 0.9 }}
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors z-10"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors z-10 flex items-center justify-center"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </motion.button>
@@ -311,8 +311,8 @@ const ResetPassword = () => {
               </label>
               <div className="relative group">
                 <motion.div
-                  animate={confirmPasswordFocused ? { scale: 1.1, color: "#3B82F6" } : { scale: 1, color: "#9CA3AF" }}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 z-10"
+                  animate={confirmPasswordFocused ? { scale: 1.1, color: "#2563EB" } : { scale: 1, color: "#94A3B8" }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center"
                 >
                   <Shield className="h-5 w-5" />
                 </motion.div>
@@ -325,7 +325,7 @@ const ResetPassword = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   onFocus={() => setConfirmPasswordFocused(true)}
                   onBlur={() => setConfirmPasswordFocused(false)}
-                  className="w-full pl-11 pr-12 py-3.5 rounded-xl bg-gray-50/50 border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 text-gray-800 placeholder-gray-400 group-hover:border-gray-300"
+                  className="w-full pl-12 pr-12 py-4 rounded-2xl bg-white/50 border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 text-slate-800 placeholder-slate-400 group-hover:border-slate-300 outline-none backdrop-blur-sm shadow-sm"
                   placeholder="Confirm new password"
                 />
                 <motion.button
@@ -333,7 +333,7 @@ const ResetPassword = () => {
                   whileTap={{ scale: 0.9 }}
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors z-10"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors z-10 flex items-center justify-center"
                 >
                   {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </motion.button>
