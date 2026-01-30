@@ -18,7 +18,7 @@ import ContactForm from "./components/add-property/ContactForm";
 import TagInput from "./components/add-property/TagInput";
 import ImageUpload from "./components/add-property/ImageUpload";
 
-const API = import.meta.env.VITE_API_BASE_URL;
+const API = import.meta.env.VITE_API_URL;
 
 const VendorAddProperty = () => {
   const token = localStorage.getItem("token");

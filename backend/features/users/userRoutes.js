@@ -1,5 +1,5 @@
 import express from 'express';
-import { protect } from '../../middleware/authmiddleware.js';
+import { protect, adminProtect } from '../../middleware/authmiddleware.js';
 import { uploadAvatar } from '../../middleware/uploadMiddleware.js';
 import {
   registerUser,
@@ -18,6 +18,7 @@ import {
   getPublicProfile,
   getSavedProperties,
   toggleSavedProperty,
+  exportUsers
 } from './userController.js';
 
 const router = express.Router();
@@ -28,6 +29,9 @@ router.post('/login', loginUser);
 router.post('/admin', adminLogin);
 router.post('/forgot', forgotPassword);
 router.post('/reset/:token', resetPassword);
+
+// Export Route
+router.get('/export', adminProtect, exportUsers);
 
 // User Profile Routes
 router.route('/me')

@@ -16,6 +16,7 @@ import {
     Store,
     BotMessageSquare,
     LogIn,
+    Phone,
 } from "lucide-react";
 import PropTypes from "prop-types";
 import logo from "../../../assets/images/apniestate-logo.png";
@@ -268,7 +269,7 @@ const MobileMenu = ({
                                     description="Our story"
                                 />
                                 <MobileNavItem
-                                    icon={MessageCircle}
+                                    icon={Phone}
                                     label="Contact"
                                     path="/contact"
                                     currentPath={currentPath}

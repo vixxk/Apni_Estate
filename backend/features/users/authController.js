@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import User from './userModel.js';
+import Telecaller from '../telecaller/telecallerModel.js';
 import generateToken from '../../utils/generateToken.js';
 import { sendEmail, emailTemplates } from '../../config/nodemailer.js';
 import { appConfig as config } from '../../config/config.js';
@@ -9,7 +10,7 @@ import { asyncHandler } from '../../middleware/asyncHandler.js';
 // @route   POST /api/users/register
 // @access  Public
 export const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, phone, role } = req.body;
+  const { name, email, password, phone, role, promoCode } = req.body;
 
   // Add phone validation
   if (!phone || !phone.trim()) {
@@ -32,6 +33,20 @@ export const registerUser = asyncHandler(async (req, res) => {
     throw new Error('User already exists with this email');
   }
 
+  // Validate Promo Code BEFORE creating user
+  let telecaller = null;
+  if (promoCode && promoCode.trim() !== '') {
+      telecaller = await Telecaller.findOne({ 
+          referralId: promoCode.trim().toUpperCase(),
+          active: true 
+      });
+
+      if (!telecaller) {
+          res.status(400);
+          throw new Error('Invalid Promo Code');
+      }
+  }
+
   const user = await User.create({
     name,
     email,
@@ -39,6 +54,12 @@ export const registerUser = asyncHandler(async (req, res) => {
     phone,
     role: userRole,
   });
+
+  // Link user to Telecaller if applicable
+  if (telecaller) {
+      telecaller.onboardings.push(user._id);
+      await telecaller.save();
+  }
 
   try {
     const tpl = emailTemplates.welcome(user.name);

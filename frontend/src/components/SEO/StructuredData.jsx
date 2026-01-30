@@ -18,17 +18,6 @@ const StructuredData = ({ type, data }) => {
         'query-input': 'required name=search_term_string'
       }
     },
-    organization: {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: 'ApniEstate',
-      url: 'https://ApniEstate.vercel.app',
-      logo: 'https://ApniEstate.vercel.app/logo.png',
-      sameAs: [
-        'https://github.com/AAYUSH412/Real-Estate-Website',
-        'https://linkedin.com/in/AAYUSH412'
-      ]
-    },
     property: {
       '@context': 'https://schema.org',
       '@type': 'RealEstateListing',
