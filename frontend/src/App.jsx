@@ -57,7 +57,6 @@ const AppLayout = ({ children }) => {
 
   return (
     <>
-      {/* Base website structured data */}
       {!isAdminRoute && (
         <>
           <StructuredData type="website" />
